@@ -1,0 +1,478 @@
+/* ----- MBTA SCREENS SYSTEM ----- */
+/* Maximum readability for distant, short-viewing-time displays */
+/* 3-column Green Line + 3-column Buses + 3-column Blue Bikes */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css');
+
+:root {
+    /* MBTA system colors */
+    --mbta-green: #00843D;
+    --mbta-bus: #FFC72C;
+    --mbta-bluebike: #2277B3;
+    --mbta-cool-black-15: #171F26;
+    --mbta-warm-white-90: #E6E4E1;
+    --mbta-warm-white-85: #D9D6D0;
+    --mbta-warm-white-80: #CCCBC8;
+    --mbta-true-white: #FFFFFF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--mbta-warm-white-90);
+    font-family: 'Neue Haas Grotesk Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: var(--mbta-cool-black-15);
+    line-height: 1.3;
+    padding: 2rem;
+}
+
+.container {
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* ===== MODE HEADERS ===== */
+.mode-header {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+}
+
+.mode-header.green {
+    background: var(--mbta-green);
+}
+
+.mode-header.bus {
+    background: var(--mbta-bus);
+}
+
+.mode-header.bluebike {
+    background: var(--mbta-bluebike);
+    margin-top: 2rem;
+}
+
+.time.stopped {
+    color: #FFC72C;  /* MBTA bus yellow - stands out */
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+}
+
+.mode-header h2 {
+    font-family: 'Neue Haas Grotesk Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin: 0;
+    text-transform: none;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+}
+
+.mode-header.green h2 {
+    color: var(--mbta-true-white);
+}
+
+.mode-header.bus h2 {
+    color: var(--mbta-cool-black-15);
+}
+
+.no-schedules {
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.95rem;
+    color: #505A62;
+    padding: 0.75rem 0;
+    text-align: left;
+    font-style: italic;
+    border-bottom: 1px solid var(--mbta-warm-white-90);
+}
+
+.mode-header.bluebike h2 {
+    color: white;
+}
+
+.mode-header.bluebike h2 i {
+    font-size: 1.3rem;
+    margin-right: 8px;
+}
+
+/* ===== GRIDS - 3 COLUMNS EACH ===== */
+.station-grid,
+.bus-grid,
+.bluebike-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.station-grid {
+    margin-bottom: 2.5rem;
+}
+
+/* ===== STOP CARDS - BASE ===== */
+.stop-card {
+    background: var(--mbta-true-white);
+    padding: 1.25rem;
+    border-radius: 8px;
+}
+
+.stop-card h3 {
+    font-family: 'Neue Haas Grotesk Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+    color: var(--mbta-cool-black-15);
+    text-transform: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stop-card h3 i {
+    font-size: 1.2rem;
+}
+
+/* ===== CARD VARIANTS ===== */
+.stop-card.green-line {
+    border: 0px solid var(--mbta-green);
+    border-left-width: 4px;
+}
+
+.stop-card.bus {
+    border: 0px solid var(--mbta-bus);
+    border-left-width: 4px;
+}
+
+.stop-card.bluebike {
+    border: 0px solid var(--mbta-bluebike);
+    border-left-width: 4px;
+}
+
+.stop-card.bluebike h3 i {
+    color: var(--mbta-bluebike);
+}
+
+/* ===== STOP LOCATION ===== */
+.stop-location {
+    font-family: 'Neue Haas Grotesk Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.8125rem;
+    color: #505A62;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--mbta-warm-white-80);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+/* ===== DIRECTION HEADERS ===== */
+.direction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--mbta-warm-white-90);
+}
+
+.direction-header:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+.direction-label {
+    font-family: 'Neue Haas Grotesk Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #505A62;
+}
+
+.destination-primary {
+    font-weight: 700;
+    font-size: 0.9375rem;
+    color: var(--mbta-cool-black-15);
+}
+
+/* ===== PREDICTION ROWS ===== */
+.prediction-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.375rem 0;
+    font-size: 1.125rem;
+    border-bottom: 1px solid var(--mbta-warm-white-90);
+}
+
+.prediction-row:last-child {
+    border-bottom: none;
+}
+
+.destination {
+    font-weight: 400;
+    color: var(--mbta-cool-black-15);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70%;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.destination i {
+    font-size: 0.95rem;
+    line-height: 1;
+}
+
+.time {
+    font-weight: 700;
+    text-align: right;
+    color: var(--mbta-cool-black-15);
+    flex-shrink: 0;
+    margin-left: 1rem;
+}
+
+.time.now {
+    color: var(--mbta-green);
+}
+
+.stop-card.bus .time.now {
+    color: var(--mbta-bus);
+}
+
+/* ===== BLUE BIKES - BIKE ROWS ===== */
+.bike-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.bike-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.4rem 0;
+    font-size: 1.1rem;
+    border-bottom: 1px solid var(--mbta-warm-white-90);
+}
+
+.bike-row:last-child {
+    border-bottom: none;
+}
+
+.bike-row.total {
+    margin-top: 0.25rem;
+    padding-top: 0.5rem;
+    border-top: 2px solid var(--mbta-warm-white-80);
+    font-weight: 700;
+}
+
+.bike-row.docks {
+    color: var(--mbta-bluebike);
+    font-weight: 600;
+}
+
+.bike-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--mbta-cool-black-15);
+}
+
+.bike-label i {
+    color: var(--mbta-bluebike);
+    font-size: 1.1rem;
+    width: 1.4rem;
+    text-align: center;
+}
+
+.bike-count {
+    font-weight: 700;
+    color: var(--mbta-cool-black-15);
+}
+
+.bike-row.docks .bike-count {
+    color: var(--mbta-bluebike);
+}
+
+/* ===== BIKE ICON ANIMATION ===== */
+@keyframes pedal {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(10deg); }
+    75% { transform: rotate(-10deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.stop-card.bluebike h3 i {
+    animation: pedal 2s ease-in-out infinite;
+}
+
+/* ===== EMPTY STATES ===== */
+.no-trains,
+.no-bikes {
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    color: #505A62;
+    padding: 0.75rem 0;
+    text-align: left;
+    font-style: normal;
+}
+
+/* ===== TIMESTAMP ===== */
+.timestamp {
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.9375rem;
+    color: #505A62;
+    margin-top: 1.5rem;
+    text-align: right;
+    border-top: 1px solid var(--mbta-warm-white-80);
+    padding-top: 1rem;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+@media (max-width: 900px) {
+    .station-grid,
+    .bus-grid,
+    .bluebike-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    body {
+        padding: 1rem;
+    }
+    
+    .stop-card h3 {
+        font-size: 1.125rem;
+    }
+    
+    .prediction-row {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 550px) {
+    .station-grid,
+    .bus-grid,
+    .bluebike-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .mode-header h2 {
+        font-size: 1.25rem;
+    }
+    
+    .stop-card {
+        padding: 1rem;
+    }
+    
+    .stop-location {
+        font-size: 0.75rem;
+    }
+    
+    .direction-label {
+        font-size: 0.6875rem;
+    }
+    
+    .destination-primary {
+        font-size: 0.875rem;
+    }
+    
+    .bike-row {
+        font-size: 1rem;
+    }
+}
+
+/* ----- ALERT BANNERS ----- */
+.alert-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    background: #FFF7BF;
+    border-left: 4px solid #FFDD00;
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.alert-banner.alert-high {
+    background: #FFE5E5;
+    border-left-color: #DA291C;
+}
+
+.alert-icon {
+    font-size: 1.25rem;
+    line-height: 1.4;
+}
+
+.alert-content {
+    flex: 1;
+}
+
+.alert-header {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #171F26;
+    margin-bottom: 0.25rem;
+}
+
+.alert-description {
+    font-size: 0.85rem;
+    color: #505A62;
+    line-height: 1.4;
+}
+
+/* ===== FONT FALLBACKS ===== */
+@supports not (font-family: 'Neue Haas Grotesk Text') {
+    body,
+    .stop-card h3,
+    .destination,
+    .time,
+    .direction-label,
+    .stop-location,
+    .bike-label {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    
+    .mode-header h2,
+    .stop-card h3 {
+        font-weight: 700;
+    }
+}
+
+/* ===== PRINT STYLES (E Ink optimization) ===== */
+@media print {
+    body {
+        background: var(--mbta-true-white);
+        padding: 0.5rem;
+    }
+    
+    .stop-card {
+        border: 1px solid #000;
+    }
+    
+    .mode-header.green,
+    .mode-header.bus,
+    .mode-header.bluebike {
+        background: #000;
+        color: white;
+    }
+    
+    .stop-card.bluebike h3 i {
+        animation: none;
+    }
+}
+
+/* ===== NO DECORATION RULES ===== */
+/* No box-shadow, no hover effects, no transforms, no transitions, no gradients */
