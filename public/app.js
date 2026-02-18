@@ -837,7 +837,7 @@ if (container) {
     renderBlueBikes();
     
     // Timestamp
-    document.getElementById('timestamp').innerHTML = `🕒 ${new Date().toLocaleTimeString()}`;
+    document.getElementById('timestamp').innerHTML = `${new Date().toLocaleTimeString()}`;
     
     console.log('Done');
 }
