@@ -43,6 +43,61 @@ body {
     margin: 0 auto;
 }
 
+/* Path navigation styles */
+.path-nav {
+  font-family: var(--font-family-mono);
+  padding: var(--spacing-base) 0;
+  white-space: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  width: 100%;
+}
+
+.path-nav::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.path-nav ol {
+  display: flex;
+  flex-wrap: nowrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.path-nav li {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  max-width: 200px; /* Limit maximum width on small screens */
+}
+
+.path-nav li.current {
+  max-width: none; /* Allow full width for current page */
+}
+
+.path-nav li a {
+  text-decoration: none;
+  border-bottom: none;
+  padding: 0 0.25em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+}
+
+.path-nav li.current a {
+  color: var(--color-text-primary);
+  font-weight: bold;
+}
+
+.path-nav a:hover {
+  text-decoration: underline;
+}
+
 /* Main menu navigation styles */
 .terminal-nav {
   font-family: var(--font-family-mono);
