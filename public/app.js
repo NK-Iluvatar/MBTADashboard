@@ -365,7 +365,7 @@ function renderStop(elementId, outbound, inbound = null, stopId = null, inboundI
         
         html += `<div class="direction-header">
                     <span class="direction-label">Outbound</span>
-                    <span class="destination-primary">→ ${outbound[0].headsign}</span>
+                    <span class="destination-primary">&rarr; ${outbound[0].headsign}</span>
                 </div>`;
         
         outbound.slice(0, 4).forEach(p => {
@@ -395,7 +395,7 @@ function renderStop(elementId, outbound, inbound = null, stopId = null, inboundI
         
         html += `<div class="direction-header">
                     <span class="direction-label">Inbound</span>
-                    <span class="destination-primary">→ ${inbound[0].headsign}</span>
+                    <span class="destination-primary">&rarr; ${inbound[0].headsign}</span>
                 </div>`;
         
         inbound.slice(0, 4).forEach(p => {
@@ -463,7 +463,7 @@ function renderRoute86() {
         if (preds.length > 0) {
             html += `<div class="direction-header">
                         <span class="direction-label">Strathmore Rd</span>
-                        <span class="destination-primary">→ ${preds[0].headsign}</span>
+                        <span class="destination-primary">&rarr; ${preds[0].headsign}</span>
                     </div>`;
             preds.slice(0, 2).forEach(p => {
                 html += `<div class="prediction-row">
@@ -503,7 +503,7 @@ function renderRoute86() {
         if (preds.length > 0) {
             html += `<div class="direction-header">
                         <span class="direction-label">Embassy Rd</span>
-                        <span class="destination-primary">→ ${preds[0].headsign}</span>
+                        <span class="destination-primary">&rarr; ${preds[0].headsign}</span>
                     </div>`;
             preds.slice(0, 2).forEach(p => {
                 html += `<div class="prediction-row">
@@ -536,7 +536,7 @@ function renderRoute501() {
         if (preds.length > 0) {
             html += `<div class="direction-header">
                         <span class="direction-label">Outbound</span>
-                        <span class="destination-primary">→ ${preds[0].headsign}</span>
+                        <span class="destination-primary">&rarr; ${preds[0].headsign}</span>
                     </div>`;
             preds.slice(0, 2).forEach(p => {
                 const timeDisplay = formatTime(p.minutes);
@@ -556,7 +556,7 @@ function renderRoute501() {
         if (preds.length > 0) {
             html += `<div class="direction-header">
                         <span class="direction-label">Inbound</span>
-                        <span class="destination-primary">→ ${preds[0].headsign}</span>
+                        <span class="destination-primary">&rarr; ${preds[0].headsign}</span>
                     </div>`;
             preds.slice(0, 2).forEach(p => {
                 const timeDisplay = formatTime(p.minutes);
@@ -741,7 +741,7 @@ if (container) {
             if (preds.length > 0) {
                 html += `<div class="direction-header">
                             <span class="direction-label">Outbound</span>
-                            <span class="destination-primary">→ ${preds[0].headsign}</span>
+                            <span class="destination-primary">&rarr; ${preds[0].headsign}</span>
                         </div>`;
                 preds.slice(0, 2).forEach(p => {
                     const timeDisplay = formatTime(p.minutes);
@@ -771,7 +771,7 @@ if (container) {
             
             html += `<div class="direction-header">
                         <span class="direction-label">Outbound</span>
-                        <span class="destination-primary">→ Brighton via Copley</span>
+                        <span class="destination-primary">&rarr; Brighton via Copley</span>
                     </div>`;
             html += `<div class="prediction-row">
                         <span class="destination">${SCHEDULE_ICON} Brighton via Copley</span>
@@ -789,7 +789,7 @@ if (container) {
             if (preds.length > 0) {
                 html += `<div class="direction-header">
                             <span class="direction-label">Inbound</span>
-                            <span class="destination-primary">→ ${preds[0].headsign}</span>
+                            <span class="destination-primary">&rarr; ${preds[0].headsign}</span>
                         </div>`;
                 preds.slice(0, 2).forEach(p => {
                     const timeDisplay = formatTime(p.minutes);
@@ -817,7 +817,7 @@ if (container) {
             
             html += `<div class="direction-header">
                         <span class="direction-label">Inbound</span>
-                        <span class="destination-primary">→ Downtown via Copley</span>
+                        <span class="destination-primary">&rarr; Downtown via Copley</span>
                     </div>`;
             html += `<div class="prediction-row">
                         <span class="destination">${SCHEDULE_ICON} Downtown via Copley</span>
