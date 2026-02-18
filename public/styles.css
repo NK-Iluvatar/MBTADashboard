@@ -32,7 +32,7 @@
 
 body {
     background: var(--mbta-warm-white-90);
-    font-family: var(--font-family-mono);
+    font: var(--font-size-base) / var(--spacing-base) var(--font-family-mono);
     color: var(--mbta-cool-black-15);
     line-height: 1.3;
     padding: 2rem;
@@ -242,6 +242,46 @@ body {
 
 .stop-card h3 i {
     font-size: 1.2rem;
+}
+
+/* ----- ALERT BANNERS ----- */
+.alert-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    background: #FFF7BF;
+    border-left: 4px solid #FFDD00;
+    font-family: var(--font-family-mono);
+}
+
+.alert-banner.alert-high {
+    background: #FFE5E5;
+    border-left-color: #DA291C;
+}
+
+.alert-icon {
+    font-size: 1.25rem;
+    line-height: 1.4;
+}
+
+.alert-content {
+    flex: 1;
+}
+
+.alert-header {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #171F26;
+    margin-bottom: 0.25rem;
+}
+
+.alert-description {
+    font-size: 0.85rem;
+    color: #505A62;
+    line-height: 1.4;
 }
 
 /* ===== CARD VARIANTS ===== */
@@ -498,45 +538,7 @@ body {
     }
 }
 
-/* ----- ALERT BANNERS ----- */
-.alert-banner {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1rem;
-    border-radius: 4px;
-    background: #FFF7BF;
-    border-left: 4px solid #FFDD00;
-    font-family: var(--font-family-mono);
-}
 
-.alert-banner.alert-high {
-    background: #FFE5E5;
-    border-left-color: #DA291C;
-}
-
-.alert-icon {
-    font-size: 1.25rem;
-    line-height: 1.4;
-}
-
-.alert-content {
-    flex: 1;
-}
-
-.alert-header {
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: #171F26;
-    margin-bottom: 0.25rem;
-}
-
-.alert-description {
-    font-size: 0.85rem;
-    color: #505A62;
-    line-height: 1.4;
-}
 
 /* ===== PRINT STYLES (E Ink optimization) ===== */
 @media print {
