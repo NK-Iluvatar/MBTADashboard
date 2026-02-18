@@ -2,6 +2,16 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     
+    // Try to serve static assets first (HTML, CSS, JS)
+    try {
+      const asset = await env.ASSETS.fetch(request);
+      if (asset.status !== 404) {
+        return asset;
+      }
+    } catch (e) {
+      // Asset not found, continue to API routes
+    }
+    
     // Handle API requests
     if (url.pathname.startsWith('/api/')) {
       // MBTA API proxy
@@ -34,7 +44,11 @@ export default {
       }
     }
     
-    // Serve static assets
-    return env.ASSETS.fetch(request);
+    // If we get here, try root path for index.html
+    if (url.pathname === '/') {
+      return env.ASSETS.fetch(new Request('/index.html', request));
+    }
+    
+    return new Response('Not Found', { status: 404 });
   }
 };
