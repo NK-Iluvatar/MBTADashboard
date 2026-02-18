@@ -98,13 +98,18 @@ function formatTime(minutes) {
 
 async function fetchAPI(url) {
     try {
-        // Convert MBTA API calls to go through your proxy
+        // If it's an MBTA API call, proxy it through your worker
         if (url.includes('api-v3.mbta.com')) {
-            const proxyUrl = url.replace('https://api-v3.mbta.com', '/api/mbta');
+            const urlObj = new URL(url);
+            const proxyUrl = `/api/mbta${urlObj.pathname}${urlObj.search}`;
             const res = await fetch(proxyUrl);
             return await res.json();
         }
-        // Keep direct fetch for other APIs
+        // For other APIs (Blue Bikes), use proxy too
+        if (url.includes('bluebikes.com')) {
+            const res = await fetch('/api/bluebikes');
+            return await res.json();
+        }
         const res = await fetch(url);
         return await res.json();
     } catch (e) {
