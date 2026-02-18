@@ -4,7 +4,7 @@
  */
 
 const MBTA_API = 'https://api-v3.mbta.com';
-const MBTA_API_KEY = '64182eff160a439598847faa3c2370dd';
+const MBTA_API_KEY = 'API_KEY_PLACEHOLDER';
 
 // ===== STOPS =====
 const GREEN_STOPS = [
@@ -98,6 +98,13 @@ function formatTime(minutes) {
 
 async function fetchAPI(url) {
     try {
+        // Convert MBTA API calls to go through your proxy
+        if (url.includes('api-v3.mbta.com')) {
+            const proxyUrl = url.replace('https://api-v3.mbta.com', '/api/mbta');
+            const res = await fetch(proxyUrl);
+            return await res.json();
+        }
+        // Keep direct fetch for other APIs
         const res = await fetch(url);
         return await res.json();
     } catch (e) {
@@ -615,7 +622,7 @@ function renderRoute51() {
 // ===== BLUE BIKES =====
 async function fetchBlueBikes() {
     try {
-        const res = await fetch('https://gbfs.bluebikes.com/gbfs/en/station_status.json');
+        const res = await fetch('/api/bluebikes');
         const data = await res.json();
         if (!data?.data?.stations) return;
         
