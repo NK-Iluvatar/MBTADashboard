@@ -40,7 +40,7 @@ body {
 
 .container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 30vw 30vw 30vw;
     grid-template-rows: min-content;
     grid-auto-flow: row;
     gap: 1.5rem;
@@ -466,7 +466,10 @@ body {
     
     
     .container {
-        grid-template-columns: 1fr;
+    }
+
+    .stop-card{
+        grid-column: span 3;
     }
     
     .stop-card h3 {
@@ -501,7 +504,7 @@ body {
 
 
 /* ===== PRINT STYLES (E Ink optimization) ===== */
-@media print {
+@media (width: 1024px; height: 758px;) {
     body {
         background: var(--mbta-true-white);
         padding: 0.5rem;
