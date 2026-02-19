@@ -381,6 +381,10 @@ body {
     color: var(--mbta-bus);
 }
 
+.bi {
+    padding-right: 0.4rem;
+}
+
 /* ===== BLUE BIKES - BIKE ROWS ===== */
 .bike-stats {
     display: flex;
