@@ -164,7 +164,6 @@ body {
 
 .mode-header.bluebike {
     background: var(--mbta-bluebike);
-    margin-top: 2rem;
 }
 
 .time.stopped {
@@ -306,7 +305,7 @@ body {
     margin-top: 0.75rem;
     margin-bottom: 0.5rem;
     padding-top: 0.5rem;
-    border-top: 1px solid var(--mbta-warm-white-90);
+    border-top: 0px solid var(--mbta-warm-white-90);
 }
 
 .direction-header:first-of-type {
@@ -456,7 +455,7 @@ body {
 .timestamp {
     grid-column: span 2;
     font-family: var(--font-family-mono);
-    font-size: 4rem;
+    font-size: 2.5rem;
     color: #505A62;
     text-align: right;
 }
@@ -466,7 +465,8 @@ body {
 @media (max-width: 900px) {
     
     
-    body {
+    .container {
+        grid-template-columns: 1fr;
     }
     
     .stop-card h3 {
