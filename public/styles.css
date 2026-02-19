@@ -52,7 +52,6 @@ body {
 .path-nav {
   grid-column: span 3;
   font-family: var(--font-family-mono);
-  padding: var(--spacing-base) 0;
   white-space: nowrap;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -457,6 +456,7 @@ body {
 .timestamp {
     grid-column: span 2;
     font-family: var(--font-family-mono);
+    font-size: 4rem;
     color: #505A62;
     text-align: right;
 }
