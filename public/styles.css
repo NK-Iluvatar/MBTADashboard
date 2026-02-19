@@ -40,12 +40,11 @@ body {
 
 .container {
     display: grid;
-    grid-template-columns: 30vw 30vw 30vw;
+    grid-template-columns: 33.3% 33.3% 33.3%;
     grid-template-rows: min-content;
     grid-auto-flow: row;
     gap: 1.5rem;
     margin-bottom: 2rem;
-    max-width: 1920px;
 }
 
 /* Path navigation styles */
@@ -282,10 +281,6 @@ body {
     border-left-width: 4px;
 }
 
-.stop-card.bluebike h3 i {
-    color: var(--mbta-bluebike);
-}
-
 /* ===== STOP LOCATION ===== */
 .stop-location {
     font-family: var(--font-family-mono);
@@ -403,7 +398,6 @@ body {
 }
 
 .bike-row.docks {
-    color: var(--mbta-bluebike);
     font-weight: 600;
 }
 
@@ -415,7 +409,6 @@ body {
 }
 
 .bike-label i {
-    color: var(--mbta-bluebike);
     width: 1.4rem;
     text-align: center;
 }
@@ -425,9 +418,6 @@ body {
     color: var(--mbta-cool-black-15);
 }
 
-.bike-row.docks .bike-count {
-    color: var(--mbta-bluebike);
-}
 
 /* ===== BIKE ICON ANIMATION ===== */
 @keyframes pedal {
@@ -504,21 +494,32 @@ body {
 
 
 /* ===== PRINT STYLES (E Ink optimization) ===== */
-@media (width: 1024px; height: 758px;) {
+@media screen and (width: 1024px) and (height: 758px) {
     body {
         background: var(--mbta-true-white);
         padding: 0.5rem;
     }
     
-    .stop-card {
-        border: 1px solid #000;
+    .stop-card.bus,
+    .stop-card.green-line,
+    .stop-card.bluebike {
+       border: 1px solid #000;
+    border-left-width: 4px;
+    }
+
+    .prediction-row:has(.now){
+        background: #000;
+    }
+
+    .prediction-row:has(.now) > span{
+        color: white;
     }
     
     .mode-header.green,
     .mode-header.bus,
     .mode-header.bluebike {
-        background: #000;
-        color: white;
+        background: #000 !important;
+        color: white !important;
     }
     
     .stop-card.bluebike h3 i {
