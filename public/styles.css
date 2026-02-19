@@ -39,12 +39,18 @@ body {
 }
 
 .container {
-    max-width: 1600px;
-    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: min-content 1fr min-content 1fr min-content 1fr min-content 1fr min-content;
+    grid-auto-flow: row;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    max-width: 1920px;
 }
 
 /* Path navigation styles */
 .path-nav {
+  grid-column: span 3;
   font-family: var(--font-family-mono);
   padding: var(--spacing-base) 0;
   white-space: nowrap;
@@ -98,6 +104,7 @@ body {
   text-decoration: underline;
 }
 
+
 /* Main menu navigation styles */
 .terminal-nav {
   font-family: var(--font-family-mono);
@@ -143,6 +150,7 @@ body {
 
 /* ===== MODE HEADERS ===== */
 .mode-header {
+    grid-column: span 3;
     padding: 0.75rem 1rem;
     margin-bottom: 1.5rem;
     border-radius: 8px;
@@ -202,19 +210,6 @@ body {
 .mode-header.bluebike h2 i {
 }
 
-/* ===== GRIDS - 3 COLUMNS EACH ===== */
-.station-grid,
-.bus-grid,
-.bluebike-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.station-grid {
-    margin-bottom: 2.5rem;
-}
 
 /* ===== STOP CARDS - BASE ===== */
 .stop-card {
@@ -461,6 +456,7 @@ body {
 
 /* ===== TIMESTAMP ===== */
 .timestamp {
+    grid-column: span 2;
     font-family: var(--font-family-mono);
     color: #505A62;
     margin-top: 1.5rem;
@@ -472,14 +468,9 @@ body {
 /* ===== RESPONSIVE BREAKPOINTS ===== */
 
 @media (max-width: 900px) {
-    .station-grid,
-    .bus-grid,
-    .bluebike-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    
     
     body {
-        padding: 1rem;
     }
     
     .stop-card h3 {
@@ -490,17 +481,12 @@ body {
 }
 
 @media (max-width: 550px) {
-    .station-grid,
-    .bus-grid,
-    .bluebike-grid {
-        grid-template-columns: 1fr;
-    }
+    
     
     .mode-header h2 {
     }
     
     .stop-card {
-        padding: 1rem;
     }
     
     .stop-location {

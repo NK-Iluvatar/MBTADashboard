@@ -8,86 +8,76 @@
 </head>
 <body>
     <div class="container">
-        <div>
-            <div>
-                <div class="path-nav">
-                    <ol>
-                        <li><a href="https://nbkelley.com/">//nbkelley </a></li>
-                        <li><a href="https://nbkelley.com/homelab/">/homelab </a><li>
-                        <li><a href="http://mbtadash.nbkelley.com">/MBTA Dashboard</a></li>
-                    </ol>
-                </div>
-                <h1> MBTA Dashboard</h1>
-                <div class="terminal-nav"><a>GitHub</a></div>
-            </div>
-            <div id="timestamp" class="timestamp"></div>
+        <div class="path-nav">
+            <ol>
+                <li><a href="https://nbkelley.com/">//nbkelley </a></li>
+                <li><a href="https://nbkelley.com/homelab/">/homelab </a><li>
+                <li><a href="http://mbtadash.nbkelley.com">/MBTA Dashboard</a></li>
+            </ol>
         </div>
+        <div>
+                <h1> MBTA Dashboard</h1>
+                <a>GitHub</a>
+        </div>
+        <div id="timestamp" class="timestamp"></div>
         
         
     <!-- Green Line Section -->
         <div class="mode-header green">
             <h2><i class="bi bi-train-front"></i> Green Line</h2>
         </div>
-        <div class="station-grid">
-            <div id="south-street" class="stop-card green-line">
+        <div id="south-street" class="stop-card green-line">
                 <h3>South Street</h3>
                 <div class="predictions"></div>
-            </div>
-            <div id="cleveland-circle" class="stop-card green-line">
+        </div>
+        <div id="cleveland-circle" class="stop-card green-line">
                 <h3>Cleveland Circle</h3>
                 <div class="predictions"></div>
-            </div>
-            <div id="reservoir" class="stop-card green-line">
+        </div>
+        <div id="reservoir" class="stop-card green-line">
                 <h3>Reservoir</h3>
                 <div class="predictions"></div>
-            </div>
         </div>
 
         <!-- Bus Section -->
         <div class="mode-header bus">
             <h2><i class="bi bi-bus-front"></i> Buses</h2>
         </div>
-        <div class="bus-grid">
-            <div id="bus-86" class="stop-card bus">
+        <div id="bus-86" class="stop-card bus">
                 <h3>Route 86</h3>
                 <div class="stop-location">Strathmore Rd & Embassy Rd</div>
                 <div class="predictions"></div>
-            </div>
-            <div id="bus-501" class="stop-card bus">
+        </div>
+        <div id="bus-501" class="stop-card bus">
                 <h3>Route 501</h3>
                 <div class="stop-location">Winship St & Waldo Terr</div>
                 <div class="predictions"></div>
-            </div>
-            <div id="bus-51" class="stop-card bus">
+        </div>
+        <div id="bus-51" class="stop-card bus">
                 <h3>Route 51</h3>
                 <div class="stop-location">Reservoir</div>
                 <div class="predictions"></div>
-            </div>
         </div>
 
         <!-- Blue Bikes Section -->
         <div class="mode-header bluebike">
             <h2><i class="bi bi-bicycle"></i> Blue Bikes</h2>
         </div>
-        <div class="bluebike-grid">
-            <div id="bluebike-ledgemere" class="stop-card bluebike">
+        <div id="bluebike-ledgemere" class="stop-card bluebike">
                 <h3>Chestnut Hill Ave</h3>
                 <div class="stop-location">at Ledgemere Rd</div>
                 <div class="predictions"></div>
-            </div>
-            <div id="bluebike-chiswick" class="stop-card bluebike">
+        </div>
+        <div id="bluebike-chiswick" class="stop-card bluebike">
                 <h3>Commonwealth Ave</h3>
                 <div class="stop-location">at Chiswick Rd</div>
                 <div class="predictions"></div>
-            </div>
-            <div id="bluebike-cleveland-circle" class="stop-card bluebike">
+        </div>
+        <div id="bluebike-cleveland-circle" class="stop-card bluebike">
                 <h3>Cleveland Circle</h3>
                 <div class="stop-location">at Beacon St</div>
                 <div class="predictions"></div>
-            </div>
         </div>
-
-        <div id="timestamp" class="timestamp"></div>
     </div>
     <script src="/app.js"></script>
 </body>
