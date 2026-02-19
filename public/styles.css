@@ -152,7 +152,6 @@ body {
 .mode-header {
     grid-column: span 3;
     padding: 0.75rem 1rem;
-    margin-bottom: 1.5rem;
     border-radius: 8px;
 }
 
@@ -459,10 +458,7 @@ body {
     grid-column: span 2;
     font-family: var(--font-family-mono);
     color: #505A62;
-    margin-top: 1.5rem;
     text-align: right;
-    border-top: 1px solid var(--mbta-warm-white-80);
-    padding-top: 1rem;
 }
 
 /* ===== RESPONSIVE BREAKPOINTS ===== */
