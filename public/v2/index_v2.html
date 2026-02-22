@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <title>MBTA Green Line & Bus & Blue Bikes Tracker</title>
+    <link rel="stylesheet" href="/styles_v2.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+    <div class="container">  <!-- Outer grid: 3 columns -->
+        <!-- Header stuff - spans all 3 columns -->
+        <div style="grid-column: span 3;">
+        </div>
+        
+        <div style="grid-column: span 1;">
+            <a href="http://princelobel.com"><img style="width:70%;" src="https://princelobel.com/wp-content/uploads/2025/07/logo.png#32762"></a>
+        </div>
+        
+        <div id="timestamp" class="timestamp" style="grid-column: span 2;"></div>
+        
+        <!-- Main container that spans all 3 columns of outer grid -->
+        <div style="grid-column: span 3; align-self: end;">
+            
+            <!-- Green Line Section - with its own 3-column grid for cards -->
+            <div id="green-section" class="section" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
+                <!-- Section header spans all 3 columns -->
+                <div class="mode-header green" style="grid-column: span 3;">
+                    <h2><i class="bi bi-train-front"></i> Green Line</h2>
+                </div>
+                
+                <!-- South Street card -->
+                <div class="stop-card green-line" id="south-street">
+                    <h3>South Street <span class="badge">Green-B</span></h3>
+                    <div class="predictions"></div>
+                </div>
+                
+                <!-- Cleveland Circle card -->
+                <div class="stop-card green-line" id="cleveland-circle">
+                    <h3>Cleveland Circle <span class="badge">Green-C</span></h3>
+                    <div class="predictions"></div>
+                </div>
+                
+                <!-- Reservoir card -->
+                <div class="stop-card green-line" id="reservoir">
+                    <h3>Reservoir <span class="badge">Green-D</span></h3>
+                    <div class="predictions"></div>
+                </div>
+            </div>
+            
+            <!-- Bus Section - with its own 3-column grid for cards -->
+            <div id="bus-section" class="section" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
+                <!-- Section header spans all 3 columns -->
+                <div class="mode-header bus" style="grid-column: span 3;">
+                    <h2><i class="bi bi-bus-front"></i> Bus</h2>
+                </div>
+                
+                <!-- Route 86 card -->
+                <div class="stop-card bus" id="bus-86">
+                    <h3>Route 86</h3>
+                    <div class="stop-location">Strathmore Rd & Embassy Rd</div>
+                    <div class="predictions"></div>
+                </div>
+                
+                <!-- Route 501 card -->
+                <div class="stop-card bus" id="bus-501">
+                    <h3>Route 501</h3>
+                    <div class="stop-location">Winship St & Waldo Terr</div>
+                    <div class="predictions"></div>
+                </div>
+                
+                <!-- Route 51 card -->
+                <div class="stop-card bus" id="bus-51">
+                    <h3>Route 51</h3>
+                    <div class="stop-location">Reservoir</div>
+                    <div class="predictions"></div>
+                </div>
+            </div>
+            
+            <!-- Blue Bikes Section - with its own 3-column grid for cards -->
+            <div id="bikes-section" class="section" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
+                <!-- Section header spans all 3 columns -->
+                <div class="mode-header bluebike" style="grid-column: span 3;">
+                    <h2><i class="bi bi-bicycle"></i> Blue Bikes</h2>
+                </div>
+                
+                <!-- Ledgemere station -->
+                <div class="stop-card bluebike" id="bluebike-ledgemere">
+                    <h3>Chestnut Hill Ave</h3>
+                    <div class="stop-location">at Ledgemere Rd</div>
+                    <div class="predictions"></div>
+                </div>
+                
+                <!-- Chiswick station -->
+                <div class="stop-card bluebike" id="bluebike-chiswick">
+                    <h3>Commonwealth Ave</h3>
+                    <div class="stop-location">at Chiswick Rd</div>
+                    <div class="predictions"></div>
+                </div>
+                
+                <!-- Cleveland Circle station -->
+                <div class="stop-card bluebike" id="bluebike-cleveland-circle">
+                    <h3>Cleveland Circle</h3>
+                    <div class="stop-location">at Beacon St</div>
+                    <div class="predictions"></div>
+                </div>
+            </div>
+            
+        </div>  <!-- End span-3 container -->
+    </div>  <!-- End outer container -->
+    
+    <script src="/app_v2.js"></script>
+</body>
+</html>
