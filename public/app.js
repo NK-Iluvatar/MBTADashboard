@@ -4,7 +4,6 @@ MBTA_API = "https://api-v3.mbta.com";
 // helper for commuter rail lines with only one service
 function crLine(elementId,routeId,destination, stopId= "place-sstat"){
   return {
-    title: "South Station — Commuter Rail",
     elementId,
     routeId,
     services: [
@@ -18,6 +17,20 @@ function crLine(elementId,routeId,destination, stopId= "place-sstat"){
   }
 }
 
+function service(routeId, directionId, stopId, destination){
+  const isBlueOrGreen = routeId === "Green" || routeId === "Blue";
+  const direction = isBlueOrGreen 
+      ? (directionId === 0 ? "Westbound" : "Eastbound")
+      : (directionId === 0 ? "Southbound" : "Northbound");
+
+  return {
+        label: `${direction} → ${destination}`,
+        directionId,
+        stopId,
+        headsignContains: destination,
+  };
+}
+
 const PANELS = [
   // South Station – Red Line
   {
@@ -25,24 +38,9 @@ const PANELS = [
     elementId: "south-station",
     routeId: "Red",
     services: [
-      {
-        label: "Southbound → Ashmont",
-        directionId: 0,
-        stopId: "place-sstat",
-        headsignContains: "Ashmont",
-      },
-      {
-        label: "Southbound → Braintree",
-        directionId: 0,
-        stopId: "place-sstat",
-        headsignContains: "Braintree",
-      },
-      {
-        label: "Northbound → Alewife",
-        directionId: 1,
-        stopId: "place-sstat",
-        headsignContains: "Alewife",
-      },
+      service("Red", 0, "place-sstat", "Ashmont"),
+      service("Red", 0, "place-sstat", "Braintree"),
+      service("Red", 1, "place-sstat", "Alewife"),
     ],
   },
 
@@ -52,18 +50,8 @@ const PANELS = [
     elementId: "state-orange",
     routeId: "Orange",
     services: [
-      {
-        label: "Southbound → Forest Hills",
-        directionId: 0,
-        stopId: "place-state",
-        headsignContains: "Forest Hills",
-      },
-      {
-        label: "Northbound → Oak Grove",
-        directionId: 1,
-        stopId: "place-state",
-        headsignContains: "Oak Grove",
-      },
+      service("Orange", 0, "place-state", "Forest Hills"),
+      service("Orange", 1, "place-state", "Oak Grove"),
     ],
   },
 
@@ -73,50 +61,68 @@ const PANELS = [
     elementId: "state-blue",
     routeId: "Blue",
     services: [
-      {
-        label: "Southbound → Bowdoin",
-        directionId: 0,
-        stopId: "place-state",
-        headsignContains: "Bowdoin",
-      },
-      {
-        label: "Northbound → Wonderland",
-        directionId: 1,
-        stopId: "place-state",
-        headsignContains: "Wonderland",
-      },
+      service("Blue", 0, "place-state", "Bowdoin"),
+      service("Blue", 1, "place-state", "Wonderland"),
     ],
   },
-  crLine("cr-south-greenbush", "CR-Greenbush", "Greenbush"),
-  //crLine("cr-south-fairmount", "CR-Fairmount", "Fairmount"),
+
+  // South Station – Commuter Rail
   {
-    title: "South Station — Commuter Rail",
+    elementId: "cr-south-greenbush",
+    routeId: "CR-Greenbush",
+    services: [
+      service("CR-Greenbush", 0, "place-sstat", "Greenbush"),
+    ],
+  },
+  {
     elementId: "cr-south-fairmount",
     routeId: "CR-Fairmount",
     services: [
-      {
-        label: "Southbound → Readville",
-        directionId: 0,
-        stopId: "place-sttat",
-        headsignContains: "Readville via Fairmount",
-      },{
-        label: "Southbound → Fairmount",
-        directionId: 0,
-        stopId: "place-sstat",
-        headsignContains: "Fairmount",
-      },
-      
+      service("CR-Fairmount", 0, "place-sstat", "Readville"),
+      service("CR-Fairmount", 0, "place-sstat", "Fairmount"),
     ],
   },
-  crLine("cr-south-newbedford", "CR-NewBedford", "New Bedford"),
-  crLine("cr-south-worcester", "CR-Worcester", "Worcester"),
-  crLine("cr-south-franklin", "CR-Franklin", "Franklin"),
+  {
+    elementId: "cr-south-newbedford",
+    routeId: "CR-NewBedford",
+    services: [
+      service("CR-NewBedford", 0, "place-sstat", "New Bedford"),
+      service("CR-NewBedford", 0, "place-sstat", "Fall River"),
+    ],
+  },
+  {
+    elementId: "cr-south-worcester",
+    routeId: "CR-Worcester",
+    services: [
+      service("CR-Worcester", 0, "place-sstat", "Worcester"),
+      service("CR-Worcester", 0, "place-sstat", "Framingham"),
+    ],
+  },
+  {
+    elementId: "cr-south-franklin",
+    routeId: "CR-Franklin",
+    services: [
+      service("CR-Franklin", 0, "place-sstat", "Foxboro"),
+      service("CR-Franklin", 0, "place-sstat", "Forge Park"),
+      service("CR-Franklin", 0, "place-sstat", "Walpole"),
+    ],
+  },
+  {
+    elementId: "cr-south-providence",
+    routeId: "CR-Providence",
+    services: [
+      service("CR-Providence", 0, "place-sstat", "Providence"),
+      service("CR-Providence", 0, "place-sstat", "Wickford"),
+      service("CR-Providence", 0, "place-sstat", "Stoughton"),
+    ],
+  },
   crLine("cr-south-kingston", "CR-Kingston", "Kingston"),
+  crLine("cr-south-needham", "CR-Needham", "Needham"),
 ];
 
 // ===================== STATE =====================
 let realtimeData = {};
-let alertData = {};
+// let alertData = {};
 
 const LIVE_ICON =
   '<i class="bi bi-broadcast-pin" style="font-size:0.9em; margin-right:4px;"></i>';
@@ -146,44 +152,47 @@ async function fetchAPI(url) {
 }
 
 // ===================== ALERTS =====================
-async function fetchAlerts() {
-  const promises = [];
-  // for each panel in PANELS
-  PANELS.forEach((panel) => {
-    // for each service in services
-    panel.services.forEach((service) => {
-      // fetch alerts given the stop
-      promises.push(
-        fetchAPI(`${MBTA_API}/alerts?filter[stop]=${service.stopId}`).then(
-          (data) => {
-            if (data?.data?.length) {
-              alertData[service.stopId] = data;
-            }
-          }
-        )
-      );
-    });
-  });
+// async function fetchAlerts() {
+//   const promises = [];
+//   // for each panel in PANELS
+//   PANELS.forEach((panel) => {
+//     // for each service in services
+//     panel.services.forEach((service) => {
+//       // fetch alerts given the stop
+//       promises.push(
+//         fetchAPI(`${MBTA_API}/alerts?filter[stop]=${service.stopId}`).then(
+//           (data) => {
+//             if (data?.data?.length) {
+//               alertData[service.stopId] ||= [];
+//               alertData[service.stopId].push(...data.data);
+//             }
+//           }
+//         )
+//       );
+//     });
+//   });
 
-  await Promise.all(promises);
-}
+//   await Promise.all(promises);
+// }
 
-function getAlertForStop(stopId, routeId) {
-  const data = alertData[stopId];
-  if (!data?.data?.length) return null;
+// function getAlertForStop(stopId, routeId) {
+//   const data = alertData[stopId];
+//   if (!data?.data?.length) return null;
 
-  const filtered = data.data.filter((alert) => {
-    const entities = alert.relationships?.informed_entity?.data || [];
-    return entities.some(
-      (e) => !routeId || (e.type === "route" && e.id === routeId)
-    );
-  });
+//   const filtered = data.data.filter((alert) => {
+//     const entities = alert.relationships?.informed_entity?.data || [];
+//     return (!routeId||
+//       entities.some(
+//       (e) => e.type === "route" && e.id === routeId)||
+//       entities.length ===0
+//     );
+//   });
 
-  if (!filtered.length) return null;
+//   if (!filtered.length) return null;
 
-  filtered.sort((a, b) => a.attributes.severity - b.attributes.severity);
-  return filtered[0];
-}
+//   filtered.sort((a, b) => a.attributes.severity - b.attributes.severity);
+//   return filtered[0];
+// }
 
 // ===================== PREDICTIONS =====================
 async function fetchRealtime() {
@@ -277,17 +286,17 @@ function renderPanel(panel) {
       );
     }
 
-    const alert = getAlertForStop(service.stopId, panel.routeId);
+    //const alert = getAlertForStop(service.stopId, panel.routeId);
 
     let html = "";
 
-    if (alert) {
-      html += `
-        <div class="alert-banner">
-          ⚠️ ${alert.attributes.header}
-        </div>
-      `;
-    }
+    // if (alert) {
+    //   html += `
+    //     <div class="alert-banner">
+    //       ⚠️ ${alert.attributes.header}
+    //     </div>
+    //   `;
+    // }
 
     if (preds.length) {
       html += `
@@ -317,7 +326,7 @@ function renderPanel(panel) {
 // ===================== UPDATE LOOP =====================
 async function updateAll() {
   await fetchRealtime();
-  await fetchAlerts();
+  // await fetchAlerts();
 
   PANELS.forEach(renderPanel);
 

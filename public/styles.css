@@ -8,6 +8,10 @@
 :root {
     /* MBTA system colors */
     --mbta-green: #00843D;
+    --mbta-red: #DA291C;
+    --mbta-blue: #003DA5;
+    --mbta-orange: #ED8B00;
+    --mbta-commuter: #80276C;
     --mbta-bus: #FFC72C;
     --mbta-bluebike: #2277B3;
     --mbta-cool-black-15: #171F26;
@@ -149,13 +153,27 @@ body {
 
 /* ===== MODE HEADERS ===== */
 .mode-header {
-    grid-column: span 3;
+    grid-column: span 1;
     padding: 0.75rem 1rem;
     border-radius: 8px;
 }
 
 .mode-header.green {
     background: var(--mbta-green);
+}
+
+.mode-header.red {
+    background: var(--mbta-red);
+}
+.mode-header.orange {
+    background: var(--mbta-orange);
+}
+.mode-header.blue {
+    background: var(--mbta-blue);
+}
+.mode-header.commuter {
+     grid-column: span 3;
+    background: var(--mbta-commuter);
 }
 
 .mode-header.bus {
@@ -186,6 +204,7 @@ body {
 .mode-header.green h2 {
     color: var(--mbta-true-white);
 }
+
 
 .mode-header.bus h2 {
     color: var(--mbta-cool-black-15);
@@ -269,6 +288,22 @@ body {
 /* ===== CARD VARIANTS ===== */
 .stop-card.green-line {
     border: 0px solid var(--mbta-green);
+    border-left-width: 4px;
+}
+.stop-card.red-line {
+    border: 0px solid var(--mbta-red);
+    border-left-width: 4px;
+}
+.stop-card.orange-line {
+    border: 0px solid var(--mbta-orange);
+    border-left-width: 4px;
+}
+.stop-card.blue-line {
+    border: 0px solid var(--mbta-blue);
+    border-left-width: 4px;
+}
+.stop-card.commuter-line {
+    border: 0px solid var(--mbta-commuter);
     border-left-width: 4px;
 }
 
@@ -503,6 +538,10 @@ body {
     
     .stop-card.bus,
     .stop-card.green-line,
+    .stop-card.red-line,
+    .stop-card.orange-line,
+    .stop-card.blue-line,
+    .stop-card.commuter-line,
     .stop-card.bluebike {
        border: 1px solid #000;
     border-left-width: 4px;
@@ -517,6 +556,10 @@ body {
     }
     
     .mode-header.green,
+    .mode-header.red,
+    .mode-header.orange,
+    .mode-header.blue,
+    .mode-header.commuter,
     .mode-header.bus,
     .mode-header.bluebike {
         background: #000 !important;
