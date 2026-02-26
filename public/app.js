@@ -1,6 +1,23 @@
 MBTA_API = "https://api-v3.mbta.com";
 
 // ===================== CONFIG =====================
+// helper for commuter rail lines with only one service
+function crLine(elementId,routeId,destination, stopId= "place-sstat"){
+  return {
+    title: "South Station — Commuter Rail",
+    elementId,
+    routeId,
+    services: [
+      {
+        label: `Southbound → ${destination}`,
+        directionId: 0,
+        stopId,
+        headsignContains: destination,
+      },
+    ],
+  }
+}
+
 const PANELS = [
   // South Station – Red Line
   {
@@ -70,6 +87,31 @@ const PANELS = [
       },
     ],
   },
+  crLine("cr-south-greenbush", "CR-Greenbush", "Greenbush"),
+  //crLine("cr-south-fairmount", "CR-Fairmount", "Fairmount"),
+  {
+    title: "South Station — Commuter Rail",
+    elementId: "cr-south-fairmount",
+    routeId: "CR-Fairmount",
+    services: [
+      {
+        label: "Southbound → Readville",
+        directionId: 0,
+        stopId: "place-sttat",
+        headsignContains: "Readville via Fairmount",
+      },{
+        label: "Southbound → Fairmount",
+        directionId: 0,
+        stopId: "place-sstat",
+        headsignContains: "Fairmount",
+      },
+      
+    ],
+  },
+  crLine("cr-south-newbedford", "CR-NewBedford", "New Bedford"),
+  crLine("cr-south-worcester", "CR-Worcester", "Worcester"),
+  crLine("cr-south-franklin", "CR-Franklin", "Franklin"),
+  crLine("cr-south-kingston", "CR-Kingston", "Kingston"),
 ];
 
 // ===================== STATE =====================
@@ -80,6 +122,7 @@ const LIVE_ICON =
   '<i class="bi bi-broadcast-pin" style="font-size:0.9em; margin-right:4px;"></i>';
 
 // ===================== HELPERS =====================
+// rounds down train departure time
 function formatTime(minutes) {
   if (minutes <= 0) return "Now";
   if (minutes < 2) return "1 min";
@@ -105,9 +148,11 @@ async function fetchAPI(url) {
 // ===================== ALERTS =====================
 async function fetchAlerts() {
   const promises = [];
-
+  // for each panel in PANELS
   PANELS.forEach((panel) => {
+    // for each service in services
     panel.services.forEach((service) => {
+      // fetch alerts given the stop
       promises.push(
         fetchAPI(`${MBTA_API}/alerts?filter[stop]=${service.stopId}`).then(
           (data) => {
@@ -147,14 +192,30 @@ async function fetchRealtime() {
   PANELS.forEach((panel) => {
     panel.services.forEach((service) => {
       const key = buildKey(panel, service);
+      const isCommuterRail = panel.routeId.startsWith("CR-")
+
+      let url;
+
+      if (isCommuterRail){
+        url=`${MBTA_API}/schedules?filter[stop]=${service.stopId}&filter[route]=${panel.routeId}&include=prediction,trip`;
+      } else{
+        url=`${MBTA_API}/predictions?filter[stop]=${service.stopId}&filter[route]=${panel.routeId}&include=trip`;
+      }
+
+      if (service.directionId !== undefined){
+          url += `&filter[direction_id]=${service.directionId}`;
+        }
 
       promises.push(
         fetchAPI(
-          `${MBTA_API}/predictions?filter[stop]=${service.stopId}&filter[route]=${panel.routeId}&filter[direction_id]=${service.directionId}&include=trip`
+          url
         ).then((data) => {
-          realtimeData[key] = data;
+          realtimeData[key] = {...data,
+            _isCommuterRail: isCommuterRail,
+          };
         })
       );
+
     });
   });
 
