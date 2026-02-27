@@ -172,39 +172,72 @@ async function fetchAPI(url) {
 
 // ===================== ALERTS =====================
 async function fetchAlerts() {
+  alertData = {};
   const promises = [];
-  STOPID.forEach((id) => {
-      // fetch alerts given the stop
-      promises.push(
-        fetchAPI(`${MBTA_API}/alerts?filter[stop]=${id}`).then(
-          (data) => {
-            if (data?.data?.length) {
-              alertData[id] ||= [];
-              alertData[id].push(...data.data);
-            }
-          },
-        ),
-      );
-    }
-  );
+  // for each panel in PANELS
+  PANELS.forEach((panel) => {
+    // for each service in services
+    promises.push(
+      fetchAPI(`${MBTA_API}/alerts?&filter[route]=${panel.routeId}`).then(
+        (data) => {
+          if (data?.data?.length) {
+            alertData[panel.routeId] = data.data;
+          }
+        },
+      ),
+    );
+  });
+
   await Promise.all(promises);
 }
 
 function getAlertForStop(stopId, routeId) {
-  const data = alertData[stopId];
-  if (!data?.data?.length) return null;
+  const alerts = alertData[stopId];
+  if (!alerts?.length) return null;
 
-  const filtered = data.data.filter((alert) => {
-    const entities = alert.informed_entity?.data || [];
-    return (!routeId||
-      entities.some(
-      (e) => e.type === "route" && e.id === routeId)||
-      entities.length ===0
+  const filtered = alerts.filter((alert) => {
+    const entities = alert.relationships?.informed_entity?.data || [];
+    return (
+      !routeId ||
+      entities.some((e) => e.type === "route" && e.id === routeId) ||
+      entities.length === 0
     );
   });
 
   if (!filtered.length) return null;
 
+  filtered.sort((a, b) => a.attributes.severity - b.attributes.severity);
+  return filtered[0];
+}
+
+function getAlertForRouteOLD(routeId) {
+  const alerts = alertData[routeId];
+  if (!alerts?.length) return null;
+  alerts.sort((a, b) => a.attributes.severity - b.attributes.severity);
+  return alerts[0];
+}
+
+function getAlertForRoute(routeId) {
+  const alerts = alertData[routeId];
+  if (!alerts?.length) return null;
+  const allowedEffects = [
+    "DELAY",
+    "CANCELLATION",
+    "SERVICE_CHANGE",
+    "NO_SERVICE",
+    "REDUCED_SERVICE",
+    "SIGNIFICANT_DELAYS",
+    "DETOUR",
+    "ADDITIONAL_SERVICE",
+    "MODIFIED_SERVICE",
+    "OTHER_EFFECT",
+    "UNKNOWN_EFFECT",
+    "STOP_MOVED",
+    "NO_EFFECT",
+  ];
+  const filtered = alerts.filter(alert =>
+    allowedEffects.includes(alert.attributes.effect)
+  ); if (!filtered.length) return null;
   filtered.sort((a, b) => a.attributes.severity - b.attributes.severity);
   return filtered[0];
 }
@@ -315,6 +348,14 @@ function renderPanel(panel) {
   if (!predContainer) return;
 
   predContainer.innerHTML = ""; // clear once
+  const alert = getAlertForRoute(panel.routeId);
+    if (alert) {
+      predContainer.innerHTML += `
+        <div class="alert-banner">
+          ⚠️ ${alert.attributes.header}
+        </div>
+      `;
+    }
 
   panel.services.forEach((service) => {
     const key = buildKey(panel, service);
@@ -327,19 +368,7 @@ function renderPanel(panel) {
           .includes(service.headsignContains.toLowerCase()),
       );
     }
-
-    const alert = getAlertForStop(service.stopId, panel.routeId);
-    console.log(alert);
-
     let html = "";
-
-    if (alert) {
-      html += `
-        <div class="alert-banner">
-          ⚠️ ${alert.attributes.header}
-        </div>
-      `;
-    }
 
     if (preds.length) {
       html += `
