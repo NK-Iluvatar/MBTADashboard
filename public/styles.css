@@ -172,7 +172,7 @@ body {
     background: var(--mbta-blue);
 }
 .mode-header.commuter {
-     grid-column: span 3;
+    grid-column: span 3;
     background: var(--mbta-commuter);
 }
 
@@ -408,7 +408,8 @@ body {
 }
 /* ===== WEATHER ===== */
 .weather-box {
-    color:pink;
+    grid-column: span 3;
+    color:blue;
     text-align: center;
     min-width: 120px;
 }
@@ -419,6 +420,10 @@ body {
 
 .weather-desc {
     font-size: 24px;
+}
+
+.weather-detail{
+    font-size: 12px;
 }
 
 

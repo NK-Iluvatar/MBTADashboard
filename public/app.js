@@ -2,17 +2,21 @@ MBTA_API = "https://api-v3.mbta.com";
 
 // ===================== CONFIG =====================
 // helper services in lines
-function service(routeId, directionId, stopId, destination){
+function service(routeId, directionId, stopId, destination) {
   const isBlueOrGreen = routeId === "Green" || routeId === "Blue";
-  const direction = isBlueOrGreen 
-      ? (directionId === 0 ? "Westbound" : "Eastbound")
-      : (directionId === 0 ? "Southbound" : "Northbound");
+  const direction = isBlueOrGreen
+    ? directionId === 0
+      ? "Westbound"
+      : "Eastbound"
+    : directionId === 0
+      ? "Southbound"
+      : "Northbound";
 
   return {
-        label: `${direction} → ${destination}`,
-        directionId,
-        stopId,
-        headsignContains: destination,
+    label: `${direction} → ${destination}`,
+    directionId,
+    stopId,
+    headsignContains: destination,
   };
 }
 
@@ -55,9 +59,7 @@ const PANELS = [
   {
     elementId: "cr-south-greenbush",
     routeId: "CR-Greenbush",
-    services: [
-      service("CR-Greenbush", 0, "place-sstat", "Greenbush"),
-    ],
+    services: [service("CR-Greenbush", 0, "place-sstat", "Greenbush")],
   },
   {
     elementId: "cr-south-fairmount",
@@ -104,24 +106,24 @@ const PANELS = [
   {
     elementId: "cr-south-kingston",
     routeId: "CR-Kingston",
-    services: [
-      service("CR-Kingston", 0, "place-sstat", "Kingston"),
-    ],
+    services: [service("CR-Kingston", 0, "place-sstat", "Kingston")],
   },
   {
     elementId: "cr-south-needham",
     routeId: "CR-Needham",
-    services: [
-      service("CR-Needham", 0, "place-sstat", "Needham"),
-    ],
+    services: [service("CR-Needham", 0, "place-sstat", "Needham")],
   },
 ];
 
+const STOPID = [{ stopId: "place-sstat" }, { stopId: "place-state" }];
+
 // ===================== STATE =====================
 let realtimeData = {};
-// let alertData = {};
+let alertData = {};
 let cacheWeather = null;
+let detailedWeather = null;
 let lastWeatherFetch = 0;
+let lastHourlyFetch = 0;
 
 const LIVE_ICON =
   '<i class="bi bi-broadcast-pin" style="font-size:0.9em; margin-right:4px;"></i>';
@@ -132,10 +134,9 @@ function formatTime(minutes) {
   if (minutes <= 0) return "Now";
   if (minutes < 2) return `${Math.floor(minutes)} min`;
 
-  const h = Math.floor(minutes/60);
-  const m = Math.floor(minutes%60);
-  return h ? `${h}h ${m}m` :`${m} min`
-
+  const h = Math.floor(minutes / 60);
+  const m = Math.floor(minutes % 60);
+  return h ? `${h}h ${m}m` : `${m} min`;
 }
 
 function buildKey(panel, service) {
@@ -145,22 +146,22 @@ function buildKey(panel, service) {
 async function fetchAPI(url) {
   try {
     // If it's an MBTA API call, proxy it through your worker
-        if (url.includes('api-v3.mbta.com')) {
-            const urlObj = new URL(url);
-            const proxyUrl = `/api/mbta${urlObj.pathname}${urlObj.search}`;
-            const res = await fetch(proxyUrl);
-            return await res.json();
-        }
-        // For other APIs (Blue Bikes), use proxy too
-        if (url.includes('api.weather.gov')) {
-            const res = await fetch(url, {
-              headers: {
-                "User-Agent": "MBTADashboard/1.0 (bnguyen@princelobel.com)",
-                "Accept": "application/geo+json",
-              }
-            });
-            return await res.json();
-        }
+    if (url.includes("api-v3.mbta.com")) {
+      const urlObj = new URL(url);
+      const proxyUrl = `/api/mbta${urlObj.pathname}${urlObj.search}`;
+      const res = await fetch(proxyUrl);
+      return await res.json();
+    }
+    // For other APIs (Blue Bikes), use proxy too
+    if (url.includes("api.weather.gov")) {
+      const res = await fetch(url, {
+        headers: {
+          "User-Agent": "MBTADashboard/1.0 (bnguyen@princelobel.com)",
+          Accept: "application/geo+json",
+        },
+      });
+      return await res.json();
+    }
     const res = await fetch(url);
     return await res.json();
   } catch (e) {
@@ -170,47 +171,43 @@ async function fetchAPI(url) {
 }
 
 // ===================== ALERTS =====================
-// async function fetchAlerts() {
-//   const promises = [];
-//   // for each panel in PANELS
-//   PANELS.forEach((panel) => {
-//     // for each service in services
-//     panel.services.forEach((service) => {
-//       // fetch alerts given the stop
-//       promises.push(
-//         fetchAPI(`${MBTA_API}/alerts?filter[stop]=${service.stopId}`).then(
-//           (data) => {
-//             if (data?.data?.length) {
-//               alertData[service.stopId] ||= [];
-//               alertData[service.stopId].push(...data.data);
-//             }
-//           }
-//         )
-//       );
-//     });
-//   });
+async function fetchAlerts() {
+  const promises = [];
+  STOPID.forEach((id) => {
+      // fetch alerts given the stop
+      promises.push(
+        fetchAPI(`${MBTA_API}/alerts?filter[stop]=${id}`).then(
+          (data) => {
+            if (data?.data?.length) {
+              alertData[id] ||= [];
+              alertData[id].push(...data.data);
+            }
+          },
+        ),
+      );
+    }
+  );
+  await Promise.all(promises);
+}
 
-//   await Promise.all(promises);
-// }
+function getAlertForStop(stopId, routeId) {
+  const data = alertData[stopId];
+  if (!data?.data?.length) return null;
 
-// function getAlertForStop(stopId, routeId) {
-//   const data = alertData[stopId];
-//   if (!data?.data?.length) return null;
+  const filtered = data.data.filter((alert) => {
+    const entities = alert.informed_entity?.data || [];
+    return (!routeId||
+      entities.some(
+      (e) => e.type === "route" && e.id === routeId)||
+      entities.length ===0
+    );
+  });
 
-//   const filtered = data.data.filter((alert) => {
-//     const entities = alert.relationships?.informed_entity?.data || [];
-//     return (!routeId||
-//       entities.some(
-//       (e) => e.type === "route" && e.id === routeId)||
-//       entities.length ===0
-//     );
-//   });
+  if (!filtered.length) return null;
 
-//   if (!filtered.length) return null;
-
-//   filtered.sort((a, b) => a.attributes.severity - b.attributes.severity);
-//   return filtered[0];
-// }
+  filtered.sort((a, b) => a.attributes.severity - b.attributes.severity);
+  return filtered[0];
+}
 
 // ===================== PREDICTIONS =====================
 async function fetchRealtime() {
@@ -219,49 +216,59 @@ async function fetchRealtime() {
   PANELS.forEach((panel) => {
     panel.services.forEach((service) => {
       const key = buildKey(panel, service);
-      const isCommuterRail = panel.routeId.startsWith("CR-")
+      const isCommuterRail = panel.routeId.startsWith("CR-");
 
       let url;
 
-      if (isCommuterRail){
-        url=`${MBTA_API}/schedules?filter[stop]=${service.stopId}&filter[route]=${panel.routeId}&include=prediction,trip`;
-      } else{
-        url=`${MBTA_API}/predictions?filter[stop]=${service.stopId}&filter[route]=${panel.routeId}&include=trip`;
+      if (isCommuterRail) {
+        url = `${MBTA_API}/schedules?filter[stop]=${service.stopId}&filter[route]=${panel.routeId}&include=prediction,trip`;
+      } else {
+        url = `${MBTA_API}/predictions?filter[stop]=${service.stopId}&filter[route]=${panel.routeId}&include=trip`;
       }
 
-      if (service.directionId !== undefined){
-          url += `&filter[direction_id]=${service.directionId}`;
-        }
+      if (service.directionId !== undefined) {
+        url += `&filter[direction_id]=${service.directionId}`;
+      }
 
       promises.push(
-        fetchAPI(
-          url
-        ).then((data) => {
-          realtimeData[key] = {...data,
-            _isCommuterRail: isCommuterRail,
-          };
-        })
+        fetchAPI(url).then((data) => {
+          realtimeData[key] = { ...data, _isCommuterRail: isCommuterRail };
+        }),
       );
-
     });
   });
 
   await Promise.all(promises);
 }
 
-async function fetchHourlyForecast(){
+async function fetchHourlyForecast() {
   const now = Date.now();
   // fetch weather every 10 mins
-  if(cacheWeather && now - lastWeatherFetch<10*60000){
+  if (cacheWeather && now - lastWeatherFetch < 10 * 60000) {
     return cacheWeather;
   }
 
   const url = "https://api.weather.gov/gridpoints/BOX/72,90/forecast/hourly";
   const data = await fetchAPI(url);
   cacheWeather = data?.properties?.periods ?? [];
-  lastWeatherFetch=now;
+  lastWeatherFetch = now;
 
   return cacheWeather;
+}
+
+async function fetchDeatailedForecast() {
+  const now = Date.now();
+  // fetch weather every 10 mins
+  if (detailedWeather && now - lastHourlyFetch < 10 * 60000) {
+    return detailedWeather;
+  }
+
+  const url = "https://api.weather.gov/gridpoints/BOX/72,90/forecast";
+  const data = await fetchAPI(url);
+  detailedWeather = data?.properties?.periods ?? [];
+  lastHourlyFetch = now;
+
+  return detailedWeather;
 }
 
 function getPredictions(data) {
@@ -317,21 +324,22 @@ function renderPanel(panel) {
       preds = preds.filter((p) =>
         p.headsign
           .toLowerCase()
-          .includes(service.headsignContains.toLowerCase())
+          .includes(service.headsignContains.toLowerCase()),
       );
     }
 
-    //const alert = getAlertForStop(service.stopId, panel.routeId);
+    const alert = getAlertForStop(service.stopId, panel.routeId);
+    console.log(alert);
 
     let html = "";
 
-    // if (alert) {
-    //   html += `
-    //     <div class="alert-banner">
-    //       ⚠️ ${alert.attributes.header}
-    //     </div>
-    //   `;
-    // }
+    if (alert) {
+      html += `
+        <div class="alert-banner">
+          ⚠️ ${alert.attributes.header}
+        </div>
+      `;
+    }
 
     if (preds.length) {
       html += `
@@ -358,27 +366,31 @@ function renderPanel(panel) {
   }
 }
 
-function renderWeather(){
+function renderWeather() {
   const container = document.getElementById("weather-box");
-  if (!container || !lastWeatherFetch?.length) return;
+  if (!container || !cacheWeather?.length || !detailedWeather?.length) return;
 
-  const current = weatherData[0];
+  const current = cacheWeather[0];
+  const currentDeatailed = detailedWeather[0];
   const tempF = current.temperature;
   const description = current.shortForecast;
-  console.log(tempF);
+  const detailedDesc = currentDeatailed.detailedForecast;
+  console.log(detailedDesc);
 
-  containner.innerHTML = `
+  container.innerHTML = `
     <div class="weather-content">
         <div class="weather-temp">${tempF} </div>
         <div class="weather-desc">${description}</div> 
-    </div>`
+        <div class="weather-detail">${detailedDesc}</div> 
+    </div>`;
 }
 
 // ===================== UPDATE LOOP =====================
 async function updateAll() {
   await fetchRealtime();
-  // await fetchAlerts();
+  await fetchAlerts();
   await fetchHourlyForecast();
+  await fetchDeatailedForecast();
 
   PANELS.forEach(renderPanel);
   renderWeather();
