@@ -1,22 +1,7 @@
 MBTA_API = "https://api-v3.mbta.com";
 
 // ===================== CONFIG =====================
-// helper for commuter rail lines with only one service
-function crLine(elementId,routeId,destination, stopId= "place-sstat"){
-  return {
-    elementId,
-    routeId,
-    services: [
-      {
-        label: `Southbound → ${destination}`,
-        directionId: 0,
-        stopId,
-        headsignContains: destination,
-      },
-    ],
-  }
-}
-
+// helper services in lines
 function service(routeId, directionId, stopId, destination){
   const isBlueOrGreen = routeId === "Green" || routeId === "Blue";
   const direction = isBlueOrGreen 
@@ -116,13 +101,27 @@ const PANELS = [
       service("CR-Providence", 0, "place-sstat", "Stoughton"),
     ],
   },
-  crLine("cr-south-kingston", "CR-Kingston", "Kingston"),
-  crLine("cr-south-needham", "CR-Needham", "Needham"),
+  {
+    elementId: "cr-south-kingston",
+    routeId: "CR-Kingston",
+    services: [
+      service("CR-Kingston", 0, "place-sstat", "Kingston"),
+    ],
+  },
+  {
+    elementId: "cr-south-needham",
+    routeId: "CR-Needham",
+    services: [
+      service("CR-Needham", 0, "place-sstat", "Needham"),
+    ],
+  },
 ];
 
 // ===================== STATE =====================
 let realtimeData = {};
 // let alertData = {};
+let cacheWeather = null;
+let lastWeatherFetch = 0;
 
 const LIVE_ICON =
   '<i class="bi bi-broadcast-pin" style="font-size:0.9em; margin-right:4px;"></i>';
@@ -131,8 +130,12 @@ const LIVE_ICON =
 // rounds down train departure time
 function formatTime(minutes) {
   if (minutes <= 0) return "Now";
-  if (minutes < 2) return "1 min";
-  return `${Math.floor(minutes)} min`;
+  if (minutes < 2) return `${Math.floor(minutes)} min`;
+
+  const h = Math.floor(minutes/60);
+  const m = Math.floor(minutes%60);
+  return h ? `${h}h ${m}m` :`${m} min`
+
 }
 
 function buildKey(panel, service) {
@@ -141,9 +144,24 @@ function buildKey(panel, service) {
 
 async function fetchAPI(url) {
   try {
-    const urlObj = new URL(url);
-    const proxyUrl = `/api/mbta${urlObj.pathname}${urlObj.search}`;
-    const res = await fetch(proxyUrl);
+    // If it's an MBTA API call, proxy it through your worker
+        if (url.includes('api-v3.mbta.com')) {
+            const urlObj = new URL(url);
+            const proxyUrl = `/api/mbta${urlObj.pathname}${urlObj.search}`;
+            const res = await fetch(proxyUrl);
+            return await res.json();
+        }
+        // For other APIs (Blue Bikes), use proxy too
+        if (url.includes('api.weather.gov')) {
+            const res = await fetch(url, {
+              headers: {
+                "User-Agent": "MBTADashboard/1.0 (bnguyen@princelobel.com)",
+                "Accept": "application/geo+json",
+              }
+            });
+            return await res.json();
+        }
+    const res = await fetch(url);
     return await res.json();
   } catch (e) {
     console.error("Fetch error:", e);
@@ -231,6 +249,21 @@ async function fetchRealtime() {
   await Promise.all(promises);
 }
 
+async function fetchHourlyForecast(){
+  const now = Date.now();
+  // fetch weather every 10 mins
+  if(cacheWeather && now - lastWeatherFetch<10*60000){
+    return cacheWeather;
+  }
+
+  const url = "https://api.weather.gov/gridpoints/BOX/72,90/forecast/hourly";
+  const data = await fetchAPI(url);
+  cacheWeather = data?.properties?.periods ?? [];
+  lastWeatherFetch=now;
+
+  return cacheWeather;
+}
+
 function getPredictions(data) {
   if (!data?.data) return [];
 
@@ -248,7 +281,9 @@ function getPredictions(data) {
     if (!timeStr) return;
 
     const minutes = (new Date(timeStr) - now) / 60000;
-    if (minutes < -1 || minutes > 120) return;
+    if (minutes < -1 || minutes > 180) return;
+
+    console.log(now.toLocaleTimeString());
 
     const tripId = item.relationships?.trip?.data?.id;
     const headsign = trips[tripId]?.headsign;
@@ -323,12 +358,30 @@ function renderPanel(panel) {
   }
 }
 
+function renderWeather(){
+  const container = document.getElementById("weather-box");
+  if (!container || !lastWeatherFetch?.length) return;
+
+  const current = weatherData[0];
+  const tempF = current.temperature;
+  const description = current.shortForecast;
+  console.log(tempF);
+
+  containner.innerHTML = `
+    <div class="weather-content">
+        <div class="weather-temp">${tempF} </div>
+        <div class="weather-desc">${description}</div> 
+    </div>`
+}
+
 // ===================== UPDATE LOOP =====================
 async function updateAll() {
   await fetchRealtime();
   // await fetchAlerts();
+  await fetchHourlyForecast();
 
   PANELS.forEach(renderPanel);
+  renderWeather();
 
   const ts = document.getElementById("timestamp");
   if (ts) ts.textContent = new Date().toLocaleTimeString();

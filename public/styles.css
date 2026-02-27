@@ -406,6 +406,22 @@ body {
 .bi {
     padding-right: 0.4rem;
 }
+/* ===== WEATHER ===== */
+.weather-box {
+    color:pink;
+    text-align: center;
+    min-width: 120px;
+}
+
+.weather-temp {
+    font-size: 48px;
+}
+
+.weather-desc {
+    font-size: 24px;
+}
+
+
 
 /* ===== BLUE BIKES - BIKE ROWS ===== */
 .bike-stats {
