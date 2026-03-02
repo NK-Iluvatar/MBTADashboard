@@ -6,6 +6,10 @@
     <title>MBTA Green Line & Bus & Blue Bikes Tracker</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
 </head>
 <body>
     <div class="container">
@@ -36,33 +40,29 @@
         <!-- ================= RED LINE ================= -->
 
         <div id="weather-box" class="weather-box"></div>
-
         
-        <div class="mode-header red">
-                <h2><i class="bi bi-train-front"></i> Red Line</h2>
-        </div>
-        <div class="mode-header orange">
-                <h2><i class="bi bi-train-front"></i> Orange Line</h2>
-        </div>
-        <div class="mode-header blue">
-                <h2><i class="bi bi-train-front"></i> Blue Line</h2>
-        </div>
     
         <div id="south-station" class="stop-card red-line">
-                <h3>South Station</h3>
+                <div class="mode-header red">
+                <h2><i class="bi bi-train-front"></i> Red Line - South Station</h2>
+                </div>
                 <div class="predictions"></div>
         </div>
 
         
 
         <div id="state-orange" class="stop-card orange-line">
-                <h3>State Station</h3>
+                <div class="mode-header orange">
+                <h2><i class="bi bi-train-front"></i> Orange Line - State Station</h2>
+                </div>
                 <div class="predictions"></div>
         </div>
 
 
         <div id="state-blue" class="stop-card blue-line">
-                <h3>State Station</h3>
+                <div class="mode-header blue">
+                <h2><i class="bi bi-train-front"></i> Blue Line - State Station</h2>
+                </div>
                 <div class="predictions"></div>
         </div>
 

@@ -234,10 +234,12 @@ function getAlertForRoute(routeId) {
     "UNKNOWN_EFFECT",
     "STOP_MOVED",
     "NO_EFFECT",
+    "SHUTTLE",
   ];
-  const filtered = alerts.filter(alert =>
-    allowedEffects.includes(alert.attributes.effect)
-  ); if (!filtered.length) return null;
+  const filtered = alerts.filter((alert) =>
+    allowedEffects.includes(alert.attributes.effect),
+  );
+  if (!filtered.length) return null;
   filtered.sort((a, b) => a.attributes.severity - b.attributes.severity);
   return filtered[0];
 }
@@ -349,13 +351,13 @@ function renderPanel(panel) {
 
   predContainer.innerHTML = ""; // clear once
   const alert = getAlertForRoute(panel.routeId);
-    if (alert) {
-      predContainer.innerHTML += `
+  if (alert) {
+    predContainer.innerHTML += `
         <div class="alert-banner">
           ⚠️ ${alert.attributes.header}
         </div>
       `;
-    }
+  }
 
   panel.services.forEach((service) => {
     const key = buildKey(panel, service);
@@ -407,11 +409,20 @@ function renderWeather() {
   console.log(detailedDesc);
 
   container.innerHTML = `
-    <div class="weather-content">
-        <div class="weather-temp">${tempF} </div>
-        <div class="weather-desc">${description}</div> 
-        <div class="weather-detail">${detailedDesc}</div> 
-    </div>`;
+  <div class="weather-content">
+    <div class="weather-left">
+      <div class="weather-desc">${description}</div>
+      <img class="weather-icon" src="${current.icon}" alt="${description}">
+      <div class="weather-detail">${detailedDesc}</div> 
+    </div>
+
+    <div class="weather-right">
+      <div class="weather-temp">${tempF}°F</div>
+      <div class="weather-location">Boston, MA</div>
+      <div class="weather-date">${new Date().toLocaleDateString()}</div>
+    </div>
+  </div>
+`;
 }
 
 // ===================== UPDATE LOOP =====================
