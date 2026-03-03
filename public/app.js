@@ -1,7 +1,14 @@
 MBTA_API = "https://api-v3.mbta.com";
 
 // ===================== CONFIG =====================
-// helper services in lines
+/**
+ * Creates a service object, given route, direction, stop, and destination.
+ * @param {*} routeId - Name of line ("Red," "Blue," "CR-Greenbush")
+ * @param {*} directionId - Direction of service (0 OR 1)
+ * @param {*} stopId - Depature stop (ex: "place-sstat," "place-state")
+ * @param {*} destination - Last stop (ex: "Alewife," "Oak Grove")
+ * @returns The service structure.
+ */
 function service(routeId, directionId, stopId, destination) {
   const isBlueOrGreen = routeId === "Green" || routeId === "Blue";
   const direction = isBlueOrGreen
@@ -20,11 +27,14 @@ function service(routeId, directionId, stopId, destination) {
   };
 }
 
+/**
+ * Panels concist of train lines and their services.
+ */
 const PANELS = [
   // South Station – Red Line
   {
     title: "South Station — Red Line",
-    elementId: "south-station",
+    elementId: "south-station-red",
     routeId: "Red",
     services: [
       service("Red", 0, "place-sstat", "Ashmont"),
@@ -36,7 +46,7 @@ const PANELS = [
   // State Station – Orange Line
   {
     title: "State Station — Orange Line",
-    elementId: "state-orange",
+    elementId: "state-station-orange",
     routeId: "Orange",
     services: [
       service("Orange", 0, "place-state", "Forest Hills"),
@@ -47,7 +57,7 @@ const PANELS = [
   // State Station – Blue Line
   {
     title: "State Station — Blue Line",
-    elementId: "state-blue",
+    elementId: "state-station-blue",
     routeId: "Blue",
     services: [
       service("Blue", 0, "place-state", "Bowdoin"),
@@ -57,12 +67,12 @@ const PANELS = [
 
   // South Station – Commuter Rail
   {
-    elementId: "cr-south-greenbush",
+    elementId: "south-station-cr-greenbush",
     routeId: "CR-Greenbush",
     services: [service("CR-Greenbush", 0, "place-sstat", "Greenbush")],
   },
   {
-    elementId: "cr-south-fairmount",
+    elementId: "south-station-cr-fairmount",
     routeId: "CR-Fairmount",
     services: [
       service("CR-Fairmount", 0, "place-sstat", "Readville"),
@@ -70,7 +80,7 @@ const PANELS = [
     ],
   },
   {
-    elementId: "cr-south-newbedford",
+    elementId: "south-station-cr-newbedford",
     routeId: "CR-NewBedford",
     services: [
       service("CR-NewBedford", 0, "place-sstat", "New Bedford"),
@@ -78,7 +88,7 @@ const PANELS = [
     ],
   },
   {
-    elementId: "cr-south-worcester",
+    elementId: "south-station-cr-worcester",
     routeId: "CR-Worcester",
     services: [
       service("CR-Worcester", 0, "place-sstat", "Worcester"),
@@ -86,7 +96,7 @@ const PANELS = [
     ],
   },
   {
-    elementId: "cr-south-franklin",
+    elementId: "south-station-cr-franklin",
     routeId: "CR-Franklin",
     services: [
       service("CR-Franklin", 0, "place-sstat", "Foxboro"),
@@ -95,7 +105,7 @@ const PANELS = [
     ],
   },
   {
-    elementId: "cr-south-providence",
+    elementId: "south-station-cr-providence",
     routeId: "CR-Providence",
     services: [
       service("CR-Providence", 0, "place-sstat", "Providence"),
@@ -104,12 +114,12 @@ const PANELS = [
     ],
   },
   {
-    elementId: "cr-south-kingston",
+    elementId: "south-station-cr-kingston",
     routeId: "CR-Kingston",
     services: [service("CR-Kingston", 0, "place-sstat", "Kingston")],
   },
   {
-    elementId: "cr-south-needham",
+    elementId: "south-station-cr-needham",
     routeId: "CR-Needham",
     services: [service("CR-Needham", 0, "place-sstat", "Needham")],
   },
