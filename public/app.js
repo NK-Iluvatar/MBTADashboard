@@ -1,424 +1,508 @@
-MBTA_API = "https://api-v3.mbta.com";
-
 // ===================== CONFIG =====================
 /**
- * Creates a service object, given route, direction, stop, and destination.
- * @param {*} routeId - Name of line ("Red," "Blue," "CR-Greenbush")
+ * Creates a service object.
+ * @param {*} routeId - Name of line ("Red" "CR-Greenbush")
  * @param {*} directionId - Direction of service (0 OR 1)
- * @param {*} stopId - Depature stop (ex: "place-sstat," "place-state")
- * @param {*} destination - Last stop (ex: "Alewife," "Oak Grove")
+ * @param {*} stopId - Depature stop (ex: "place-sstat")
+ * @param {*} destination - Last stop (ex: "Alewife")
  * @returns The service structure.
  */
 function service(routeId, directionId, stopId, destination) {
-  const isBlueOrGreen = routeId === "Green" || routeId === "Blue";
-  const direction = isBlueOrGreen
-    ? directionId === 0
-      ? "Westbound"
-      : "Eastbound"
-    : directionId === 0
-      ? "Southbound"
-      : "Northbound";
+    const isBlueOrGreen = routeId === "Green" || routeId === "Blue";
+    const direction = isBlueOrGreen
+        ? directionId === 0
+            ? "Westbound"
+            : "Eastbound"
+        : directionId === 0
+          ? "Southbound"
+          : "Northbound";
 
-  return {
-    label: `${direction} → ${destination}`,
-    directionId,
-    stopId,
-    headsignContains: destination,
-  };
+    return {
+        label: `${direction} → ${destination}`,
+        directionId,
+        stopId,
+        headsignContains: destination,
+    };
 }
 
 /**
  * Panels concist of train lines and their services.
  */
 const PANELS = [
-  // South Station – Red Line
-  {
-    title: "South Station — Red Line",
-    elementId: "south-station-red",
-    routeId: "Red",
-    services: [
-      service("Red", 0, "place-sstat", "Ashmont"),
-      service("Red", 0, "place-sstat", "Braintree"),
-      service("Red", 1, "place-sstat", "Alewife"),
-    ],
-  },
+    // South Station – Red Line
+    {
+        elementId: "south-station-red",
+        routeId: "Red",
+        services: [
+            service("Red", 0, "place-sstat", "Ashmont"),
+            service("Red", 0, "place-sstat", "Braintree"),
+            service("Red", 1, "place-sstat", "Alewife"),
+        ],
+    },
 
-  // State Station – Orange Line
-  {
-    title: "State Station — Orange Line",
-    elementId: "state-station-orange",
-    routeId: "Orange",
-    services: [
-      service("Orange", 0, "place-state", "Forest Hills"),
-      service("Orange", 1, "place-state", "Oak Grove"),
-    ],
-  },
+    // State Station – Orange Line
+    {
+        elementId: "state-station-orange",
+        routeId: "Orange",
+        services: [
+            service("Orange", 0, "place-state", "Forest Hills"),
+            service("Orange", 1, "place-state", "Oak Grove"),
+        ],
+    },
 
-  // State Station – Blue Line
-  {
-    title: "State Station — Blue Line",
-    elementId: "state-station-blue",
-    routeId: "Blue",
-    services: [
-      service("Blue", 0, "place-state", "Bowdoin"),
-      service("Blue", 1, "place-state", "Wonderland"),
-    ],
-  },
+    // State Station – Blue Line
+    {
+        elementId: "state-station-blue",
+        routeId: "Blue",
+        services: [
+            service("Blue", 0, "place-state", "Bowdoin"),
+            service("Blue", 1, "place-state", "Wonderland"),
+        ],
+    },
 
-  // South Station – Commuter Rail
-  {
-    elementId: "south-station-cr-greenbush",
-    routeId: "CR-Greenbush",
-    services: [service("CR-Greenbush", 0, "place-sstat", "Greenbush")],
-  },
-  {
-    elementId: "south-station-cr-fairmount",
-    routeId: "CR-Fairmount",
-    services: [
-      service("CR-Fairmount", 0, "place-sstat", "Readville"),
-      service("CR-Fairmount", 0, "place-sstat", "Fairmount"),
-    ],
-  },
-  {
-    elementId: "south-station-cr-newbedford",
-    routeId: "CR-NewBedford",
-    services: [
-      service("CR-NewBedford", 0, "place-sstat", "New Bedford"),
-      service("CR-NewBedford", 0, "place-sstat", "Fall River"),
-    ],
-  },
-  {
-    elementId: "south-station-cr-worcester",
-    routeId: "CR-Worcester",
-    services: [
-      service("CR-Worcester", 0, "place-sstat", "Worcester"),
-      service("CR-Worcester", 0, "place-sstat", "Framingham"),
-    ],
-  },
-  {
-    elementId: "south-station-cr-franklin",
-    routeId: "CR-Franklin",
-    services: [
-      service("CR-Franklin", 0, "place-sstat", "Foxboro"),
-      service("CR-Franklin", 0, "place-sstat", "Forge Park"),
-      service("CR-Franklin", 0, "place-sstat", "Walpole"),
-    ],
-  },
-  {
-    elementId: "south-station-cr-providence",
-    routeId: "CR-Providence",
-    services: [
-      service("CR-Providence", 0, "place-sstat", "Providence"),
-      service("CR-Providence", 0, "place-sstat", "Wickford"),
-      service("CR-Providence", 0, "place-sstat", "Stoughton"),
-    ],
-  },
-  {
-    elementId: "south-station-cr-kingston",
-    routeId: "CR-Kingston",
-    services: [service("CR-Kingston", 0, "place-sstat", "Kingston")],
-  },
-  {
-    elementId: "south-station-cr-needham",
-    routeId: "CR-Needham",
-    services: [service("CR-Needham", 0, "place-sstat", "Needham")],
-  },
+    // South Station – Commuter Rail
+    {
+        elementId: "south-station-cr-greenbush",
+        routeId: "CR-Greenbush",
+        services: [service("CR-Greenbush", 0, "place-sstat", "Greenbush")],
+    },
+    {
+        elementId: "south-station-cr-fairmount",
+        routeId: "CR-Fairmount",
+        services: [
+            service("CR-Fairmount", 0, "place-sstat", "Readville"),
+            service("CR-Fairmount", 0, "place-sstat", "Fairmount"),
+        ],
+    },
+    {
+        elementId: "south-station-cr-newbedford",
+        routeId: "CR-NewBedford",
+        services: [
+            service("CR-NewBedford", 0, "place-sstat", "New Bedford"),
+            service("CR-NewBedford", 0, "place-sstat", "Fall River"),
+        ],
+    },
+    {
+        elementId: "south-station-cr-worcester",
+        routeId: "CR-Worcester",
+        services: [
+            service("CR-Worcester", 0, "place-sstat", "Worcester"),
+            service("CR-Worcester", 0, "place-sstat", "Framingham"),
+        ],
+    },
+    {
+        elementId: "south-station-cr-franklin",
+        routeId: "CR-Franklin",
+        services: [
+            service("CR-Franklin", 0, "place-sstat", "Foxboro"),
+            service("CR-Franklin", 0, "place-sstat", "Forge Park"),
+            service("CR-Franklin", 0, "place-sstat", "Walpole"),
+        ],
+    },
+    {
+        elementId: "south-station-cr-providence",
+        routeId: "CR-Providence",
+        services: [
+            service("CR-Providence", 0, "place-sstat", "Providence"),
+            service("CR-Providence", 0, "place-sstat", "Wickford"),
+            service("CR-Providence", 0, "place-sstat", "Stoughton"),
+        ],
+    },
+    {
+        elementId: "south-station-cr-kingston",
+        routeId: "CR-Kingston",
+        services: [service("CR-Kingston", 0, "place-sstat", "Kingston")],
+    },
+    {
+        elementId: "south-station-cr-needham",
+        routeId: "CR-Needham",
+        services: [service("CR-Needham", 0, "place-sstat", "Needham")],
+    },
 ];
 
+/** Relevant STOPS */
 const STOPID = [{ stopId: "place-sstat" }, { stopId: "place-state" }];
 
 // ===================== STATE =====================
+/** MBTA Data */
 let realtimeData = {};
 let alertData = {};
+
+/** NWS Data */
 let cacheWeather = null;
 let detailedWeather = null;
 let lastWeatherFetch = 0;
 let lastHourlyFetch = 0;
 
 const LIVE_ICON =
-  '<i class="bi bi-broadcast-pin" style="font-size:0.9em; margin-right:4px;"></i>';
+    '<i class="bi bi-broadcast-pin" style="font-size:0.9em; margin-right:4px;"></i>';
+
+const SCHEDULE_ICON = '<i class="bi bi-calendar-date"></i>';
 
 // ===================== HELPERS =====================
-// rounds down train departure time
+/**
+ * Formats minutes to hour and minutes.
+ * @param {*} minutes - total minutes
+ * @returns total time in hour and minutes.
+ */
 function formatTime(minutes) {
-  if (minutes <= 0) return "Now";
-  if (minutes < 2) return `${Math.floor(minutes)} min`;
+    if (minutes <= 1) return "Now";
 
-  const h = Math.floor(minutes / 60);
-  const m = Math.floor(minutes % 60);
-  return h ? `${h}h ${m}m` : `${m} min`;
+    const h = Math.floor(minutes / 60);
+    const m = Math.floor(minutes % 60);
+    return h ? `${h}h ${m}m` : `${m} min`;
 }
 
+/**
+ * Builds a key to store and retrieve data recieved from mbta api
+ * @param {*} panel
+ * @param {*} service
+ * @returns the unique key
+ */
 function buildKey(panel, service) {
-  return `${panel.routeId}-${service.stopId}-${service.directionId}-${service.headsignContains}`;
+    return `${panel.routeId}-${service.stopId}-${service.directionId}-${service.headsignContains}`;
 }
 
+/**
+ * Makes an API call
+ * @param {*} url
+ * @returns
+ */
 async function fetchAPI(url) {
-  try {
-    // If it's an MBTA API call, proxy it through your worker
-    if (url.includes("api-v3.mbta.com")) {
-      const urlObj = new URL(url);
-      const proxyUrl = `/api/mbta${urlObj.pathname}${urlObj.search}`;
-      const res = await fetch(proxyUrl);
-      return await res.json();
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(res.status);
+        return await res.json();
+    } catch (e) {
+        console.error("Fetch error:", e);
+        return null;
     }
-    // For other APIs (Blue Bikes), use proxy too
-    if (url.includes("api.weather.gov")) {
-      const res = await fetch(url, {
-        headers: {
-          "User-Agent": "MBTADashboard/1.0 (bnguyen@princelobel.com)",
-          Accept: "application/geo+json",
-        },
-      });
-      return await res.json();
-    }
-    const res = await fetch(url);
-    return await res.json();
-  } catch (e) {
-    console.error("Fetch error:", e);
-    return null;
-  }
 }
 
 // ===================== ALERTS =====================
+/**
+ * Makes and API call to get alerts for each line in PANEL
+ */
 async function fetchAlerts() {
-  alertData = {};
-  const promises = [];
-  // for each panel in PANELS
-  PANELS.forEach((panel) => {
-    // for each service in services
-    promises.push(
-      fetchAPI(`${MBTA_API}/alerts?&filter[route]=${panel.routeId}`).then(
-        (data) => {
-          if (data?.data?.length) {
-            alertData[panel.routeId] = data.data;
-          }
-        },
-      ),
-    );
-  });
+    alertData = {};
+    const promises = [];
+    // for each line in PANELS
+    PANELS.forEach((line) => {
+        promises.push(
+            fetchAPI(`/api/mbta/alerts?&filter[route]=${line.routeId}`).then(
+                (data) => {
+                    if (data?.data?.length) {
+                        alertData[line.routeId] = data.data;
+                    }
+                },
+            ),
+        );
+    });
 
-  await Promise.all(promises);
+    await Promise.all(promises);
 }
 
-function getAlertForStop(stopId, routeId) {
-  const alerts = alertData[stopId];
-  if (!alerts?.length) return null;
-
-  const filtered = alerts.filter((alert) => {
-    const entities = alert.relationships?.informed_entity?.data || [];
-    return (
-      !routeId ||
-      entities.some((e) => e.type === "route" && e.id === routeId) ||
-      entities.length === 0
-    );
-  });
-
-  if (!filtered.length) return null;
-
-  filtered.sort((a, b) => a.attributes.severity - b.attributes.severity);
-  return filtered[0];
-}
-
-function getAlertForRouteOLD(routeId) {
-  const alerts = alertData[routeId];
-  if (!alerts?.length) return null;
-  alerts.sort((a, b) => a.attributes.severity - b.attributes.severity);
-  return alerts[0];
-}
-
+/**
+ * Gets the most severe allowed alert for a given line
+ * @param {*} routeId - the ID of the line
+ * @returns the alert
+ */
 function getAlertForRoute(routeId) {
-  const alerts = alertData[routeId];
-  if (!alerts?.length) return null;
-  const allowedEffects = [
-    "DELAY",
-    "CANCELLATION",
-    "SERVICE_CHANGE",
-    "NO_SERVICE",
-    "REDUCED_SERVICE",
-    "SIGNIFICANT_DELAYS",
-    "DETOUR",
-    "ADDITIONAL_SERVICE",
-    "MODIFIED_SERVICE",
-    "OTHER_EFFECT",
-    "UNKNOWN_EFFECT",
-    "STOP_MOVED",
-    "NO_EFFECT",
-    "SHUTTLE",
-  ];
-  const filtered = alerts.filter((alert) =>
-    allowedEffects.includes(alert.attributes.effect),
-  );
-  if (!filtered.length) return null;
-  filtered.sort((a, b) => a.attributes.severity - b.attributes.severity);
-  return filtered[0];
+    const alerts = alertData[routeId];
+    if (!alerts?.length) return null;
+    const allowedEffects = [
+        "DELAY",
+        "CANCELLATION",
+        "SERVICE_CHANGE",
+        "NO_SERVICE",
+        "REDUCED_SERVICE",
+        "SIGNIFICANT_DELAYS",
+        "DETOUR",
+        "ADDITIONAL_SERVICE",
+        "MODIFIED_SERVICE",
+        "OTHER_EFFECT",
+        "UNKNOWN_EFFECT",
+        "STOP_MOVED",
+        "NO_EFFECT",
+        "SHUTTLE",
+    ];
+    const filtered = alerts.filter((alert) =>
+        allowedEffects.includes(alert.attributes.effect),
+    );
+    if (!filtered.length) return null;
+    filtered.sort((a, b) => a.attributes.severity - b.attributes.severity);
+    return filtered[0];
 }
 
 // ===================== PREDICTIONS =====================
+/**
+ * fetches schedules for upcoming lines and include predictions
+ */
 async function fetchRealtime() {
-  const promises = [];
+    const promises = [];
 
-  PANELS.forEach((panel) => {
-    panel.services.forEach((service) => {
-      const key = buildKey(panel, service);
-      const isCommuterRail = panel.routeId.startsWith("CR-");
+    PANELS.forEach((panel) => {
+        panel.services.forEach((service) => {
+            const key = buildKey(panel, service);
 
-      let url;
+            let url;
+            url = `/api/mbta/schedules?filter[stop]=${service.stopId}&filter[route]=${panel.routeId}&include=prediction,trip`;
+            if (service.directionId !== undefined) {
+                url += `&filter[direction_id]=${service.directionId}`;
+            }
 
-      if (isCommuterRail) {
-        url = `${MBTA_API}/schedules?filter[stop]=${service.stopId}&filter[route]=${panel.routeId}&include=prediction,trip`;
-      } else {
-        url = `${MBTA_API}/predictions?filter[stop]=${service.stopId}&filter[route]=${panel.routeId}&include=trip`;
-      }
-
-      if (service.directionId !== undefined) {
-        url += `&filter[direction_id]=${service.directionId}`;
-      }
-
-      promises.push(
-        fetchAPI(url).then((data) => {
-          realtimeData[key] = { ...data, _isCommuterRail: isCommuterRail };
-        }),
-      );
+            promises.push(
+                fetchAPI(url).then((data) => {
+                    realtimeData[key] = {
+                        ...data,
+                    };
+                }),
+            );
+        });
     });
-  });
 
-  await Promise.all(promises);
+    await Promise.all(promises);
 }
 
-async function fetchHourlyForecast() {
-  const now = Date.now();
-  // fetch weather every 10 mins
-  if (cacheWeather && now - lastWeatherFetch < 10 * 60000) {
-    return cacheWeather;
-  }
-
-  const url = "https://api.weather.gov/gridpoints/BOX/72,90/forecast/hourly";
-  const data = await fetchAPI(url);
-  cacheWeather = data?.properties?.periods ?? [];
-  lastWeatherFetch = now;
-
-  return cacheWeather;
-}
-
-async function fetchDeatailedForecast() {
-  const now = Date.now();
-  // fetch weather every 10 mins
-  if (detailedWeather && now - lastHourlyFetch < 10 * 60000) {
-    return detailedWeather;
-  }
-
-  const url = "https://api.weather.gov/gridpoints/BOX/72,90/forecast";
-  const data = await fetchAPI(url);
-  detailedWeather = data?.properties?.periods ?? [];
-  lastHourlyFetch = now;
-
-  return detailedWeather;
-}
-
+/**
+ * Gets predictions from the api call for trains; if no predictiosn, default to schedules.
+ * @param {*} data - data from api call
+ * @returns
+ */
 function getPredictions(data) {
-  if (!data?.data) return [];
+    if (!data?.data) return [];
+    const now = new Date();
 
-  const trips = {};
-  data.included?.forEach((i) => {
-    if (i.type === "trip") trips[i.id] = i.attributes;
-  });
+    // Build maps
+    const predictionsByTrip = {};
+    const tripsById = {};
 
-  const now = new Date();
-  const results = [];
-
-  data.data.forEach((item) => {
-    const timeStr =
-      item.attributes.departure_time || item.attributes.arrival_time;
-    if (!timeStr) return;
-
-    const minutes = (new Date(timeStr) - now) / 60000;
-    if (minutes < -1 || minutes > 180) return;
-
-    console.log(now.toLocaleTimeString());
-
-    const tripId = item.relationships?.trip?.data?.id;
-    const headsign = trips[tripId]?.headsign;
-    if (!headsign) return;
-
-    results.push({
-      minutes,
-      headsign,
-      status: item.attributes.status,
+    data.included?.forEach((item) => {
+        if (item.type === "prediction") {
+            const tripId = item.relationships?.trip?.data?.id;
+            if (tripId) predictionsByTrip[tripId] = item.attributes;
+        }
+        if (item.type === "trip") {
+            tripsById[item.id] = item.attributes;
+        }
     });
-  });
+    const results = [];
 
-  return results.sort((a, b) => a.minutes - b.minutes);
+    data.data.forEach((schedule) => {
+        const tripId = schedule.relationships?.trip?.data?.id;
+        const prediction = predictionsByTrip[tripId];
+        const timeStr =
+            prediction?.departure_time ||
+            prediction?.arrival_time ||
+            schedule.attributes.departure_time ||
+            schedule.attributes.arrival_time;
+
+        if (!timeStr) return;
+        const minutes = (new Date(timeStr) - now) / 60000;
+        if (minutes < -1 || minutes > 180) return;
+        const headsign = tripsById[tripId]?.headsign;
+        if (!headsign) return;
+
+        results.push({
+            minutes,
+            headsign,
+            status: prediction?.status || null,
+            isRealtime: !!prediction,
+        });
+    });
+
+    return results.sort((a, b) => a.minutes - b.minutes);
+}
+
+/**
+ * Calls NWS API for hourly weather
+ * @returns cached weather
+ */
+async function fetchHourlyForecast() {
+    const now = Date.now();
+    // fetch weather every 15 mins
+    if (cacheWeather && now - lastWeatherFetch < 15 * 60000) {
+        return cacheWeather;
+    }
+
+    const url = "/api/weather/gridpoints/BOX/72,90/forecast/hourly";
+    const data = await fetchAPI(url);
+    cacheWeather = data?.properties?.periods ?? [];
+    lastHourlyFetch = now;
+
+    return cacheWeather;
+}
+
+/**
+ * Calls NWS API for 12 hour forecast
+ * @returns detailed description of weather
+ */
+async function fetchDeatailedForecast() {
+    const now = Date.now();
+    // fetch weather every hour
+    if (detailedWeather && now - lastHourlyFetch < 60 * 60000) {
+        return detailedWeather;
+    }
+
+    const url = "/api/weather/gridpoints/BOX/72,90/forecast";
+    const data = await fetchAPI(url);
+    detailedWeather = data?.properties?.periods ?? [];
+    lastDetailedFetch = now;
+
+    return detailedWeather;
 }
 
 // ===================== RENDER =====================
+/**
+ * Renders a line in PANELS
+ * @param {*} panel - a train line
+ * @returns
+ */
 function renderPanel(panel) {
-  const container = document.getElementById(panel.elementId);
-  if (!container) return;
+    const container = document.getElementById(panel.elementId);
+    if (!container) return;
 
-  const predContainer = container.querySelector(".predictions");
-  if (!predContainer) return;
+    const predContainer = container.querySelector(".predictions");
+    if (!predContainer) return;
 
-  predContainer.innerHTML = ""; // clear once
-  const alert = getAlertForRoute(panel.routeId);
-  if (alert) {
-    predContainer.innerHTML += `
+    predContainer.innerHTML = "";
+    const alert = getAlertForRoute(panel.routeId);
+    if (alert) {
+        predContainer.innerHTML += `
         <div class="alert-banner">
           ⚠️ ${alert.attributes.header}
         </div>
       `;
-  }
-
-  panel.services.forEach((service) => {
-    const key = buildKey(panel, service);
-    let preds = getPredictions(realtimeData[key]);
-
-    if (service.headsignContains) {
-      preds = preds.filter((p) =>
-        p.headsign
-          .toLowerCase()
-          .includes(service.headsignContains.toLowerCase()),
-      );
     }
-    let html = "";
 
-    if (preds.length) {
-      html += `
+    panel.services.forEach((service) => {
+        const key = buildKey(panel, service);
+        let preds = getPredictions(realtimeData[key]);
+
+        if (service.headsignContains) {
+            preds = preds.filter((p) =>
+                p.headsign
+                    .toLowerCase()
+                    .includes(service.headsignContains.toLowerCase()),
+            );
+        }
+        let html = "";
+
+        if (preds.length) {
+            html += `
         <div class="direction-header">
           <span class="direction-label">${service.label}</span>
         </div>
       `;
 
-      preds.slice(0, 3).forEach((p) => {
-        html += `
+            preds.slice(0, 4).forEach((p) => {
+                html += `
           <div class="prediction-row">
-            <span>${LIVE_ICON}${p.headsign}</span>
+            <span>
+                ${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON}
+                ${p.headsign}
+            </span>
             <span>${formatTime(p.minutes)}</span>
           </div>
         `;
-      });
+            });
+        }
+
+        predContainer.innerHTML += html;
+    });
+
+    if (!predContainer.innerHTML.trim()) {
+        predContainer.innerHTML = '<div class="no-trains">No trains</div>';
     }
-
-    predContainer.innerHTML += html;
-  });
-
-  if (!predContainer.innerHTML.trim()) {
-    predContainer.innerHTML = '<div class="no-trains">No trains</div>';
-  }
 }
 
+// function renderPanel(panel) {
+//     const container = document.getElementById(panel.elementId);
+//     if (!container) return;
+
+//     const predContainer = container.querySelector(".predictions");
+//     if (!predContainer) return;
+
+//     predContainer.innerHTML = "";
+
+//     let html = `
+//         <div class="mbta-card">
+//             <div class="mbta-card-header" style="background:${panel.color}"
+//                 ${panel.title}
+//             </div>
+//             <div class="mbta-card-body">
+//         `;
+//     const alert = getAlertForRoute(panel.routeId);
+//     if (alert) {
+//         html += `
+//         <div class="alert-banner">
+//           ⚠️ ${alert.attributes.header}
+//         </div>
+//       `;
+//     }
+
+//     panel.services.forEach((service) => {
+//         const key = buildKey(panel, service);
+//         let preds = getPredictions(realtimeData[key]);
+
+//         if (service.headsignContains) {
+//             preds = preds.filter((p) =>
+//                 p.headsign
+//                     .toLowerCase()
+//                     .includes(service.headsignContains.toLowerCase()),
+//             );
+//         }
+
+//         if (preds.length) {
+//             html += `
+//         <div class="direction-header">
+//           <span class="direction-label">${service.label}</span>
+//         </div>
+//       `;
+
+//             preds.slice(0, 4).forEach((p) => {
+//                 html += `
+//           <div class="mbta-row">
+//           <div class="row-left">
+//           <div class="destination">
+//                 ${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON}
+//                 ${p.headsign}
+//             </div>
+
+//             <div class="row-right">
+//             <div class="time">
+//             ${formatTime(p.minutes)}
+//             </div>
+//             </div>
+//           </div>
+//         `;
+//             });
+//             html += `</div>`;
+//         }
+//         html += `</div>
+//         </div>`;
+//         predContainer.innerHTML = html;
+
+//         if (!predContainer.innerHTML.trim()) {
+//             predContainer.innerHTML = '<div class="no-trains">No trains</div>';
+//         }
+//     });
+// }
+
+/**
+ * Renders the weather short and long description, inclcude an icon, temp F, Location, and Date
+ */
 function renderWeather() {
-  const container = document.getElementById("weather-box");
-  if (!container || !cacheWeather?.length || !detailedWeather?.length) return;
+    const container = document.getElementById("weather-box");
+    if (!container || !cacheWeather?.length || !detailedWeather?.length) return;
 
-  const current = cacheWeather[0];
-  const currentDeatailed = detailedWeather[0];
-  const tempF = current.temperature;
-  const description = current.shortForecast;
-  const detailedDesc = currentDeatailed.detailedForecast;
-  console.log(detailedDesc);
+    const current = cacheWeather[0];
+    const currentDeatailed = detailedWeather[0];
+    const tempF = current.temperature;
+    const description = current.shortForecast;
+    const detailedDesc = currentDeatailed.detailedForecast;
 
-  container.innerHTML = `
+    container.innerHTML = `
   <div class="weather-content">
     <div class="weather-left">
       <div class="weather-desc">${description}</div>
@@ -437,16 +521,16 @@ function renderWeather() {
 
 // ===================== UPDATE LOOP =====================
 async function updateAll() {
-  await fetchRealtime();
-  await fetchAlerts();
-  await fetchHourlyForecast();
-  await fetchDeatailedForecast();
+    await fetchRealtime();
+    await fetchAlerts();
+    await fetchHourlyForecast();
+    await fetchDeatailedForecast();
 
-  PANELS.forEach(renderPanel);
-  renderWeather();
+    PANELS.forEach(renderPanel);
+    renderWeather();
 
-  const ts = document.getElementById("timestamp");
-  if (ts) ts.textContent = new Date().toLocaleTimeString();
+    const ts = document.getElementById("timestamp");
+    if (ts) ts.textContent = new Date().toLocaleTimeString();
 }
 
 // ===================== START =====================

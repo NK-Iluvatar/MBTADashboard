@@ -224,10 +224,6 @@ body {
     color: white;
 }
 
-.mode-header.bluebike h2 i {
-}
-
-
 /* ===== STOP CARDS - BASE ===== */
 .stop-card {
     background: var(--mbta-true-white);
@@ -244,9 +240,6 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-}
-
-.stop-card h3 i {
 }
 
 /* ----- ALERT BANNERS ----- */
@@ -539,49 +532,6 @@ body {
     color: #505A62;
     text-align: right;
 }
-
-/* ===== RESPONSIVE BREAKPOINTS ===== */
-
-@media (max-width: 900px) {
-    
-    
-    .container {
-    }
-
-    .stop-card{
-        grid-column: span 3;
-    }
-    
-    .stop-card h3 {
-    }
-    
-    .prediction-row {
-    }
-}
-
-@media (max-width: 550px) {
-    
-    
-    .mode-header h2 {
-    }
-    
-    .stop-card {
-    }
-    
-    .stop-location {
-    }
-    
-    .direction-label {
-    }
-    
-    .destination-primary {
-    }
-    
-    .bike-row {
-    }
-}
-
-
 
 /* ===== PRINT STYLES (E Ink optimization) ===== */
 @media screen and (width: 1024px) and (height: 758px) {
