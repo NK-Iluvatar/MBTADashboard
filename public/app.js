@@ -7,7 +7,7 @@
  * @param {*} destination - Last stop (ex: "Alewife")
  * @returns The service structure.
  */
-function service(routeId, directionId, stopId, destination) {
+function service(routeId, directionId, stopId, destination, pattern) {
     const isBlueOrGreen = routeId === "Green" || routeId === "Blue";
     const direction = isBlueOrGreen
         ? directionId === 0
@@ -18,10 +18,11 @@ function service(routeId, directionId, stopId, destination) {
           : "Northbound";
 
     return {
-        label: `${direction} → ${destination}`,
+        label: `${direction}`,
         directionId,
         stopId,
         headsignContains: destination,
+        routePattern: pattern,
     };
 }
 
@@ -31,92 +32,121 @@ function service(routeId, directionId, stopId, destination) {
 const PANELS = [
     // South Station – Red Line
     {
+        title: "Red Line",
         elementId: "south-station-red",
         routeId: "Red",
         services: [
-            service("Red", 0, "place-sstat", "Ashmont"),
-            service("Red", 0, "place-sstat", "Braintree"),
-            service("Red", 1, "place-sstat", "Alewife"),
+            service("Red", 0, "place-sstat", "Ashmont", "Red-1-0"),
+            service("Red", 0, "place-sstat", "Braintree", "Red-3-0"),
+            service("Red", 1, "place-sstat", "Alewife", "Red-3-1"),
         ],
     },
 
     // State Station – Orange Line
     {
+        title: "Orange Line",
         elementId: "state-station-orange",
         routeId: "Orange",
         services: [
-            service("Orange", 0, "place-state", "Forest Hills"),
-            service("Orange", 1, "place-state", "Oak Grove"),
+            service("Orange", 0, "place-state", "Forest Hills", "Orange-A-0"),
+            service("Orange", 1, "place-state", "Oak Grove", "Orange-A-1"),
         ],
     },
 
     // State Station – Blue Line
     {
+        title: "Blue Line",
         elementId: "state-station-blue",
         routeId: "Blue",
         services: [
-            service("Blue", 0, "place-state", "Bowdoin"),
-            service("Blue", 1, "place-state", "Wonderland"),
+            service("Blue", 0, "place-state", "Bowdoin", "Blue-6-0"),
+            service("Blue", 1, "place-state", "Wonderland", "Blue-6-1"),
         ],
     },
 
     // South Station – Commuter Rail
     {
+        title: "Greenbush Line",
         elementId: "south-station-cr-greenbush",
         routeId: "CR-Greenbush",
-        services: [service("CR-Greenbush", 0, "place-sstat", "Greenbush")],
+        services: [service("CR-Greenbush", 0, "place-sstat", "Greenbush", "CR-Greenbush-a9099211-0")],
+        // "CR-Greenbush-6d652c57-0" - Greenbush
     },
     {
+        title: "Fairmount Line",
         elementId: "south-station-cr-fairmount",
         routeId: "CR-Fairmount",
         services: [
-            service("CR-Fairmount", 0, "place-sstat", "Readville"),
-            service("CR-Fairmount", 0, "place-sstat", "Fairmount"),
+            service("CR-Fairmount", 0, "place-sstat", "Readville", "CR-Fairmount-195ea3c8-0"),
+            service("CR-Fairmount", 0, "place-sstat", "Fairmount", "CR-Fairmount-3914aae7-0"),
         ],
     },
     {
+        title: "Fall River/New Bedford Line",
         elementId: "south-station-cr-newbedford",
         routeId: "CR-NewBedford",
         services: [
-            service("CR-NewBedford", 0, "place-sstat", "New Bedford"),
-            service("CR-NewBedford", 0, "place-sstat", "Fall River"),
+            service("CR-NewBedford", 0, "place-sstat", "New Bedford", "CR-NewBedford-165b7060-0"),
+            service("CR-NewBedford", 0, "place-sstat", "Fall River", "CR-NewBedford-54a95b41-0"),
+            //"CR-NewBedford-e455f611-0" - fall river
         ],
     },
     {
+        title: "Framingham/Worcester Line",
         elementId: "south-station-cr-worcester",
         routeId: "CR-Worcester",
         services: [
-            service("CR-Worcester", 0, "place-sstat", "Worcester"),
-            service("CR-Worcester", 0, "place-sstat", "Framingham"),
+            service("CR-Worcester", 0, "place-sstat", "Worcester", "CR-Worcester-a512d591-0"),
+            service("CR-Worcester", 0, "place-sstat", "Framingham", "CR-Worcester-b65b9e75-0"),
+            // "CR-Worcester-6436caf7-0" - worcester
+            // "CR-Worcester-2fe54abd-0" - worcester
+            // "CR-Worcester-6fbe3217-0" - worcester
+            // "CR-Worcester-b5dda27b-0" - Worcester
+            // "CR-Worcester-bbf42cea-0" - frammingham
+
         ],
     },
     {
+        title: "Franklin/Foxboro Line",
         elementId: "south-station-cr-franklin",
         routeId: "CR-Franklin",
         services: [
-            service("CR-Franklin", 0, "place-sstat", "Foxboro"),
-            service("CR-Franklin", 0, "place-sstat", "Forge Park"),
-            service("CR-Franklin", 0, "place-sstat", "Walpole"),
+            service("CR-Franklin", 0, "place-sstat", "Foxboro", "CR-Franklin-35c1126a-0"),
+            service("CR-Franklin", 0, "place-sstat", "Forge Park", "CR-Franklin-3badde55-0"),
+            service("CR-Franklin", 0, "place-sstat", "Walpole", "CR-Franklin-f904f75a-0"),
+            // "CR-Franklin-b8c4a7ca-0" - fp
+            // "CR-Franklin-512734e4-0" -fox
+            //  "CR-Franklin-072595b7-0" - wal
+            //  "CR-Franklin-26c18f70-0" - wal
+
         ],
     },
     {
+        title: "Providence/Stoughton Line",
         elementId: "south-station-cr-providence",
         routeId: "CR-Providence",
         services: [
-            service("CR-Providence", 0, "place-sstat", "Providence"),
-            service("CR-Providence", 0, "place-sstat", "Wickford"),
-            service("CR-Providence", 0, "place-sstat", "Stoughton"),
+            service("CR-Providence", 0, "place-sstat", "Providence", "CR-Providence-743ff41d-0"),
+            service("CR-Providence", 0, "place-sstat", "Wickford", "CR-Providence-9cf54fb3-0"),
+            service("CR-Providence", 0, "place-sstat", "Stoughton", "CR-Providence-9515a09b-0"),
+            //  "CR-Providence-cea1b73d-0" - wickford
+
         ],
     },
     {
+        title: "Kingston Line",
         elementId: "south-station-cr-kingston",
         routeId: "CR-Kingston",
-        services: [service("CR-Kingston", 0, "place-sstat", "Kingston")],
+        services: [service("CR-Kingston", 0, "place-sstat", "Kingston", "CR-Kingston-515864bc-0")],
+        // "CR-Kingston-5caee635-0" 
+        // "CR-Kingston-e76fd7be-0"
     },
     {
+        title: "Needham Line",
         elementId: "south-station-cr-needham",
         routeId: "CR-Needham",
-        services: [service("CR-Needham", 0, "place-sstat", "Needham")],
+        services: [service("CR-Needham", 0, "place-sstat", "Needham", "CR-Needham-a6552e0a-0")],
+        // "CR-Needham-69669b59-0"
     },
 ];
 
@@ -146,11 +176,11 @@ const SCHEDULE_ICON = '<i class="bi bi-calendar-date"></i>';
  * @returns total time in hour and minutes.
  */
 function formatTime(minutes) {
-    if (minutes <= 1) return "Now";
+    if (minutes <= 1) return "0";
 
     const h = Math.floor(minutes / 60);
     const m = Math.floor(minutes % 60);
-    return h ? `${h}h ${m}m` : `${m} min`;
+    return h ? `${h}h ${m}m` : `${m}`;
 }
 
 /**
@@ -283,7 +313,11 @@ function getPredictions(data) {
             if (tripId) predictionsByTrip[tripId] = item.attributes;
         }
         if (item.type === "trip") {
-            tripsById[item.id] = item.attributes;
+            tripsById[item.id] = {
+                headsign: item.attributes.headsign,
+                directionId: item.attributes.direction_id,
+                routePattern: item.relationships?.route_pattern?.data?.id
+            };
         }
     });
     const results = [];
@@ -303,9 +337,14 @@ function getPredictions(data) {
         const headsign = tripsById[tripId]?.headsign;
         if (!headsign) return;
 
+        const trip = tripsById[tripId];
+        if (!trip) return;
+
         results.push({
             minutes,
-            headsign,
+            headsign: trip.headsign,
+            directionId: trip.directionId,
+            routePattern: trip.routePattern,
             status: prediction?.status || null,
             isRealtime: !!prediction,
         });
@@ -365,129 +404,101 @@ function renderPanel(panel) {
     const predContainer = container.querySelector(".predictions");
     if (!predContainer) return;
 
-    predContainer.innerHTML = "";
+    let html = `
+        <div class="mbta-card">
+            <div class="mbta-card-header">
+                ${panel.title}
+            </div>
+            <div class="mbta-card-body">
+        `;
+
     const alert = getAlertForRoute(panel.routeId);
     if (alert) {
-        predContainer.innerHTML += `
-        <div class="alert-banner">
-          ⚠️ ${alert.attributes.header}
-        </div>
-      `;
+        html += `
+            <div class="alert-banner">
+                ⚠️ ${alert.attributes.header}
+            </div>
+        `;
     }
 
+    // Group services by direction
+    const directions = {};
     panel.services.forEach((service) => {
-        const key = buildKey(panel, service);
-        let preds = getPredictions(realtimeData[key]);
-
-        if (service.headsignContains) {
-            preds = preds.filter((p) =>
-                p.headsign
-                    .toLowerCase()
-                    .includes(service.headsignContains.toLowerCase()),
-            );
+        const dir = service.directionId;
+        if (!directions[dir]) {
+            directions[dir] = {
+                label: service.label || "",
+                services: [],
+            };
         }
-        let html = "";
-
-        if (preds.length) {
-            html += `
-        <div class="direction-header">
-          <span class="direction-label">${service.label}</span>
-        </div>
-      `;
-
-            preds.slice(0, 4).forEach((p) => {
-                html += `
-          <div class="prediction-row">
-            <span>
-                ${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON}
-                ${p.headsign}
-            </span>
-            <span>${formatTime(p.minutes)}</span>
-          </div>
-        `;
-            });
-        }
-
-        predContainer.innerHTML += html;
+        directions[dir].services.push(service);
     });
+
+    Object.values(directions).forEach((dir) => {
+        html += `
+            <div class="direction-header">
+                <span class="direction-label">${dir.label}</span>
+            </div>
+        `;
+
+        dir.services.forEach((service) => {
+            const key = buildKey(panel, service);
+            let preds = getPredictions(realtimeData[key]);
+
+            if (service.routePattern) {
+                preds = preds.filter((p) =>
+                    service.routePattern.includes(p.routePattern)
+                );
+            }
+
+            if (!preds.length) return;
+
+            const headsign = preds[0].headsign;
+
+            const times = preds
+                .slice(0, 4)
+                .map((p) => {
+                    const min = formatTime(p.minutes);
+
+                    return `
+                        <div class="pred-time">
+                            <div class="pred-number">${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON} ${min}</div>
+                            <div class="pred-unit">min</div>
+                        </div>
+                    `;
+                })
+                .join("");
+
+            html += `
+                <div class="prediction-row">
+                    <div class="headsign">
+                        <div class="headsign">
+                            ${headsign}
+                        </div>
+                        <div class="headsign">
+                            ${headsign}
+                        </div>
+                    </div>
+
+                    <div class="pred-times">
+                        ${times}
+                    </div>
+                </div>
+            `;
+        });
+    });
+
+    html += `
+            </div>
+        </div>
+    `;
+
+    predContainer.innerHTML = html;
 
     if (!predContainer.innerHTML.trim()) {
         predContainer.innerHTML = '<div class="no-trains">No trains</div>';
     }
 }
-
-// function renderPanel(panel) {
-//     const container = document.getElementById(panel.elementId);
-//     if (!container) return;
-
-//     const predContainer = container.querySelector(".predictions");
-//     if (!predContainer) return;
-
-//     predContainer.innerHTML = "";
-
-//     let html = `
-//         <div class="mbta-card">
-//             <div class="mbta-card-header" style="background:${panel.color}"
-//                 ${panel.title}
-//             </div>
-//             <div class="mbta-card-body">
-//         `;
-//     const alert = getAlertForRoute(panel.routeId);
-//     if (alert) {
-//         html += `
-//         <div class="alert-banner">
-//           ⚠️ ${alert.attributes.header}
-//         </div>
-//       `;
-//     }
-
-//     panel.services.forEach((service) => {
-//         const key = buildKey(panel, service);
-//         let preds = getPredictions(realtimeData[key]);
-
-//         if (service.headsignContains) {
-//             preds = preds.filter((p) =>
-//                 p.headsign
-//                     .toLowerCase()
-//                     .includes(service.headsignContains.toLowerCase()),
-//             );
-//         }
-
-//         if (preds.length) {
-//             html += `
-//         <div class="direction-header">
-//           <span class="direction-label">${service.label}</span>
-//         </div>
-//       `;
-
-//             preds.slice(0, 4).forEach((p) => {
-//                 html += `
-//           <div class="mbta-row">
-//           <div class="row-left">
-//           <div class="destination">
-//                 ${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON}
-//                 ${p.headsign}
-//             </div>
-
-//             <div class="row-right">
-//             <div class="time">
-//             ${formatTime(p.minutes)}
-//             </div>
-//             </div>
-//           </div>
-//         `;
-//             });
-//             html += `</div>`;
-//         }
-//         html += `</div>
-//         </div>`;
-//         predContainer.innerHTML = html;
-
-//         if (!predContainer.innerHTML.trim()) {
-//             predContainer.innerHTML = '<div class="no-trains">No trains</div>';
-//         }
-//     });
-// }
 
 /**
  * Renders the weather short and long description, inclcude an icon, temp F, Location, and Date
