@@ -19,135 +19,61 @@
         />
     </head>
     <body>
-        <div class="container">
-            <div>
+        <div>
                 <h1>MBTA Dashboard</h1>
             </div>
-            <div id="timestamp" class="timestamp"></div>
-
-            <!-- Green Line Section -->
-            <!-- <div class="mode-header green">
-            <h2><i class="bi bi-train-front"></i> Green Line</h2>
-        </div>
-        <div id="south-street" class="stop-card green-line">
-                <h3>South Street</h3>
-                <div class="predictions"></div>
-        </div>
-        <div id="cleveland-circle" class="stop-card green-line">
-                <h3>Cleveland Circle</h3>
-                <div class="predictions"></div>
-        </div>
-        <div id="reservoir" class="stop-card green-line">
-                <h3>Reservoir</h3>
-                <div class="predictions"></div>
-        </div> -->
-
-            <!-- ================= RED LINE ================= -->
-
+        <!-- ================= WEATHER ================= -->
+            <div id="weather-box" class="weather-box"></div>
+        <div class="container">
+            <!-- ================= WEATHER ================= -->
             <div id="weather-box" class="weather-box"></div>
 
-            <div id="south-station-red" class="stop-card red-line">
-                <div class="mode-header red">
-                    <h2>
-                        <i class="bi bi-train-front"></i> Red Line - South
-                        Station
-                    </h2>
-                </div>
+            <!-- ================= RED LINE ================= -->
+            <div id="south-station-red">
                 <div class="predictions"></div>
             </div>
-
-            <div id="state-station-orange" class="stop-card orange-line">
-                <div class="mode-header orange">
-                    <h2>
-                        <i class="bi bi-train-front"></i> Orange Line - State
-                        Station
-                    </h2>
-                </div>
+            <!-- ================= ORANGE LINE ================= -->
+            <div id="state-station-orange">
                 <div class="predictions"></div>
             </div>
-
-            <div id="state-station-blue" class="stop-card blue-line">
-                <div class="mode-header blue">
-                    <h2>
-                        <i class="bi bi-train-front"></i> Blue Line - State
-                        Station
-                    </h2>
-                </div>
+            <!-- ================= BLUE LINE ================= -->
+            <div id="state-station-blue">
                 <div class="predictions"></div>
             </div>
-
-            <div class="mode-header commuter">
-                <h2><i class="bi bi-train-front"></i> Commuter Rail</h2>
-            </div>
-
-            <div
-                id="south-station-cr-greenbush"
-                class="stop-card commuter-line"
-            >
-                <h3>South Station - Greenbush Line</h3>
-                <div class="predictions"></div>
-            </div>
-
-            <div
-                id="south-station-cr-fairmount"
-                class="stop-card commuter-line"
-            >
-                <h3>South Station - Fairmount Line</h3>
-                <div class="predictions"></div>
-            </div>
-            <div
-                id="south-station-cr-newbedford"
-                class="stop-card commuter-line"
-            >
-                <h3>South Station - Fall River/New Bedford Line</h3>
-                <div class="predictions"></div>
-            </div>
-            <div
-                id="south-station-cr-worcester"
-                class="stop-card commuter-line"
-            >
-                <h3>South Station - Framingham/Worcester Line</h3>
-                <div class="predictions"></div>
-            </div>
-            <div id="south-station-cr-franklin" class="stop-card commuter-line">
-                <h3>South Station - Franklin/Foxboro Line</h3>
-                <div class="predictions"></div>
-            </div>
-            <div
-                id="south-station-cr-providence"
-                class="stop-card commuter-line"
-            >
-                <h3>South Station - Providence/Stoughton Line</h3>
-                <div class="predictions"></div>
-            </div>
-            <div id="south-station-cr-kingston" class="stop-card commuter-line">
-                <h3>South Station - Kingston Line</h3>
-                <div class="predictions"></div>
-            </div>
-            <div id="south-station-cr-needham" class="stop-card commuter-line">
-                <h3>South Station - Needham Line</h3>
-                <div class="predictions"></div>
-            </div>
-
-            <!-- Blue Bikes Section -->
-            <!-- <div class="mode-header bluebike">
-            <h2><i class="bi bi-bicycle"></i> Blue Bikes</h2>
         </div>
-        <div id="bluebike-ledgemere" class="stop-card bluebike">
-                <h3>Chestnut Hill Ave</h3>
-                <div class="stop-location">at Ledgemere Rd</div>
+        <div class="container-bottom">
+            <!-- ================= COMMUTER RAIL ================= -->
+            <div id="south-station-cr-greenbush">
                 <div class="predictions"></div>
-        </div>
-        <div id="bluebike-chiswick" class="stop-card bluebike">
-                <h3>Commonwealth Ave</h3>
-                <div class="stop-location">at Chiswick Rd</div>
+            </div>
+
+            <div id="south-station-cr-fairmount">
                 <div class="predictions"></div>
-        </div>
-        <div id="bluebike-cleveland-circle" class="stop-card bluebike">
-                <h3>Cleveland Circle</h3>
-                <div class="stop-location">at Beacon St</div>
+            </div>
+
+            <div id="south-station-cr-newbedford">
                 <div class="predictions"></div>
-        </div> -->
+            </div>
+
+            <div id="south-station-cr-worcester">
+                <div class="predictions"></div>
+            </div>
+
+            <div id="south-station-cr-franklin">
+                <div class="predictions"></div>
+            </div>
+
+            <div id="south-station-cr-providence">
+                <div class="predictions"></div>
+            </div>
+
+            <div id="south-station-cr-kingston">
+                <div class="predictions"></div>
+            </div>
+            
+            <div id="south-station-cr-needham">
+                <div class="predictions"></div>
+            </div>
         </div>
         <script src="/app.js"></script>
     </body>
