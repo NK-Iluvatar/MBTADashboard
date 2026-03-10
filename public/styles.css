@@ -200,7 +200,8 @@ body {
 .route-Orange .mbta-card-header { background:#ED8B00; }
 .route-Blue .mbta-card-header { background:#003DA5; }
 .route-Green .mbta-card-header { background:#00843D; }
-.route-CR .mbta-card-header { background:#80276C; }
+.route-CR .mbta-card-header { background:#80276C;   font-size: 16px;
+}
 
 /* DIRECTION LABEL */
 
