@@ -1,10 +1,9 @@
 /**
  * MBTA Green Line & Bus & Blue Bikes Tracker
- * SIMPLIFIED WORKING VERSION WITH ALERTS
+ * KIOSK MODE - Simple section rotation
  */
 
 const MBTA_API = 'https://api-v3.mbta.com';
-const MBTA_API_KEY = 'API_KEY_PLACEHOLDER';
 
 // ===== STOPS =====
 const GREEN_STOPS = [
@@ -79,6 +78,15 @@ const BLUE_BIKE_STATIONS = [
     }
 ];
 
+// ===== SECTIONS =====
+const SECTIONS = [
+    { name: 'green', elementId: 'green-section' },
+    { name: 'bus', elementId: 'bus-section' },
+    { name: 'bikes', elementId: 'bikes-section' }
+];
+
+let currentSectionIndex = 0;
+
 // ===== DATA STORAGE =====
 let realtimeData = {};
 let scheduleData = {};
@@ -86,8 +94,8 @@ let bikeData = {};
 let alertData = {};
 
 // ===== ICONS =====
-const LIVE_ICON = '<i class="bi bi-broadcast-pin" style="font-size:0.9em; margin-right:4px;"></i>';
-const SCHEDULE_ICON = '<i class="bi bi-calendar-date" style="font-size:0.9em; margin-right:4px;"></i>';
+const LIVE_ICON = '<i class="bi bi-broadcast-pin"></i>';
+const SCHEDULE_ICON = '<i class="bi bi-calendar-date"></i>';
 
 // ===== HELPERS =====
 function formatTime(minutes) {
@@ -119,13 +127,12 @@ async function fetchAPI(url) {
 }
 
 // ===== ALERTS =====
-async function fetchAlerts() {
+async function fetchAlertsForStops(stops) {
     const promises = [];
     
-    // Remove ?include=stop from the URL - it's not supported
-    GREEN_STOPS.forEach(stop => {
+    stops.forEach(stop => {
         promises.push(
-            fetchAPI(`${MBTA_API}/alerts?filter[stop]=${stop.id}&api_key=${MBTA_API_KEY}`)
+            fetchAPI(`${MBTA_API}/alerts?filter[stop]=${stop.id}`)
                 .then(data => { 
                     if (data?.data?.length > 0) {
                         alertData[stop.id] = data;
@@ -135,28 +142,7 @@ async function fetchAlerts() {
         
         if (stop.inboundId && stop.inboundId !== stop.id) {
             promises.push(
-                fetchAPI(`${MBTA_API}/alerts?filter[stop]=${stop.inboundId}&api_key=${MBTA_API_KEY}`)
-                    .then(data => { 
-                        if (data?.data?.length > 0) {
-                            alertData[stop.inboundId] = data;
-                        }
-                    })
-            );
-        }
-    });
-    
-    BUS_STOPS.forEach(stop => {
-        promises.push(
-            fetchAPI(`${MBTA_API}/alerts?filter[stop]=${stop.id}&api_key=${MBTA_API_KEY}`)
-                .then(data => { 
-                    if (data?.data?.length > 0) {
-                        alertData[stop.id] = data;
-                    }
-                })
-        );
-        if (stop.inboundId) {
-            promises.push(
-                fetchAPI(`${MBTA_API}/alerts?filter[stop]=${stop.inboundId}&api_key=${MBTA_API_KEY}`)
+                fetchAPI(`${MBTA_API}/alerts?filter[stop]=${stop.inboundId}`)
                     .then(data => { 
                         if (data?.data?.length > 0) {
                             alertData[stop.inboundId] = data;
@@ -167,7 +153,159 @@ async function fetchAlerts() {
     });
     
     await Promise.all(promises);
-    console.log('✅ Alerts fetched');
+}
+
+// ===== SECTION-SPECIFIC FETCHING =====
+async function fetchGreenLineData() {
+    console.log('Fetching Green Line data...');
+    const promises = [];
+    
+    GREEN_STOPS.forEach(stop => {
+        promises.push(
+            fetchAPI(`${MBTA_API}/predictions?filter[stop]=${stop.id}&filter[route]=${stop.route}&filter[direction_id]=0&include=trip`)
+                .then(data => { realtimeData[`${stop.id}-out`] = data; })
+        );
+        
+        if (!stop.isTerminal && stop.inboundId) {
+            promises.push(
+                fetchAPI(`${MBTA_API}/predictions?filter[stop]=${stop.inboundId}&filter[route]=${stop.route}&filter[direction_id]=1&include=trip`)
+                    .then(data => { realtimeData[`${stop.inboundId}-in`] = data; })
+            );
+        }
+        
+        if (stop.isTerminal) {
+            promises.push(
+                fetchAPI(`${MBTA_API}/predictions?filter[stop]=${stop.id}&filter[route]=${stop.route}&filter[direction_id]=1&include=trip`)
+                    .then(data => { realtimeData[`${stop.id}-in`] = data; })
+            );
+        }
+    });
+    
+    // Fetch tomorrow's schedules for South Street and Cleveland Circle
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(3, 0, 0, 0);
+    const nextDay = new Date(tomorrow);
+    nextDay.setDate(nextDay.getDate() + 1);
+    
+    promises.push(
+        fetchAPI(`${MBTA_API}/schedules?filter[stop]=70112&filter[route]=Green-B&filter[direction_id]=1&filter[min_time]=${tomorrow.toISOString()}&filter[max_time]=${nextDay.toISOString()}&include=trip&sort=departure_time`)
+            .then(data => { if (data?.data) scheduleData['70112-sched'] = data; })
+    );
+    
+    promises.push(
+        fetchAPI(`${MBTA_API}/schedules?filter[stop]=place-clmnl&filter[route]=Green-C&filter[direction_id]=1&filter[min_time]=${tomorrow.toISOString()}&filter[max_time]=${nextDay.toISOString()}&include=trip&sort=departure_time`)
+            .then(data => { if (data?.data) scheduleData['place-clmnl-sched'] = data; })
+    );
+    
+    // Fetch alerts for Green Line stops
+    await fetchAlertsForStops(GREEN_STOPS);
+    
+    await Promise.all(promises);
+}
+
+async function fetchBusData() {
+    console.log('Fetching Bus data...');
+    const promises = [];
+    
+    BUS_STOPS.forEach(stop => {
+        promises.push(
+            fetchAPI(`${MBTA_API}/predictions?filter[stop]=${stop.id}&filter[route]=${stop.route}&include=trip`)
+                .then(data => { realtimeData[`${stop.id}-bus`] = data; })
+        );
+        if (stop.inboundId) {
+            promises.push(
+                fetchAPI(`${MBTA_API}/predictions?filter[stop]=${stop.inboundId}&filter[route]=${stop.route}&include=trip`)
+                    .then(data => { realtimeData[`${stop.inboundId}-bus`] = data; })
+            );
+        }
+    });
+    
+    // Fetch schedule for 501 inbound
+    promises.push(
+        fetchAPI(`${MBTA_API}/schedules?filter[stop]=1994&filter[route]=501&filter[direction_id]=1&filter[min_time]=${new Date().toISOString()}&include=trip&sort=departure_time&page[limit]=2`)
+            .then(data => { if (data?.data) scheduleData['1994-sched'] = data; })
+    );
+    
+    // Fetch alerts for Bus stops
+    await fetchAlertsForStops(BUS_STOPS);
+    
+    await Promise.all(promises);
+}
+
+async function fetchBikeData() {
+    console.log('Fetching Blue Bikes data...');
+    try {
+        const res = await fetch('https://gbfs.bluebikes.com/gbfs/en/station_status.json');
+        const data = await res.json();
+        if (!data?.data?.stations) return;
+        
+        const stations = {};
+        BLUE_BIKE_STATIONS.forEach(s => { stations[s.id] = null; });
+        
+        data.data.stations.forEach(s => {
+            if (stations.hasOwnProperty(s.station_id)) {
+                stations[s.station_id] = s;
+            }
+        });
+        
+        bikeData = stations;
+    } catch (e) {
+        console.log('Blue Bikes error:', e);
+    }
+}
+
+// ===== PROCESS PREDICTIONS =====
+function getPredictions(data, isRealtime = true, isCommuterRoute = false) {
+    if (!data?.data) return [];
+    
+    const trips = {};
+    if (data.included) {
+        data.included.forEach(item => {
+            if (item.type === 'trip') trips[item.id] = item.attributes;
+        });
+    }
+    
+    const now = new Date();
+    const results = [];
+    
+    data.data.forEach(item => {
+        const status = item.attributes.status;
+        if (status === 'Stopped' || status === 'Stopped at station') {
+            const tripId = item.relationships?.trip?.data?.id;
+            const headsign = trips[tripId]?.headsign || 'Train at station';
+            
+            results.push({
+                minutes: 0,
+                headsign: headsign,
+                isRealtime: true,
+                status: 'stopped'
+            });
+            return;
+        }
+        
+        const timeStr = item.attributes.departure_time || item.attributes.arrival_time;
+        if (!timeStr) return;
+        
+        const minutes = (new Date(timeStr) - now) / 60000;
+        
+        const maxTime = isCommuterRoute ? 240 : 120;
+        if (minutes < 0 || minutes > maxTime) return;
+        
+        const tripId = item.relationships?.trip?.data?.id;
+        const headsign = trips[tripId]?.headsign;
+        if (!headsign) return;
+        
+        results.push({
+            minutes,
+            headsign,
+            isRealtime,
+            status: item.attributes.status,
+            scheduleRelationship: item.attributes.schedule_relationship
+        });
+    });
+    
+    return results.sort((a, b) => a.minutes - b.minutes);
 }
 
 function getAlertForStop(stopId, routeId = null) {
@@ -176,12 +314,10 @@ function getAlertForStop(stopId, routeId = null) {
     const alerts = alertData[stopId].data;
     if (!alerts || alerts.length === 0) return null;
     
-    // Filter alerts that affect this specific route
     const routeAlerts = alerts.filter(alert => {
-        // Check if alert affects this route
         const entities = alert.relationships?.informed_entity?.data || [];
         return entities.some(entity => 
-            !routeId || // If no route specified, include all
+            !routeId || 
             (entity.id === routeId) || 
             (entity.type === 'route' && entity.id === routeId)
         );
@@ -225,126 +361,6 @@ function renderAlert(alert, direction = '') {
     `;
 }
 
-// ===== REAL-TIME PREDICTIONS =====
-async function fetchRealtime() {
-    const promises = [];
-    
-    GREEN_STOPS.forEach(stop => {
-        promises.push(
-            fetchAPI(`${MBTA_API}/predictions?filter[stop]=${stop.id}&filter[route]=${stop.route}&filter[direction_id]=0&include=trip&api_key=${MBTA_API_KEY}`)
-                .then(data => { realtimeData[`${stop.id}-out`] = data; })
-        );
-        
-        if (!stop.isTerminal && stop.inboundId) {
-            promises.push(
-                fetchAPI(`${MBTA_API}/predictions?filter[stop]=${stop.inboundId}&filter[route]=${stop.route}&filter[direction_id]=1&include=trip&api_key=${MBTA_API_KEY}`)
-                    .then(data => { realtimeData[`${stop.inboundId}-in`] = data; })
-            );
-        }
-        
-        if (stop.isTerminal) {
-            promises.push(
-                fetchAPI(`${MBTA_API}/predictions?filter[stop]=${stop.id}&filter[route]=${stop.route}&filter[direction_id]=1&include=trip&api_key=${MBTA_API_KEY}`)
-                    .then(data => { realtimeData[`${stop.id}-in`] = data; })
-            );
-        }
-    });
-    
-    BUS_STOPS.forEach(stop => {
-        promises.push(
-            fetchAPI(`${MBTA_API}/predictions?filter[stop]=${stop.id}&filter[route]=${stop.route}&include=trip&api_key=${MBTA_API_KEY}`)
-                .then(data => { realtimeData[`${stop.id}-bus`] = data; })
-        );
-        if (stop.inboundId) {
-            promises.push(
-                fetchAPI(`${MBTA_API}/predictions?filter[stop]=${stop.inboundId}&filter[route]=${stop.route}&include=trip&api_key=${MBTA_API_KEY}`)
-                    .then(data => { realtimeData[`${stop.inboundId}-bus`] = data; })
-            );
-        }
-    });
-    
-    await Promise.all(promises);
-}
-
-// ===== SCHEDULES =====
-async function fetchSchedules() {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(3, 0, 0, 0);
-    
-    const nextDay = new Date(tomorrow);
-    nextDay.setDate(nextDay.getDate() + 1);
-    
-    const southUrl = `${MBTA_API}/schedules?filter[stop]=70112&filter[route]=Green-B&filter[direction_id]=1&filter[min_time]=${tomorrow.toISOString()}&filter[max_time]=${nextDay.toISOString()}&include=trip&sort=departure_time&api_key=${MBTA_API_KEY}`;
-    const southData = await fetchAPI(southUrl);
-    if (southData?.data) scheduleData['70112-sched'] = southData;
-    
-    const clevelandUrl = `${MBTA_API}/schedules?filter[stop]=place-clmnl&filter[route]=Green-C&filter[direction_id]=1&filter[min_time]=${tomorrow.toISOString()}&filter[max_time]=${nextDay.toISOString()}&include=trip&sort=departure_time&api_key=${MBTA_API_KEY}`;
-    const clevelandData = await fetchAPI(clevelandUrl);
-    if (clevelandData?.data) scheduleData['place-clmnl-sched'] = clevelandData;
-    
-    const busUrl = `${MBTA_API}/schedules?filter[stop]=1994&filter[route]=501&filter[direction_id]=1&filter[min_time]=${new Date().toISOString()}&include=trip&sort=departure_time&page[limit]=2&api_key=${MBTA_API_KEY}`;
-    const busData = await fetchAPI(busUrl);
-    if (busData?.data) scheduleData['1994-sched'] = busData;
-}
-
-
-// ===== PROCESS PREDICTIONS =====
-function getPredictions(data, isRealtime = true, isCommuterRoute = false) {
-    if (!data?.data) return [];
-    
-    const trips = {};
-    if (data.included) {
-        data.included.forEach(item => {
-            if (item.type === 'trip') trips[item.id] = item.attributes;
-        });
-    }
-    
-    const now = new Date();
-    const results = [];
-    
-    data.data.forEach(item => {
-        // Check for stopped trains FIRST
-        const status = item.attributes.status;
-        if (status === 'Stopped' || status === 'Stopped at station') {
-            const tripId = item.relationships?.trip?.data?.id;
-            const headsign = trips[tripId]?.headsign || 'Train at station';
-            
-            results.push({
-                minutes: 0,
-                headsign: headsign,
-                isRealtime: true,
-                status: 'stopped'
-            });
-            return;
-        }
-        
-        // For commuter routes like 501, be more lenient with time windows
-        const timeStr = item.attributes.departure_time || item.attributes.arrival_time;
-        if (!timeStr) return;
-        
-        const minutes = (new Date(timeStr) - now) / 60000;
-        
-        // For 501, include predictions up to 4 hours ahead (since it runs infrequently)
-        const maxTime = isCommuterRoute ? 240 : 120;
-        if (minutes < 0 || minutes > maxTime) return;
-        
-        const tripId = item.relationships?.trip?.data?.id;
-        const headsign = trips[tripId]?.headsign;
-        if (!headsign) return;
-        
-        results.push({
-            minutes,
-            headsign,
-            isRealtime,
-            status: item.attributes.status,
-            scheduleRelationship: item.attributes.schedule_relationship
-        });
-    });
-    
-    return results.sort((a, b) => a.minutes - b.minutes);
-}
-
 // ===== RENDER FUNCTIONS =====
 function renderStop(elementId, outbound, inbound = null, stopId = null, inboundId = null, routeId = null) {
     const container = document.getElementById(elementId);
@@ -355,9 +371,7 @@ function renderStop(elementId, outbound, inbound = null, stopId = null, inboundI
     
     let html = '';
     
-    // Outbound section with its own alert
     if (outbound.length > 0) {
-        // Check for outbound-specific alert
         const outAlert = getAlertForStop(stopId, routeId);
         if (outAlert) {
             html += renderAlert(outAlert, 'outbound');
@@ -385,9 +399,7 @@ function renderStop(elementId, outbound, inbound = null, stopId = null, inboundI
         });
     }
     
-    // Inbound section with its own alert
     if (inbound && inbound.length > 0) {
-        // Check for inbound-specific alert
         const inAlert = getAlertForStop(inboundId || stopId, routeId);
         if (inAlert) {
             html += renderAlert(inAlert, 'inbound');
@@ -416,7 +428,6 @@ function renderStop(elementId, outbound, inbound = null, stopId = null, inboundI
         });
     }
     
-    // No trains at all
     if (outbound.length === 0 && (!inbound || inbound.length === 0)) {
         html = '<div class="no-trains">No trains running</div>';
     }
@@ -527,10 +538,7 @@ function renderRoute501() {
     const now = new Date();
     let html = '';
     
-    // Outbound (real-time or schedules)
-    const outboundKey = '11674-bus';
-    const outData = realtimeData[outboundKey];
-    
+    const outData = realtimeData['11674-bus'];
     if (outData?.data?.length > 0) {
         const preds = getPredictions(outData, true, true);
         if (preds.length > 0) {
@@ -549,7 +557,6 @@ function renderRoute501() {
         }
     }
     
-    // Inbound (schedules only)
     const schedData = scheduleData['1994-sched'];
     if (schedData?.data?.length > 0) {
         const preds = getPredictions(schedData, false, true);
@@ -624,28 +631,6 @@ function renderRoute51() {
     predContainer.innerHTML = html;
 }
 
-// ===== BLUE BIKES =====
-async function fetchBlueBikes() {
-    try {
-        const res = await fetch('/api/bluebikes');
-        const data = await res.json();
-        if (!data?.data?.stations) return;
-        
-        const stations = {};
-        BLUE_BIKE_STATIONS.forEach(s => { stations[s.id] = null; });
-        
-        data.data.stations.forEach(s => {
-            if (stations.hasOwnProperty(s.station_id)) {
-                stations[s.station_id] = s;
-            }
-        });
-        
-        bikeData = stations;
-    } catch (e) {
-        console.log('Blue Bikes error:', e);
-    }
-}
-
 function renderBlueBikes() {
     BLUE_BIKE_STATIONS.forEach(station => {
         const container = document.getElementById(station.elementId);
@@ -674,175 +659,102 @@ function renderBlueBikes() {
     });
 }
 
-// ===== UPDATE ALL =====
-// ===== UPDATE ALL =====
-async function updateAll() {
-    console.log('Updating...');
+// ===== RENDER CURRENT SECTION =====
+async function renderCurrentSection() {
+    const section = SECTIONS[currentSectionIndex];
     
-    await fetchRealtime();
-    await fetchSchedules();
-    await fetchAlerts();
+    // Hide all sections, show current
+    SECTIONS.forEach(s => {
+        const el = document.getElementById(s.elementId);
+        if (el) {
+            if (s.elementId === section.elementId) {
+                el.style.display = 'grid';
+            } else {
+                el.style.display = 'none';
+            }
+        }
+    });
     
-    // South Street
-    const southOut = getPredictions(realtimeData['70111-out']);
-    let southIn = getPredictions(realtimeData['70112-in']);
-    if (southIn.length === 0 && scheduleData['70112-sched']) {
-        southIn = getPredictions(scheduleData['70112-sched'], false);
+    // Clear old data for this section
+    if (section.name === 'green') {
+        GREEN_STOPS.forEach(stop => {
+            delete realtimeData[`${stop.id}-out`];
+            delete realtimeData[`${stop.id}-in`];
+            if (stop.inboundId) {
+                delete realtimeData[`${stop.inboundId}-in`];
+            }
+        });
+        delete scheduleData['70112-sched'];
+        delete scheduleData['place-clmnl-sched'];
+    } else if (section.name === 'bus') {
+        BUS_STOPS.forEach(stop => {
+            delete realtimeData[`${stop.id}-bus`];
+            if (stop.inboundId) {
+                delete realtimeData[`${stop.inboundId}-bus`];
+            }
+        });
+        delete scheduleData['1994-sched'];
+    } else if (section.name === 'bikes') {
+        bikeData = {};
     }
-    renderStop('south-street', southOut, southIn, '70111', '70112', 'Green-B');
     
-    // Cleveland Circle
-    const cleveOut = getPredictions(realtimeData['place-clmnl-out']);
-    let cleveIn = getPredictions(realtimeData['place-clmnl-in']);
-    if (cleveIn.length === 0 && scheduleData['place-clmnl-sched']) {
-        cleveIn = getPredictions(scheduleData['place-clmnl-sched'], false);
+    alertData = {};
+    
+    // Fetch and render
+    switch(section.name) {
+        case 'green':
+            await fetchGreenLineData();
+            
+            const southOut = getPredictions(realtimeData['70111-out']);
+            let southIn = getPredictions(realtimeData['70112-in']);
+            if (southIn.length === 0 && scheduleData['70112-sched']) {
+                southIn = getPredictions(scheduleData['70112-sched'], false);
+            }
+            renderStop('south-street', southOut, southIn, '70111', '70112', 'Green-B');
+            
+            const cleveOut = getPredictions(realtimeData['place-clmnl-out']);
+            let cleveIn = getPredictions(realtimeData['place-clmnl-in']);
+            if (cleveIn.length === 0 && scheduleData['place-clmnl-sched']) {
+                cleveIn = getPredictions(scheduleData['place-clmnl-sched'], false);
+            }
+            renderStop('cleveland-circle', cleveOut, cleveIn, 'place-clmnl', null, 'Green-C');
+            
+            const resOut = getPredictions(realtimeData['place-rsmnl-out']);
+            const resIn = getPredictions(realtimeData['place-rsmnl-in']);
+            renderStop('reservoir', resOut, resIn, 'place-rsmnl', null, 'Green-D');
+            break;
+            
+        case 'bus':
+            await fetchBusData();
+            renderRoute86();
+            renderRoute501();
+            renderRoute51();
+            break;
+            
+        case 'bikes':
+            await fetchBikeData();
+            renderBlueBikes();
+            break;
     }
-    renderStop('cleveland-circle', cleveOut, cleveIn, 'place-clmnl', null, 'Green-C');
     
-    // Reservoir
-    const resOut = getPredictions(realtimeData['place-rsmnl-out']);
-    const resIn = getPredictions(realtimeData['place-rsmnl-in']);
-    renderStop('reservoir', resOut, resIn, 'place-rsmnl', null, 'Green-D');
-    
-    // Route 86 - Combined card
-    renderRoute86();
-    
-    // Route 501 - Special handling for commuter route
-console.log('501 Debug:');
-console.log('- Outbound real-time data:', realtimeData['11674-bus'] ? 'exists' : 'missing');
-console.log('- Schedule data:', scheduleData['1994-sched'] ? 'exists' : 'missing');
-
-if (scheduleData['1994-sched']) {
-    console.log('- Schedule entries:', scheduleData['1994-sched'].data?.length || 0);
-}
-
-const container = document.getElementById('bus-501');
-if (container) {
-    const predContainer = container.querySelector('.predictions');
-    if (predContainer) {
-        let html = '';
-        
-        // Check if we're in PM peak hours (roughly 1:30 PM - 7:30 PM)
-        const now = new Date();
-        const hour = now.getHours();
-        const minute = now.getMinutes();
-        const timeValue = hour + minute / 60;
-        
-        // PM Peak: ~1:30 PM to 7:30 PM
-        const isPMPeak = timeValue >= 13.5 && timeValue <= 19.5;
-        
-        // Outbound (real-time with extended window)
-        const outData = realtimeData['11674-bus'];
-        if (outData?.data?.length > 0) {
-            console.log('- Processing outbound data');
-            const preds = getPredictions(outData, true, true);
-            console.log('- Outbound predictions:', preds.length);
-            
-            if (preds.length > 0) {
-                html += `<div class="direction-header">
-                            <span class="direction-label">Outbound</span>
-                            <span class="destination-primary">&rarr; ${preds[0].headsign}</span>
-                        </div>`;
-                preds.slice(0, 2).forEach(p => {
-                    const timeDisplay = formatTime(p.minutes);
-                    const icon = p.scheduleRelationship === 'ADDED' ? SCHEDULE_ICON : LIVE_ICON;
-                    html += `<div class="prediction-row">
-                                <span class="destination">${icon} ${p.headsign}</span>
-                                <span class="time ${p.minutes <= 1 ? 'now' : ''}">${timeDisplay}</span>
-                            </div>`;
-                });
-            }
-        }
-        
-        // If no real-time data and we're in PM peak, show static schedule
-        if (outData?.data?.length === 0 && isPMPeak) {
-            console.log('- Using static PM peak schedule');
-            
-            // Calculate minutes until 4:16 PM
-            const targetTime = new Date();
-            targetTime.setHours(16, 16, 0, 0); // 4:16 PM
-            
-            // If it's past 4:16 PM today, show tomorrow's 4:16 PM
-            if (now > targetTime) {
-                targetTime.setDate(targetTime.getDate() + 1);
-            }
-            
-            const minutesUntil = (targetTime - now) / 60000;
-            
-            html += `<div class="direction-header">
-                        <span class="direction-label">Outbound</span>
-                        <span class="destination-primary">&rarr; Brighton via Copley</span>
-                    </div>`;
-            html += `<div class="prediction-row">
-                        <span class="destination">${SCHEDULE_ICON} Brighton via Copley</span>
-                        <span class="time">${formatTime(minutesUntil)}</span>
-                    </div>`;
-        }
-        
-        // Inbound (schedules only)
-        const schedData = scheduleData['1994-sched'];
-        if (schedData?.data?.length > 0) {
-            console.log('- Processing inbound schedule data');
-            const preds = getPredictions(schedData, false, true);
-            console.log('- Inbound predictions:', preds.length);
-            
-            if (preds.length > 0) {
-                html += `<div class="direction-header">
-                            <span class="direction-label">Inbound</span>
-                            <span class="destination-primary">&rarr; ${preds[0].headsign}</span>
-                        </div>`;
-                preds.slice(0, 2).forEach(p => {
-                    const timeDisplay = formatTime(p.minutes);
-                    html += `<div class="prediction-row">
-                                <span class="destination">${SCHEDULE_ICON} ${p.headsign}</span>
-                                <span class="time ${p.minutes <= 1 ? 'now' : ''}">${timeDisplay}</span>
-                            </div>`;
-                });
-            }
-        }
-        
-        // If no schedule data and we're in PM peak, show static inbound schedule
-        if ((!schedData?.data?.length) && isPMPeak) {
-            console.log('- Using static PM peak inbound schedule');
-            
-            // Next inbound might be at 5:00 PM etc
-            const targetTime = new Date();
-            targetTime.setHours(17, 0, 0, 0); // 5:00 PM
-            
-            if (now > targetTime) {
-                targetTime.setHours(18, 0, 0, 0); // 6:00 PM
-            }
-            
-            const minutesUntil = (targetTime - now) / 60000;
-            
-            html += `<div class="direction-header">
-                        <span class="direction-label">Inbound</span>
-                        <span class="destination-primary">&rarr; Downtown via Copley</span>
-                    </div>`;
-            html += `<div class="prediction-row">
-                        <span class="destination">${SCHEDULE_ICON} Downtown via Copley</span>
-                        <span class="time">${formatTime(minutesUntil)}</span>
-                    </div>`;
-        }
-        
-        predContainer.innerHTML = html || '<div class="no-trains">No buses scheduled</div>';
+    // Update timestamp
+    const timestampEl = document.getElementById('timestamp');
+    if (timestampEl) {
+        timestampEl.innerHTML = `${new Date().toLocaleTimeString()}`;
     }
 }
-    
-    // Route 51
-    renderRoute51();
-    
-    // Blue Bikes
-    await fetchBlueBikes();
-    renderBlueBikes();
-    
-    // Timestamp
-    document.getElementById('timestamp').innerHTML = `${new Date().toLocaleTimeString()}`;
-    
-    console.log('Done');
+
+// ===== ROTATION =====
+function nextSection() {
+    currentSectionIndex = (currentSectionIndex + 1) % SECTIONS.length;
+    renderCurrentSection();
 }
 
 // ===== START =====
-console.log('Starting MBTA Tracker with Alerts...');
-updateAll();
-setInterval(updateAll, 15000);
+console.log('Starting MBTA Tracker - Kiosk Mode...');
+
+// Start with first section
+renderCurrentSection();
+
+// Rotate every 15 seconds
+setInterval(nextSection, 15000);
