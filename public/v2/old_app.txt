@@ -4,7 +4,7 @@
  */
 
 const MBTA_API = 'https://api-v3.mbta.com';
-const MBTA_API_KEY = 'API_KEY_PLACEHOLDER';
+const MBTA_API_KEY = '64182eff160a439598847faa3c2370dd';
 
 // ===== STOPS =====
 const GREEN_STOPS = [
@@ -96,20 +96,27 @@ function formatTime(minutes) {
     return `${Math.floor(minutes)} min`;
 }
 
+// ===== HELPERS =====
 async function fetchAPI(url) {
     try {
-        // If it's an MBTA API call, proxy it through your worker
+        // For local testing, bypass the proxy and call APIs directly
         if (url.includes('api-v3.mbta.com')) {
+            // Make sure API key is included
             const urlObj = new URL(url);
-            const proxyUrl = `/api/mbta${urlObj.pathname}${urlObj.search}`;
-            const res = await fetch(proxyUrl);
+            // Add API key if not present
+            if (!urlObj.searchParams.has('api_key')) {
+                urlObj.searchParams.append('api_key', MBTA_API_KEY);
+            }
+            const res = await fetch(urlObj.toString());
             return await res.json();
         }
-        // For other APIs (Blue Bikes), use proxy too
+        
+        // For Blue Bikes in local testing
         if (url.includes('bluebikes.com')) {
-            const res = await fetch('/api/bluebikes');
+            const res = await fetch(url);
             return await res.json();
         }
+        
         const res = await fetch(url);
         return await res.json();
     } catch (e) {
@@ -627,7 +634,8 @@ function renderRoute51() {
 // ===== BLUE BIKES =====
 async function fetchBlueBikes() {
     try {
-        const res = await fetch('/api/bluebikes');
+        // Direct call to Blue Bikes API for local testing
+        const res = await fetch('https://gbfs.bluebikes.com/gbfs/en/station_status.json');
         const data = await res.json();
         if (!data?.data?.stations) return;
         

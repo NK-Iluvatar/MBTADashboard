@@ -16,7 +16,7 @@
     --mbta-warm-white-80: #CCCBC8;
     --mbta-true-white: #FFFFFF;
 
-     /* Typography */
+    /* Typography */
     --spacing-base: 1.5em;
     --font-family-mono: monospace;
     --font-size-base: 1em;
@@ -31,125 +31,133 @@
 }
 
 body {
-    background: var(--mbta-warm-white-90);
+    background: var(--mbta-warm-white-90) url('https://wanderwisdom.com/.image/w_3840,q_auto:good,c_limit/MjA0OTI4MjMzOTk5NzA1Njk0/21-free-things-to-do-in-boston.jpg') center center/cover no-repeat fixed;
     font: var(--font-size-base) / var(--spacing-base) var(--font-family-mono);
     color: var(--mbta-cool-black-15);
     line-height: 1.3;
     padding: 2rem;
     width: 100vw;
+    height: 100vh;
 }
 
 .container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: min-content;
+    grid-template-rows: min-content min-content 1fr;
     grid-auto-flow: row;
     gap: 1.5rem;
     margin-bottom: 2rem;
+    max-width: 100%;
+    height: 100%;
+}
+
+/* Section visibility - only one shown at a time */
+.section {
+    display: none;
+}
+
+.section.active {
+    display: grid;
 }
 
 /* Path navigation styles */
 .path-nav {
-  grid-column: span 3;
-  font-family: var(--font-family-mono);
-  white-space: nowrap;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-  width: 100%;
+    font-family: var(--font-family-mono);
+    white-space: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    width: 100%;
 }
 
 .path-nav::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+    display: none; /* Chrome, Safari, Opera */
 }
 
 .path-nav ol {
-  display: flex;
-  flex-wrap: nowrap;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .path-nav li {
-  display: flex;
-  align-items: center;
-  color: var(--color-text-muted);
-  flex-shrink: 0;
-  max-width: 200px; /* Limit maximum width on small screens */
+    display: flex;
+    align-items: center;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+    max-width: 200px;
 }
 
 .path-nav li.current {
-  max-width: none; /* Allow full width for current page */
+    max-width: none;
 }
 
 .path-nav li a {
-  text-decoration: none;
-  border-bottom: none;
-  padding: 0 0.25em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: var(--color-text-muted);
+    text-decoration: none;
+    border-bottom: none;
+    padding: 0 0.25em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--color-text-muted);
 }
 
 .path-nav li.current a {
-  color: var(--color-text-primary);
-  font-weight: bold;
+    color: var(--color-text-primary);
+    font-weight: bold;
 }
 
 .path-nav a:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
-
 
 /* Main menu navigation styles */
 .terminal-nav {
-  font-family: var(--font-family-mono);
-  border-top: 1px solid var(--color-border);
-  margin-bottom: calc(var(--spacing-base) * 2);
-  padding-bottom: var(--spacing-base);
-  padding-top: var(--spacing-base);
+    font-family: var(--font-family-mono);
+    border-top: 1px solid var(--color-border);
+    margin-bottom: calc(var(--spacing-base) * 2);
+    padding-bottom: var(--spacing-base);
+    padding-top: var(--spacing-base);
 }
 
 .terminal-nav nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  gap: 1em;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 1em;
 }
 
 .terminal-nav nav ul li {
-  display: inline-block;
+    display: inline-block;
 }
 
 .terminal-nav nav ul li a,
 .terminal-nav .back-link {
-  color: var(--color-text-muted);
-  border-bottom: none;
-  text-decoration: none;
+    color: var(--color-text-muted);
+    border-bottom: none;
+    text-decoration: none;
 }
 
 .terminal-nav nav ul li a:hover,
 .terminal-nav .back-link:hover {
-  color: var(--color-text-primary);
+    color: var(--color-text-primary);
 }
 
 .terminal-nav nav ul li a.active {
-  color: var(--color-text-primary);
-  font-weight: bold;
+    color: var(--color-text-primary);
+    font-weight: bold;
 }
 
 .terminal-nav .back-nav {
-  margin: calc(var(--spacing-base) * 0.5) 0;
+    margin: calc(var(--spacing-base) * 0.5) 0;
 }
-
 
 /* ===== MODE HEADERS ===== */
 .mode-header {
-    grid-column: span 3;
     padding: 0.75rem 1rem;
     border-radius: 8px;
 }
@@ -166,13 +174,6 @@ body {
     background: var(--mbta-bluebike);
 }
 
-.time.stopped {
-    color: #FFC72C;  /* MBTA bus yellow - stands out */
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-}
-
 .mode-header h2 {
     font-family: var(--font-family-mono);
     font-weight: 700;
@@ -181,32 +182,16 @@ body {
     letter-spacing: -0.01em;
     display: flex;
     align-items: center;
+    gap: 0.5rem;
 }
 
 .mode-header.green h2 {
     color: var(--mbta-true-white);
 }
 
-.mode-header.bus h2 {
-    color: var(--mbta-cool-black-15);
-}
-
-.no-schedules {
-    font-family: var(--font-family-mono);
-    color: #505A62;
-    padding: 0.75rem 0;
-    text-align: left;
-    font-style: italic;
-    border-bottom: 1px solid var(--mbta-warm-white-90);
-}
-
 .mode-header.bluebike h2 {
     color: white;
 }
-
-.mode-header.bluebike h2 i {
-}
-
 
 /* ===== STOP CARDS - BASE ===== */
 .stop-card {
@@ -226,60 +211,17 @@ body {
     gap: 0.5rem;
 }
 
-.stop-card h3 i {
-}
-
-/* ----- ALERT BANNERS ----- */
-.alert-banner {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1rem;
-    border-radius: 4px;
-    background: #FFF7BF;
-    border-left: 4px solid #FFDD00;
-    font-family: var(--font-family-mono);
-}
-
-.alert-banner.alert-high {
-    background: #FFE5E5;
-    border-left-color: #DA291C;
-}
-
-.alert-icon {
-    line-height: 1.4;
-}
-
-.alert-content {
-    flex: 1;
-}
-
-.alert-header {
-    font-weight: 700;
-    color: #171F26;
-    margin-bottom: 0.25rem;
-}
-
-.alert-description {
-    color: #505A62;
-    line-height: 1.4;
-}
-
 /* ===== CARD VARIANTS ===== */
 .stop-card.green-line {
-    border: 0px solid var(--mbta-green);
-    border-left-width: 4px;
+    border-left: 4px solid var(--mbta-green);
 }
 
 .stop-card.bus {
-    border: 0px solid var(--mbta-bus);
-    border-left-width: 4px;
+    border-left: 4px solid var(--mbta-bus);
 }
 
 .stop-card.bluebike {
-    border: 0px solid var(--mbta-bluebike);
-    border-left-width: 4px;
+    border-left: 4px solid var(--mbta-bluebike);
 }
 
 /* ===== STOP LOCATION ===== */
@@ -291,6 +233,18 @@ body {
     border-bottom: 1px solid var(--mbta-warm-white-80);
     text-transform: uppercase;
     letter-spacing: 0.03em;
+    font-size: 0.9rem;
+}
+
+/* ===== BADGES ===== */
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    background: var(--mbta-warm-white-90);
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--mbta-cool-black-15);
 }
 
 /* ===== DIRECTION HEADERS ===== */
@@ -301,7 +255,7 @@ body {
     margin-top: 0.75rem;
     margin-bottom: 0.5rem;
     padding-top: 0.5rem;
-    border-top: 0px solid var(--mbta-warm-white-90);
+    border-top: 1px solid var(--mbta-warm-white-90);
 }
 
 .direction-header:first-of-type {
@@ -316,6 +270,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: #505A62;
+    font-size: 0.85rem;
 }
 
 .destination-primary {
@@ -368,8 +323,52 @@ body {
     color: var(--mbta-bus);
 }
 
+.time.stopped {
+    color: #FFC72C;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
 .bi {
     padding-right: 0.4rem;
+}
+
+/* ===== ALERT BANNERS ===== */
+.alert-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    background: #FFF7BF;
+    border-left: 4px solid #FFDD00;
+    font-family: var(--font-family-mono);
+}
+
+.alert-banner.alert-high {
+    background: #FFE5E5;
+    border-left-color: #DA291C;
+}
+
+.alert-icon {
+    line-height: 1.4;
+}
+
+.alert-content {
+    flex: 1;
+}
+
+.alert-header {
+    font-weight: 700;
+    color: #171F26;
+    margin-bottom: 0.25rem;
+}
+
+.alert-description {
+    color: #505A62;
+    line-height: 1.4;
 }
 
 /* ===== BLUE BIKES - BIKE ROWS ===== */
@@ -419,7 +418,6 @@ body {
     color: var(--mbta-cool-black-15);
 }
 
-
 /* ===== BIKE ICON ANIMATION ===== */
 @keyframes pedal {
     0% { transform: rotate(0deg); }
@@ -434,7 +432,8 @@ body {
 
 /* ===== EMPTY STATES ===== */
 .no-trains,
-.no-bikes {
+.no-bikes,
+.no-schedules {
     font-family: var(--font-family-mono);
     color: #505A62;
     padding: 0.75rem 0;
@@ -444,75 +443,83 @@ body {
 
 /* ===== TIMESTAMP ===== */
 .timestamp {
-    grid-column: span 2;
     font-family: var(--font-family-mono);
+    align-self: center;
     font-size: 2.5rem;
     color: #505A62;
     text-align: right;
 }
 
 /* ===== RESPONSIVE BREAKPOINTS ===== */
-
 @media (max-width: 900px) {
-    
+    body {
+        padding: 1rem;
+    }
     
     .container {
-    }
-
-    .stop-card{
-        grid-column: span 3;
+        gap: 1rem;
     }
     
-    .stop-card h3 {
+    .section.active {
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
     
-    .prediction-row {
+    .mode-header {
+        grid-column: span 1 !important;
     }
 }
 
 @media (max-width: 550px) {
+    body {
+        padding: 0.5rem;
+    }
     
-    
-    .mode-header h2 {
+    .container {
+        gap: 0.75rem;
     }
     
     .stop-card {
+        padding: 1rem;
     }
     
-    .stop-location {
-    }
-    
-    .direction-label {
+    .direction-header {
+        flex-direction: column;
+        gap: 0.25rem;
     }
     
     .destination-primary {
-    }
-    
-    .bike-row {
+        font-size: 0.9rem;
     }
 }
-
-
 
 /* ===== PRINT STYLES (E Ink optimization) ===== */
 @media screen and (width: 1024px) and (height: 758px) {
     body {
         background: var(--mbta-true-white);
-        padding: 0.5rem;
+        padding: 10px;
+    }
+
+    img {
+        filter: grayscale(100%) contrast(200%);
+    }
+
+    .container {
+        padding: 10px;
     }
     
     .stop-card.bus,
     .stop-card.green-line,
     .stop-card.bluebike {
-       border: 1px solid #000;
-    border-left-width: 4px;
+        border: 1px solid #000;
+        border-left-width: 4px;
     }
 
-    .prediction-row:has(.now){
+    .prediction-row:has(.now) {
         background: #000;
     }
 
-    .prediction-row:has(.now) > span{
+    .prediction-row:has(.now) > span {
         color: white;
     }
     
