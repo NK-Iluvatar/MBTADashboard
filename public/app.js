@@ -69,7 +69,6 @@ const PANELS = [
         elementId: "south-station-cr-greenbush",
         routeId: "CR-Greenbush",
         services: [service("CR-Greenbush", 0, "place-sstat", "Greenbush")],
-        // "CR-Greenbush-6d652c57-0" - Greenbush
     },
     {
         title: "Fairmount Line",
@@ -169,7 +168,7 @@ function formatTime(minutes) {
  * Builds a key to store and retrieve data recieved from mbta api
  * @param {*} panel
  * @param {*} service
- * @returns the unique key
+ * @returns String
  */
 function buildKey(panel, service) {
     return `${panel.routeId}-${service.stopId}-${service.directionId}-${service.headsignContains}`;
@@ -210,20 +209,19 @@ async function fetchAlerts() {
             ),
         );
     });
-
     await Promise.all(promises);
 }
 
 /**
  * Gets the most severe allowed alert for a given line
  * @param {*} routeId - the ID of the line
- * @returns the alert
+ * @returns the relevant alert
  */
 function getAlertForRoute(routeId) {
     const alerts = alertData[routeId];
     if (!alerts?.length) return null;
     const allowedEffects = [
-        { effect: "DELAY", severity: 10 },
+        { effect: "DELAY", severity: 10 }, // most urgent
         { effect: "CANCELLATION", severity: 10 },
         { effect: "NO_SERVICE", severity: 10 },
         { effect: "SIGNIFICANT_DELAYS", severity: 10 },
@@ -231,6 +229,7 @@ function getAlertForRoute(routeId) {
         { effect: "REDUCED_SERVICE", severity: 5 },
         { effect: "MODIFIED_SERVICE", severity: 5 },
     ];
+    // filtered allowed alerts from response and asign new serverity
     const filtered = alerts
         .map((alert) => {
             const rule = allowedEffects.find(
@@ -248,7 +247,7 @@ function getAlertForRoute(routeId) {
 
 // ===================== PREDICTIONS =====================
 /**
- * fetches schedules for upcoming lines and include predictions
+ * fetches schedules for upcoming lines and include predictions amd trips
  */
 async function fetchRealtime() {
     const promises = [];
@@ -277,7 +276,7 @@ async function fetchRealtime() {
 }
 
 /**
- * Gets predictions from the api call for trains; if no predictiosn, default to schedules.
+ * Transfrom data to predictions; if no predictions, default to schedules.
  * @param {*} data - data from api call
  * @returns
  */
@@ -314,14 +313,16 @@ function getPredictions(data) {
 
         if (!timeStr) return;
         const date = new Date(timeStr);
+        // how long from now does train arrive
         const minutes = (date - now) / 60000;
-        if (minutes < -1 || minutes > 180) return;
+        if (minutes < -1 || minutes > 180) return; // allow preds within 3hr
         const headsign = tripsById[tripId]?.headsign;
         if (!headsign) return;
 
         const trip = tripsById[tripId];
         if (!trip) return;
 
+        // predicted time train arrives
         const formattedTime = date.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
@@ -347,12 +348,12 @@ function getPredictions(data) {
  */
 async function fetchHourlyForecast() {
     const now = Date.now();
-    // fetch weather every 15 mins
-    if (cacheWeather && now - lastWeatherFetch < 15 * 60000) {
+    // fetch weather every 20 mins
+    if (cacheWeather && now - lastWeatherFetch < 20 * 60000) {
         return cacheWeather;
     }
 
-    const url = "/api/weather/gridpoints/BOX/72,90/forecast/hourly";
+    const url = "/api/weather/gridpoints/BOX/72,90/forecast/hourly"; // BOX(72,90) = Boston area
     const data = await fetchAPI(url);
     cacheWeather = data?.properties?.periods ?? [];
     lastHourlyFetch = now;
@@ -380,6 +381,11 @@ async function fetchDetailedForecast() {
 }
 
 // ===================== RENDER =====================
+/**
+ * Gets class based on route for styling
+ * @param {*} routeId routeID of a line
+ * @returns style class
+ */
 function getRouteClass(routeId) {
     if (!routeId) return "";
 
@@ -413,7 +419,7 @@ function renderPanel(panel) {
             <div class="mbta-card-body">
         `;
 
-    // Group services by direction
+    // Group services by direction(eg southbound, northbound) in each line
     const directions = {};
     panel.services.forEach((service) => {
         const dir = service.directionId;
@@ -426,6 +432,7 @@ function renderPanel(panel) {
         directions[dir].services.push(service);
     });
 
+    // render predicted time for each service in each direction of each line
     Object.values(directions).forEach((dir) => {
         html += `
             <div class="direction-header">
@@ -446,33 +453,33 @@ function renderPanel(panel) {
             const headsign = preds[0].headsign;
             const [destination, via] = headsign.split(" via ");
 
+            // renders predicted time horizontally
             const times = preds
                 .slice(0, 3)
                 .map((p) => {
                     return `
-              <div class="pred-time ${p.isRealtime ? "realtime" : "scheduled"}">
-                  <div class="pred-number">${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON} ${formatTime(p.minutes)}</div>
-                  <div class="pred-unit">${p.formattedTime}</div>
-              </div>
+                        <div class="pred-time ${p.isRealtime ? "realtime" : "scheduled"}">
+                            <div>${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON} ${formatTime(p.minutes)}</div>
+                            <div>${p.formattedTime}</div>
+                        </div>
                     `;
                 })
                 .join("");
 
             html += `
-                <div class="prediction-row">
-                    <div class="destination">
-                <div class="destination-main">${destination}</div>
-                    ${via ? `<div class="destination-via">via ${via}</div>` : ""}
-                </div>
+                    <div class="prediction-row">
+                    <div class="destination-main">${destination}</div>
+                        ${via ? `<div class="destination-via">via ${via}</div>` : ""} <!-- COMMENT: Doesn't always exist -->
 
-                <div class="pred-times">
-                        ${times}
-                </div>
+                    <div class="pred-times">
+                            ${times}
+                    </div>
                 </div>
             `;
         });
     });
 
+    // puts alerts bottom of panel
     const alert = getAlertForRoute(panel.routeId);
     if (alert) {
         html += `
@@ -516,29 +523,30 @@ function renderWeather() {
 
     if (!container.querySelector(".weather-card")) {
         container.innerHTML = `
-  <div class="weather-card">
+        <div class="weather-card">
 
-    <div class="weather-left">
-      <div class="weather-main">
-        <div class="weather-temp">${tempF}°</div>
-        <img class="weather-icon" src="${current.icon}" alt="${description}">
-      </div>
+            <div class="weather-left">
+                <div class="weather-main">
+                    <div class="weather-temp">${tempF}°</div>
+                    <img class="weather-icon" src="${current.icon}" alt="${description}">
+                </div>
 
-      <div class="weather-desc">${description}</div>
-      <div class="weather-detail">${detailedDesc}</div>
-    </div>
+                <div class="weather-desc">${description}</div>
+                <div class="weather-detail">${detailedDesc}</div>
+            </div>
 
-    <div class="weather-right">
-      <div class="weather-location">Boston, MA</div>
-      <div class="weather-date">${date}</div>
-      <div id="timestamp" class="timestamp"></div>
-    </div>
+            <div class="weather-right">
+                <div class="weather-location">Boston, MA</div>
+                <div class="weather-date">${date}</div>
+                <div id="timestamp" class="timestamp"></div>
+            </div>
 
-  </div>
-`;
+        </div>
+    `;
     }
     const card = container.querySelector(".weather-card");
 
+    // update everything every 20mins EXCEPT timestamp
     card.querySelector("weather-temp").textContent = `${tempF}`;
     card.querySelector("weather-icon").src = current.icon;
     card.querySelector("weather-icon").alt = description;
@@ -548,6 +556,9 @@ function renderWeather() {
 }
 
 // ===================== UPDATE LOOP =====================
+/**
+ * Starts a clock. Called once when first rendered.
+ */
 function startClock() {
     function updateClock() {
         const ts = document.getElementById("timestamp");
@@ -561,6 +572,10 @@ function startClock() {
     updateClock();
     setInterval(updateClock, 1000);
 }
+
+/** 
+ * Update calls and render.
+*/
 async function updateAll() {
     await fetchRealtime();
     await fetchAlerts();
@@ -575,4 +590,5 @@ async function updateAll() {
 console.log("Starting scalable MBTA tracker");
 startClock();
 updateAll();
+// update every 15 seconds (weather updates independently every 20 & 60 minutes)
 setInterval(updateAll, 15000);

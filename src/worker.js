@@ -1,4 +1,3 @@
-
 const JSON_HEADERS = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -80,11 +79,13 @@ export default {
             }
 
             // Blue Bikes API proxy
+            /** 
             if (url.pathname === "/api/bluebikes") {
                 return proxyRequest(
                     "https://gbfs.bluebikes.com/gbfs/en/station_status.json",
                 );
             }
+            */
         }
 
         // If we get here, try root path for index.html
