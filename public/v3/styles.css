@@ -160,6 +160,9 @@ body {
 .cr-alert {
     overflow: hidden;
     white-space: nowrap;
+    min-width: 0;
+    max-width: 100%;
+    contain: strict;
 }
 
 .cr-alert:has(.cr-alert-ticker) {
