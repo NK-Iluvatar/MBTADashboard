@@ -108,7 +108,9 @@ body {
     padding: 14px 20px;
     text-transform: uppercase;
     border-radius: 3px 3px 0 0;
-    overflow-x: clip;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
     flex-shrink: 0;
 }
 
@@ -216,6 +218,8 @@ body {
 
 .weather-temp {
     font-size: 60px;
+    
+    color: #616161;
     font-weight: 700;
 }
 
@@ -253,5 +257,6 @@ body {
 
 #timestamp {
     font-size: 60px;
+    color: #616161;
     font-weight: 700;
 }
