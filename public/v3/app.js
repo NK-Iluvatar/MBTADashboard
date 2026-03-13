@@ -504,7 +504,7 @@ function renderPanel(panel) {
         <div class="mbta-card ${routeClass}">
             <div class="mbta-card-header">
                 <div class="ticker-container">
-                    <span class="ticker-text"><strong>${panel.title}</strong> - <span style="font-weight: 200;">${panel.StationName}</span></span>
+                    <span class="ticker-text">${panel.title} - <span style="font-weight: 200;">${panel.StationName}</span></span>
                 </div>
             </div>
             <div class="mbta-card-body">
