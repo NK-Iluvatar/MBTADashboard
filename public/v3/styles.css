@@ -108,7 +108,7 @@ body {
     padding: 14px 20px;
     text-transform: uppercase;
     border-radius: 3px 3px 0 0;
-    overflow: hidden;
+    overflow: clip;
     height: 66px;
     flex-shrink: 0;
 }
