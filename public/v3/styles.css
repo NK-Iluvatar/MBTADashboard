@@ -403,4 +403,12 @@ body {
     .container-ferry {
         grid-template-columns: calc(50% - 0.625rem) calc(50% - 0.625rem);
     }
+
+    .cr-grid {
+    grid-template-columns: 1fr 1fr 3fr 3fr;
+    }
+
+    .cr-times {
+    gap: 40px;
+}
 }
