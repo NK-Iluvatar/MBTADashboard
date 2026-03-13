@@ -119,7 +119,7 @@ body {
 .mbta-card {
   border: 1px solid #E6E7E8;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  border-radius: 10rem;
+  border-radius: 50px;
 }
 
 /* HEADER */
@@ -191,7 +191,7 @@ body {
   flex-direction: row;
   align-items: center;
   gap: 20px;
-  padding: 14px 20px;
+  padding: 14px 0px;
   background: none !important;
 }
 
