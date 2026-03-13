@@ -677,9 +677,28 @@ async function updateAll() {
     renderWeather();
 }
 
+/**
+ * Alternates visibility between container-top and container-bottom every 20 seconds.
+ */
+function startContainerRotation() {
+    const top = document.querySelector(".container-top");
+    const bottom = document.querySelector(".container-bottom");
+    if (!top || !bottom) return;
+
+    let showingTop = true;
+    bottom.style.display = "none";
+
+    setInterval(() => {
+        showingTop = !showingTop;
+        top.style.display = showingTop ? "grid" : "none";
+        bottom.style.display = showingTop ? "none" : "grid";
+    }, 20000);
+}
+
 // ===================== START =====================
 console.log("Starting scalable MBTA tracker");
 startClock();
+startContainerRotation();
 updateAll();
 // update every 15 seconds (weather updates independently every 20 & 60 minutes)
 setInterval(updateAll, 15000);
