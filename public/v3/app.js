@@ -597,7 +597,7 @@ function renderPanel(panel) {
         if (!tickerContainer || !tickerSpan) return;
 
         if (tickerSpan.scrollWidth > tickerContainer.offsetWidth) {
-            tickerSpan.innerHTML = `${headerCopy}<span style="display:inline-block;width:72px"></span>${headerCopy}<span style="display:inline-block;width:72px"></span>`;
+            tickerSpan.innerHTML = `${headerCopy}<span style="display:inline-block;width:36px"></span>${headerCopy}<span style="display:inline-block;width:36px"></span>`;
             tickerSpan.classList.add('ticker-active');
         }
     }, 300);
