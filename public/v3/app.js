@@ -441,6 +441,7 @@ function getRouteClass(routeId) {
     if (!routeId) return "";
 
     if (routeId.startsWith("CR-")) return "route-CR";
+    if (routeId.startsWith("Boat-")) return "route-Boat";
     if (routeId === "Red") return "route-Red";
     if (routeId === "Orange") return "route-Orange";
     if (routeId === "Blue") return "route-Blue";
