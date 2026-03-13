@@ -161,13 +161,12 @@ body {
     min-width: 0;
     overflow: hidden;
     position: relative;
+    align-self: stretch;
 }
 
 .cr-alert:has(.cr-alert-ticker) {
     border-top: 1px solid #d7d8da;
     padding: 3px 20px;
-    text-align: left;
-    align-self: center;
 }
 
 .cr-grid:not(:has(.cr-alert-ticker)) .cr-header:last-child {
@@ -182,9 +181,13 @@ body {
 }
 
 .cr-alert-ticker {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    right: 0;
+    transform: translateY(-50%);
     overflow: hidden;
     white-space: nowrap;
-    width: 100%;
 }
 
 .cr-alert-text {
@@ -227,6 +230,7 @@ body {
 
 .mbta-card-header .ticker-station {
     font-weight: 200;
+    font-size: 20px;
 }
 
 /* BODY */

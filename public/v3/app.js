@@ -566,7 +566,7 @@ function renderPanel(panel) {
     let html = `
         <div class="mbta-card ${routeClass}">
             <div class="mbta-card-header">
-                <span class="ticker-title">${panel.title}</span> - <span class="ticker-station">${panel.StationName}</span>
+                <span class="ticker-title">${panel.title}</span> <span class="ticker-station">via ${panel.StationName}</span>
             </div>
             <div class="mbta-card-body">
         `;
