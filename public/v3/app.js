@@ -9,13 +9,12 @@
  */
 function service(routeId, directionId, stopId, destination) {
     const isBlueOrGreen = routeId === "Green" || routeId === "Blue" || routeId.startsWith("Green-");
+    const isCommuter = routeId.startsWith("CR-");
     const direction = isBlueOrGreen
-        ? directionId === 0
-            ? "Westbound"
-            : "Eastbound"
-        : directionId === 0
-          ? "Southbound"
-          : "Northbound";
+        ? directionId === 0 ? "Westbound" : "Eastbound"
+        : isCommuter
+        ? directionId === 0 ? "Outbound" : "Inbound"
+        : directionId === 0 ? "Southbound" : "Northbound";
 
     return {
         routeId,
@@ -213,6 +212,51 @@ const PANELS = [
         StationName: "Aquarium",
         routeId: "Boat-F7",
         services: [service("Boat-F7", 0, "Boat-Aquarium", "Quincy")],
+        },
+    
+        // North Station 
+    {
+        title: "Fitchburg Line",
+        elementId: "north-station-cr-fitchburg",
+        StationName: "North Station",
+        routeId: "CR-Fitchburg",
+        services: [
+            service("CR-Fitchburg", 0, "place-north", "Fitchburg"),
+            service("CR-Fitchburg", 0, "place-north", "Wachusett"),
+        ],
+    },
+
+    {
+        title: "Lowell Line",
+        elementId: "north-station-cr-lowell",
+        StationName: "North Station",
+        routeId: "CR-Lowell",
+        services: [
+            service("CR-Lowell", 0, "place-north", "Lowell"),
+        ],
+    },
+
+    {
+        title: "Haverhill Line",
+        elementId: "north-station-cr-haverhill",
+        StationName: "North Station",
+        routeId: "CR-Haverhill",
+        services: [
+            service("CR-Haverhill", 0, "place-north", "Haverhill"),
+            service("CR-Haverhill", 0, "place-north", "Bradford"),
+        ],
+    },
+
+    {
+        title: "Newburyport/Rockport Line",
+        elementId: "north-station-cr-newburyport",
+        StationName: "North Station",
+        routeId: "CR-Newburyport",
+        services: [
+            service("CR-Newburyport", 0, "place-north", "Newburyport"),
+            service("CR-Newburyport", 0, "place-north", "Rockport"),
+            service("CR-Newburyport", 0, "place-north", "Gloucester"),
+        ],
     },
 ];
 
@@ -710,20 +754,23 @@ async function updateAll() {
 }
 
 /**
- * Alternates visibility between container-top and container-bottom every 20 seconds.
+ * Cycles visibility between container-1, container-2, and container-3 every 15 seconds.
  */
 function startContainerRotation() {
-    const top = document.querySelector(".container-top");
-    const bottom = document.querySelector(".container-bottom");
-    if (!top || !bottom) return;
+    const containers = [
+        document.querySelector(".container-1"),
+        document.querySelector(".container-2"),
+        document.querySelector(".container-3"),
+    ].filter(Boolean);
+    if (containers.length === 0) return;
 
-    let showingTop = true;
-    bottom.style.display = "none";
+    let current = 0;
+    containers.forEach((c, i) => { c.style.display = i === 0 ? "grid" : "none"; });
 
     setInterval(() => {
-        showingTop = !showingTop;
-        top.style.display = showingTop ? "grid" : "none";
-        bottom.style.display = showingTop ? "none" : "grid";
+        containers[current].style.display = "none";
+        current = (current + 1) % containers.length;
+        containers[current].style.display = "grid";
     }, 15000);
 }
 
