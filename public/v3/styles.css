@@ -51,6 +51,7 @@ body {
     grid-template-rows: min-content;
     grid-auto-flow: row;
     gap: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .container-bottom {
@@ -154,7 +155,7 @@ body {
 .route-Blue .mbta-card-header { background:#003DA5; }
 .route-Green .mbta-card-header { background:#00843D; }
 .route-CR .mbta-card-header { background:#80276C; font-size: 16px; }
-.route-Boat .mbta-card-header { background:#165788; }
+.route-Boat .mbta-card-header { background:#ADD8E6; }
 
 /* DIRECTION LABEL */
 
