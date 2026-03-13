@@ -506,9 +506,15 @@ function renderPanel(panel) {
  */
 function forecastToEmoji(forecast, isDaytime) {
     const f = forecast.toLowerCase();
-    if (f.includes('thunderstorm') || f.includes('lightning')) return '⛈️';
-    if (f.includes('blizzard') || f.includes('snow') || f.includes('flurr') || f.includes('sleet')) return '🌨️';
-    if (f.includes('rain') || f.includes('shower') || f.includes('drizzle')) return '🌧️';
+    if (f.includes('thunderstorm')) return '⛈️';
+    if (f.includes('lightning')) return '⚡️';
+    if (f.includes('blizzard')) return '❄️❄️❄️';
+    if (f.includes('snow')) return '❄️❄️';
+    if (f.includes('flurr')) return '❄️';
+    if (f.includes('sleet')) return '💧❄️';
+    if (f.includes('rain')) return '💧💧💧';
+    if (f.includes('shower')) return '💧💧';
+    if (f.includes('drizzle')) return '💧';
     if (f.includes('fog') || f.includes('haze') || f.includes('mist')) return '🌫️';
     if (f.includes('mostly sunny') || f.includes('partly sunny')) return '🌤️';
     if (f.includes('partly cloudy')) return '⛅';
