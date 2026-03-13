@@ -499,15 +499,12 @@ function renderPanel(panel) {
     if (!predContainer) return;
     const routeClass = getRouteClass(panel.routeId);
 
-    const headerText = `${panel.title} - ${panel.StationName}`;
-    const headerInner = `<strong>${panel.title}</strong> - <span style="font-weight: 200;">${panel.StationName}</span>`;
+    const oneCopy = `<span class="ticker-title">${panel.title}</span> - <span class="ticker-station">${panel.StationName}</span>`;
     let html = `
         <div class="mbta-card ${routeClass}">
             <div class="mbta-card-header">
                 <div class="ticker-container">
-                    <span class="ticker-text">
-                        <span class="ticker-copy">${headerInner}</span><span class="ticker-gap"></span><span class="ticker-copy">${headerInner}</span>
-                    </span>
+                    <span class="ticker-text">${oneCopy}<span class="ticker-spacer"></span>${oneCopy}<span class="ticker-spacer"></span></span>
                 </div>
             </div>
             <div class="mbta-card-body">
@@ -597,17 +594,14 @@ function renderPanel(panel) {
     setTimeout(() => {
         const tickerContainer = predContainer.querySelector('.ticker-container');
         const tickerSpan = predContainer.querySelector('.ticker-text');
-        const copies = predContainer.querySelectorAll('.ticker-copy');
-        const gap = predContainer.querySelector('.ticker-gap');
-        if (!tickerContainer || !tickerSpan || copies.length < 2 || !gap) return;
+        if (!tickerContainer || !tickerSpan) return;
 
-        if (copies[0].offsetWidth > tickerContainer.offsetWidth) {
-            const gapWidth = tickerContainer.offsetWidth;
-            gap.style.width = `${gapWidth}px`;
-            const offset = copies[0].offsetWidth + gapWidth;
-            const duration = Math.max(8, headerText.length * 0.2);
-            tickerSpan.style.setProperty('--ticker-offset', `-${offset}px`);
-            tickerSpan.style.animationDuration = `${duration}s`;
+        // scrollWidth with zero-width spacers ≈ 2× one copy; half of that vs container width
+        if (tickerSpan.scrollWidth / 2 > tickerContainer.offsetWidth) {
+            const spacerWidth = Math.round(tickerContainer.offsetWidth / 2);
+            predContainer.querySelectorAll('.ticker-spacer').forEach(s => {
+                s.style.width = `${spacerWidth}px`;
+            });
             tickerSpan.classList.add('ticker-active');
         }
     }, 300);

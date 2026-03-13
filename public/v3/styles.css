@@ -122,21 +122,21 @@ body {
     display: inline-block;
 }
 
-.ticker-copy {
+.ticker-spacer {
     display: inline-block;
 }
 
-.ticker-gap {
-    display: inline-block;
+.mbta-card-header .ticker-station {
+    font-weight: 200;
 }
 
 @keyframes ticker {
-    from { transform: translateX(0); }
-    to   { transform: translateX(var(--ticker-offset, -50%)); }
+    from { transform: translateX(0%); }
+    to   { transform: translateX(-50%); }
 }
 
 .ticker-active {
-    animation: ticker linear infinite;
+    animation: ticker 35s linear infinite;
 }
 
 /* BODY */
