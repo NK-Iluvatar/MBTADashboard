@@ -119,6 +119,7 @@ body {
 .mbta-card {
   border: 1px solid #E6E7E8;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  border-radius: 1%;
 }
 
 /* HEADER */
@@ -182,79 +183,40 @@ body {
 
 /* ===== WEATHER ===== */
 #weather-box {
-  display: flex;
-  grid-column: span 4;
-  justify-content: center;
+  margin-bottom: 1.5rem;
 }
 
-.weather-card {
-  width: 100%;
-  padding: 20px 28px;
-
-  border-radius: 1px;
-
-  color: black;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-
+.weather-card-header {
+  background: var(--mbta-cool-black-15);
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  box-shadow:
-    0 10px 25px rgba(0,0,0,0.25),
 }
 
-.weather-left {
-  display: flex;
-  flex-direction: column;
-  max-width: 70%;
-}
-
-.weather-main {
-  display: flex;
+.weather-card-body {
+  height: auto;
+  flex-direction: row;
   align-items: center;
   gap: 16px;
+  padding: 14px 20px;
+}
+
+.weather-emoji {
+  font-size: 40px;
+  line-height: 1;
 }
 
 .weather-temp {
-  font-size: 72px;
+  font-size: 40px;
   font-weight: 700;
-}
-
-.weather-icon {
-  width: 72px;
-  height: 72px;
 }
 
 .weather-desc {
   font-size: 22px;
   font-weight: 700;
-  margin-top: 6px;
-}
-
-.weather-detail {
-  margin-top: 4px;
-  font-size: 14px;
-}
-
-.weather-right {
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.weather-location {
-  font-size: 22px;
-  font-weight: 600;
-}
-
-.weather-date {
-  font-size: 14px;
-  opacity: 0.85;
 }
 
 #timestamp {
-  font-size: 30px;
+  font-size: 20px;
   font-weight: 700;
 }

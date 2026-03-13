@@ -502,18 +502,34 @@ function renderPanel(panel) {
 }
 
 /**
- * Renders the weather short and long description, inclcude an icon, temp F, Location, and Date
+ * Maps NWS shortForecast string to a weather emoji.
+ */
+function forecastToEmoji(forecast, isDaytime) {
+    const f = forecast.toLowerCase();
+    if (f.includes('thunderstorm') || f.includes('lightning')) return '⛈️';
+    if (f.includes('blizzard') || f.includes('snow') || f.includes('flurr') || f.includes('sleet')) return '🌨️';
+    if (f.includes('rain') || f.includes('shower') || f.includes('drizzle')) return '🌧️';
+    if (f.includes('fog') || f.includes('haze') || f.includes('mist')) return '🌫️';
+    if (f.includes('mostly sunny') || f.includes('partly sunny')) return '🌤️';
+    if (f.includes('partly cloudy')) return '⛅';
+    if (f.includes('mostly cloudy')) return '🌥️';
+    if (f.includes('cloudy') || f.includes('overcast')) return '☁️';
+    if (f.includes('sunny') || f.includes('clear')) return isDaytime ? '☀️' : '🌙';
+    if (f.includes('wind') || f.includes('bree')) return '💨';
+    return isDaytime ? '🌡️' : '🌙';
+}
+
+/**
+ * Renders weather as an MBTA-style card with date/time in the header.
  */
 function renderWeather() {
     const container = document.getElementById("weather-box");
-    if (!container || !cacheWeather?.length || !detailedWeather?.length) return;
+    if (!container || !cacheWeather?.length) return;
 
     const current = cacheWeather[0];
-    const currentDetailed = detailedWeather[0];
-
     const tempF = Math.round(current.temperature);
     const description = current.shortForecast;
-    const detailedDesc = currentDetailed.detailedForecast;
+    const emoji = forecastToEmoji(description, current.isDaytime);
 
     const date = new Date().toLocaleDateString(undefined, {
         weekday: "long",
@@ -523,36 +539,25 @@ function renderWeather() {
 
     if (!container.querySelector(".weather-card")) {
         container.innerHTML = `
-        <div class="weather-card">
-
-            <div class="weather-left">
-                <div class="weather-main">
-                    <div class="weather-temp">${tempF}°</div>
-                    <img class="weather-icon" src="${current.icon}" alt="${description}">
-                </div>
-
-                <div class="weather-desc">${description}</div>
-                <div class="weather-detail">${detailedDesc}</div>
+        <div class="mbta-card weather-card">
+            <div class="mbta-card-header weather-card-header">
+                <span class="weather-date">${date}</span>
+                <div id="timestamp"></div>
             </div>
-
-            <div class="weather-right">
-                <div class="weather-location">Boston, MA</div>
-                <div class="weather-date">${date}</div>
-                <div id="timestamp" class="timestamp"></div>
+            <div class="mbta-card-body weather-card-body">
+                <span class="weather-emoji">${emoji}</span>
+                <span class="weather-temp">${tempF}°</span>
+                <span class="weather-desc">${description}</span>
             </div>
-
         </div>
-    `;
+        `;
+    } else {
+        const card = container.querySelector(".weather-card");
+        card.querySelector(".weather-emoji").textContent = emoji;
+        card.querySelector(".weather-temp").textContent = `${tempF}°`;
+        card.querySelector(".weather-desc").textContent = description;
+        card.querySelector(".weather-date").textContent = date;
     }
-    const card = container.querySelector(".weather-card");
-
-    // update everything every 20mins EXCEPT timestamp
-    card.querySelector("weather-temp").textContent = `${tempF}`;
-    card.querySelector("weather-icon").src = current.icon;
-    card.querySelector("weather-icon").alt = description;
-    card.querySelector("weather-desc").textContent = description;
-    card.querySelector("weather-detail").textContent = detailedDesc;
-    card.querySelector("weather-date").textContent = date;
 }
 
 // ===================== UPDATE LOOP =====================
