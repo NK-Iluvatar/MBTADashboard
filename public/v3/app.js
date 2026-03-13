@@ -692,7 +692,7 @@ function startContainerRotation() {
         showingTop = !showingTop;
         top.style.display = showingTop ? "grid" : "none";
         bottom.style.display = showingTop ? "none" : "grid";
-    }, 20000);
+    }, 15000);
 }
 
 // ===================== START =====================
