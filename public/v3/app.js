@@ -129,6 +129,57 @@ const PANELS = [
         routeId: "CR-Needham",
         services: [service("CR-Needham", 0, "place-sstat", "Needham")],
     },
+
+    // Long Wharf South -> Charlestown
+    {
+        title: "Charlestown Ferry",
+        elementId: "long-wharf-south-boat-f4",
+        routeId: "Boat-F4",
+        services: [service("Boat-F4", 0, "Boat-Long-South", "Charlestown")],
+    },
+
+    // Rowes Wharf -> Hingham
+    {
+        title: "Hingham/Hull Ferry",
+        elementId: "boat-rowes-boat-f1",
+        routeId: "Boat-F1",
+        services: [
+            service("Boat-F1", 0, "Boat-Rowes", "Hingham"),
+            service("Boat-F1", 0, "Boat-Long", "Hull"),
+        ],
+    },
+
+    // Long Wharf North -> East Boston
+    {
+        title: "East Boston Ferry",
+        elementId: "boat-long-boat-eastboston",
+        routeId: "Boat-EastBoston",
+        services: [service("Boat-EastBoston", 0, "Boat-Long", "Lewis Mall")],
+    },
+
+    // Long Wharf North -> Lynn
+    {
+        title: "Lynn Ferry",
+        elementId: "boat-long-boat-lynn",
+        routeId: "Boat-Lynn",
+        services: [service("Boat-Lynn", 0, "Boat-Long", "Blossom Street")],
+    },
+
+    // Aquarium -> Winthrop
+    {
+        title: "Winthrop Ferry",
+        elementId: "boat-aquarium-boat-f6",
+        routeId: "Boat-F6",
+        services: [service("Boat-F6", 0, "Boat-Aquarium", "Winthrop")],
+    },
+
+    // Aquarium -> Quincy
+    {
+        title: "Quincy Ferry",
+        elementId: "boat-aquarium-boat-f7",
+        routeId: "Boat-F7",
+        services: [service("Boat-F7", 0, "Boat-Aquarium", "Quincy")],
+    },
 ];
 
 /** Relevant STOPS */
