@@ -612,7 +612,6 @@ function renderPanel(panel) {
                     return `
                         <div class="pred-time ${p.isRealtime ? "realtime" : "scheduled"}">
                             <div>${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON} ${formatTime(p.minutes)}</div>
-                            <div>${p.formattedTime}</div>
                         </div>
                     `;
                 })
@@ -696,7 +695,7 @@ function renderCRPanel(panels, stationName, stationClass) {
                 .map((p) => {
                     return `
                         <div class="pred-time ${p.isRealtime ? "realtime" : "scheduled"}">
-                            <div>${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON} ${formatTime(p.minutes)} - ${p.formattedTime}</div>
+                            <div>${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON} ${p.formattedTime}</div>
                         </div>
                     `;
                 })
@@ -880,6 +879,7 @@ function startContainerRotation() {
         containers[current].style.display = "none";
         current = (current + 1) % containers.length;
         containers[current].style.display = "grid";
+        updateAll();
     }, 25000);
 }
 
@@ -888,5 +888,3 @@ console.log("Starting scalable MBTA tracker");
 startClock();
 startContainerRotation();
 updateAll();
-// update every 15 seconds (weather updates independently every 20 & 60 minutes)
-setInterval(updateAll, 20000);
