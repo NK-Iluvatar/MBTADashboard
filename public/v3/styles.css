@@ -141,7 +141,7 @@ body {
     display: flex;
     gap: 40px;
     font-weight: 700;
-    font-size: 12px;
+    font-size: 20px;
     align-items: center;
 }
 
@@ -266,7 +266,7 @@ body {
     background: #fff7bf;
     border-left: 4px solid #ffdd00;
     font-family: var(--font-family-mono);
-    font-size: 12px;
+    font-size: 20px;
     flex-shrink: 0;
 }
 
@@ -313,7 +313,7 @@ body {
 }
 
 .pred-time {
-    font-size: 16px;
+    font-size: 20px;
     min-width: 70px;
     text-align: right;
 }
