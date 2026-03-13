@@ -8,13 +8,22 @@
  * @returns The service structure.
  */
 function service(routeId, directionId, stopId, destination) {
-    const isBlueOrGreen = routeId === "Green" || routeId === "Blue" || routeId.startsWith("Green-");
+    const isBlueOrGreen =
+        routeId === "Green" ||
+        routeId === "Blue" ||
+        routeId.startsWith("Green-");
     const isCommuter = routeId.startsWith("CR-");
     const direction = isBlueOrGreen
-        ? directionId === 0 ? "Westbound" : "Eastbound"
+        ? directionId === 0
+            ? "Westbound"
+            : "Eastbound"
         : isCommuter
-        ? directionId === 0 ? "Outbound" : "Inbound"
-        : directionId === 0 ? "Southbound" : "Northbound";
+          ? directionId === 0
+              ? "Outbound"
+              : "Inbound"
+          : directionId === 0
+            ? "Southbound"
+            : "Northbound";
 
     return {
         routeId,
@@ -212,9 +221,9 @@ const PANELS = [
         StationName: "Aquarium",
         routeId: "Boat-F7",
         services: [service("Boat-F7", 0, "Boat-Aquarium", "Quincy")],
-        },
-    
-        // North Station 
+    },
+
+    // North Station
     {
         title: "Fitchburg Line",
         elementId: "north-station-cr-fitchburg",
@@ -231,9 +240,7 @@ const PANELS = [
         elementId: "north-station-cr-lowell",
         StationName: "North Station",
         routeId: "CR-Lowell",
-        services: [
-            service("CR-Lowell", 0, "place-north", "Lowell"),
-        ],
+        services: [service("CR-Lowell", 0, "place-north", "Lowell")],
     },
 
     {
@@ -262,7 +269,22 @@ const PANELS = [
 
 /** Relevant STOPS */
 const STOPID = [{ stopId: "place-sstat" }, { stopId: "place-state" }];
-
+const SOUTHSTATIONCR = [
+    "CR-Greenbush",
+    "CR-Fairmount",
+    "CR-NewBedford",
+    "CR-Worcester",
+    "CR-Franklin",
+    "CR-Providence",
+    "CR-Kingston",
+    "CR-Needham",
+];
+const NORTHSTATIONCR = [
+    "CR-Fitchburg",
+    "CR-Lowell",
+    "CR-Haverhill",
+    "CR-Newburyport",
+];
 // ===================== STATE =====================
 /** MBTA Data */
 let realtimeData = {};
@@ -446,7 +468,7 @@ function getPredictions(data) {
         const date = new Date(timeStr);
         // how long from now does train arrive
         const minutes = (date - now) / 60000;
-        if (minutes < -1 || minutes > 180) return; // allow preds within 3hr
+        if (minutes < -1 || minutes > 480) return; // allow preds within 3hr
         const headsign = tripsById[tripId]?.headsign;
         if (!headsign) return;
 
@@ -636,15 +658,90 @@ function renderPanel(panel) {
     }
 
     setTimeout(() => {
-        const tickerContainer = predContainer.querySelector('.ticker-container');
-        const tickerSpan = predContainer.querySelector('.ticker-text');
+        const tickerContainer =
+            predContainer.querySelector(".ticker-container");
+        const tickerSpan = predContainer.querySelector(".ticker-text");
         if (!tickerContainer || !tickerSpan) return;
 
         if (tickerSpan.scrollWidth > tickerContainer.offsetWidth) {
             tickerSpan.innerHTML = `${headerCopy}<span style="display:inline-block;width:36px"></span>${headerCopy}<span style="display:inline-block;width:36px"></span>`;
-            tickerSpan.classList.add('ticker-active');
+            tickerSpan.classList.add("ticker-active");
         }
     }, 300);
+}
+
+/**
+ * Render commuter rails in PANELS in grid format
+ * @param {*} panel - a train line
+ * @returns
+ */
+function renderCRPanel(panels, stationName, stationClass) {
+    const container = document.querySelector(`.${stationClass}`);
+    if (!container) return;
+
+    const predContainer = container.querySelector(".predictions");
+    if (!predContainer) return;
+
+    let html = `
+        <div class="mbta-card route-CR">
+            <div class="mbta-card-header">
+                ${stationName} Commuter Rail
+            </div>
+
+            <div class="cr-grid">
+                <div class="cr-header">Line</div>
+                <div class="cr-header">Destination</div>
+                <div class="cr-header">Departure Time</div>
+                <div class="cr-header">Alert</div>
+            
+        `;
+
+    panels.forEach((panel) => {
+        panel.services.forEach((service) => {
+            const key = buildKey(panel, service);
+            let preds = getPredictions(realtimeData[key]);
+
+            preds = preds.filter((p) =>
+                p.headsign.includes(service.headsignContains),
+            );
+            if (!preds.length) return;
+
+            // renders predicted time horizontally
+            const times = preds
+                .slice(0, 3)
+                .map((p) => {
+                    return `
+                        <div class="pred-time ${p.isRealtime ? "realtime" : "scheduled"}">
+                            <div>${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON} ${formatTime(p.minutes)} - ${p.formattedTime}</div>
+                        </div>
+                    `;
+                })
+                .join("");
+
+            const p = preds[0];
+            // puts alerts bottom of panel
+            const alert = getAlertForRoute(panel.routeId);
+            html += `
+
+                    <div class="cr-line">${panel.title}</div>
+                        <div class="cr-line">${p.headsign}</div>
+
+                        <div class="cr-times">
+                            ${times}
+                        </div>
+
+                        <div class="cr-alert">
+                            ${alert ? `⚠️ ${alert.attributes.header}` : ""}
+                        </div>
+                    `;
+        });
+    });
+    html += `</div></div>`;
+    predContainer.innerHTML = html;
+
+    if (!predContainer.innerHTML.trim()) {
+        predContainer.innerHTML = '<div class="no-trains">No trains</div>';
+    }
 }
 
 /**
@@ -652,31 +749,48 @@ function renderPanel(panel) {
  */
 function forecastToEmoji(forecast, isDaytime) {
     const f = forecast.toLowerCase();
-    if (f.includes('blizzard')) return '🌨️❄️💨';
-    if (f.includes('thunderstorm') || f.includes('lightning')) {
-        return f.includes('rain') || f.includes('shower') ? '⛈️⚡🌧️' : '⛈️⚡';
+    if (f.includes("blizzard")) return "🌨️❄️💨";
+    if (f.includes("thunderstorm") || f.includes("lightning")) {
+        return f.includes("rain") || f.includes("shower") ? "⛈️⚡🌧️" : "⛈️⚡";
     }
-    if (f.includes('freezing rain') || f.includes('sleet') || f.includes('ice pellet')) return '🌨️💧';
-    if (f.includes('heavy snow')) return '❄️🌨️❄️';
-    if (f.includes('snow') || f.includes('flurr')) return '❄️🌨️';
-    if (f.includes('heavy rain')) return '🌧️💧💧';
-    if (f.includes('rain') && (f.includes('wind') || f.includes('bree'))) return '🌧️💨';
-    if (f.includes('shower') && f.includes('sun')) return '🌦️☀️';
-    if (f.includes('rain') || f.includes('shower')) return '🌧️💧';
-    if (f.includes('drizzle')) return '🌦️💧';
-    if (f.includes('dense fog')) return '🌫️🌫️';
-    if (f.includes('fog') || f.includes('haze') || f.includes('mist') || f.includes('smoke')) return '🌫️';
-    if (f.includes('mostly sunny') && (f.includes('wind') || f.includes('bree'))) return '🌤️💨';
-    if (f.includes('mostly sunny') || f.includes('partly sunny')) return '🌤️';
-    if (f.includes('partly cloudy')) return isDaytime ? '⛅' : '🌙⛅';
-    if (f.includes('mostly cloudy')) return '🌥️☁️';
-    if (f.includes('cloudy') || f.includes('overcast')) return '☁️☁️';
-    if (f.includes('sunny') || f.includes('clear')) {
-        if (f.includes('wind') || f.includes('bree')) return isDaytime ? '☀️💨' : '🌙💨';
-        return isDaytime ? '☀️' : '🌙✨';
+    if (
+        f.includes("freezing rain") ||
+        f.includes("sleet") ||
+        f.includes("ice pellet")
+    )
+        return "🌨️💧";
+    if (f.includes("heavy snow")) return "❄️🌨️❄️";
+    if (f.includes("snow") || f.includes("flurr")) return "❄️🌨️";
+    if (f.includes("heavy rain")) return "🌧️💧💧";
+    if (f.includes("rain") && (f.includes("wind") || f.includes("bree")))
+        return "🌧️💨";
+    if (f.includes("shower") && f.includes("sun")) return "🌦️☀️";
+    if (f.includes("rain") || f.includes("shower")) return "🌧️💧";
+    if (f.includes("drizzle")) return "🌦️💧";
+    if (f.includes("dense fog")) return "🌫️🌫️";
+    if (
+        f.includes("fog") ||
+        f.includes("haze") ||
+        f.includes("mist") ||
+        f.includes("smoke")
+    )
+        return "🌫️";
+    if (
+        f.includes("mostly sunny") &&
+        (f.includes("wind") || f.includes("bree"))
+    )
+        return "🌤️💨";
+    if (f.includes("mostly sunny") || f.includes("partly sunny")) return "🌤️";
+    if (f.includes("partly cloudy")) return isDaytime ? "⛅" : "🌙⛅";
+    if (f.includes("mostly cloudy")) return "🌥️☁️";
+    if (f.includes("cloudy") || f.includes("overcast")) return "☁️☁️";
+    if (f.includes("sunny") || f.includes("clear")) {
+        if (f.includes("wind") || f.includes("bree"))
+            return isDaytime ? "☀️💨" : "🌙💨";
+        return isDaytime ? "☀️" : "🌙✨";
     }
-    if (f.includes('wind') || f.includes('bree')) return '💨💨';
-    return isDaytime ? '🌡️' : '🌙';
+    if (f.includes("wind") || f.includes("bree")) return "💨💨";
+    return isDaytime ? "🌡️" : "🌙";
 }
 
 /**
@@ -740,9 +854,9 @@ function startClock() {
     setInterval(updateClock, 1000);
 }
 
-/** 
+/**
  * Update calls and render.
-*/
+ */
 async function updateAll() {
     await fetchRealtime();
     await fetchAlerts();
@@ -750,6 +864,16 @@ async function updateAll() {
     await fetchDetailedForecast();
 
     PANELS.forEach(renderPanel);
+
+    const southPanels = PANELS.filter((p) =>
+        SOUTHSTATIONCR.includes(p.routeId),
+    );
+    const northPanels = PANELS.filter((p) =>
+        NORTHSTATIONCR.includes(p.routeId),
+    );
+    renderCRPanel(southPanels, "South Station", "south-station-cr");
+    renderCRPanel(northPanels, "North Station", "north-station-cr");
+
     renderWeather();
 }
 
@@ -761,11 +885,14 @@ function startContainerRotation() {
         document.querySelector(".container-1"),
         document.querySelector(".container-2"),
         document.querySelector(".container-3"),
+        document.querySelector(".container-4"),
     ].filter(Boolean);
     if (containers.length === 0) return;
 
     let current = 0;
-    containers.forEach((c, i) => { c.style.display = i === 0 ? "grid" : "none"; });
+    containers.forEach((c, i) => {
+        c.style.display = i === 0 ? "grid" : "none";
+    });
 
     setInterval(() => {
         containers[current].style.display = "none";
@@ -780,4 +907,4 @@ startClock();
 startContainerRotation();
 updateAll();
 // update every 15 seconds (weather updates independently every 20 & 60 minutes)
-setInterval(updateAll, 15000);
+setInterval(updateAll, 20000);
