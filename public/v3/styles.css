@@ -103,11 +103,12 @@ body {
 /* HEADER */
 .mbta-card-header {
     color: white;
-    font-size: 26px;
+    font-size: 30px;
     font-weight: 700;
     padding: 14px 20px;
     text-transform: uppercase;
     border-radius: 3px 3px 0 0;
+    overflow-x: hidden;
     flex-shrink: 0;
 }
 
@@ -169,7 +170,7 @@ body {
 
 /* DESTINATION */
 .destination-main {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     color: #1C1E23;
 }
@@ -187,7 +188,7 @@ body {
 }
 
 .pred-time {
-    font-size: 24px;
+    font-size: 22px;
     min-width: 70px;
     text-align: right;
 }
@@ -243,7 +244,7 @@ body {
 
 .weather-date,
 .weather-location {
-    font-size: 14px;
+    font-size: 22px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.04em;
