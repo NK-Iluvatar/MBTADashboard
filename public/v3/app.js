@@ -500,11 +500,14 @@ function renderPanel(panel) {
     const routeClass = getRouteClass(panel.routeId);
 
     const headerText = `${panel.title} - ${panel.StationName}`;
+    const headerInner = `<strong>${panel.title}</strong> - <span style="font-weight: 200;">${panel.StationName}</span>`;
     let html = `
         <div class="mbta-card ${routeClass}">
             <div class="mbta-card-header">
                 <div class="ticker-container">
-                    <span class="ticker-text">${panel.title} - <span style="font-weight: 200;">${panel.StationName}</span></span>
+                    <span class="ticker-text">
+                        <span class="ticker-copy">${headerInner}</span><span class="ticker-gap"></span><span class="ticker-copy">${headerInner}</span>
+                    </span>
                 </div>
             </div>
             <div class="mbta-card-body">
@@ -594,8 +597,16 @@ function renderPanel(panel) {
     setTimeout(() => {
         const tickerContainer = predContainer.querySelector('.ticker-container');
         const tickerSpan = predContainer.querySelector('.ticker-text');
-        if (tickerContainer && tickerSpan && tickerSpan.scrollWidth > tickerContainer.offsetWidth) {
+        const copies = predContainer.querySelectorAll('.ticker-copy');
+        const gap = predContainer.querySelector('.ticker-gap');
+        if (!tickerContainer || !tickerSpan || copies.length < 2 || !gap) return;
+
+        if (copies[0].offsetWidth > tickerContainer.offsetWidth) {
+            const gapWidth = tickerContainer.offsetWidth;
+            gap.style.width = `${gapWidth}px`;
+            const offset = copies[0].offsetWidth + gapWidth;
             const duration = Math.max(8, headerText.length * 0.2);
+            tickerSpan.style.setProperty('--ticker-offset', `-${offset}px`);
             tickerSpan.style.animationDuration = `${duration}s`;
             tickerSpan.classList.add('ticker-active');
         }

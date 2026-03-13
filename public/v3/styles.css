@@ -122,9 +122,17 @@ body {
     display: inline-block;
 }
 
+.ticker-copy {
+    display: inline-block;
+}
+
+.ticker-gap {
+    display: inline-block;
+}
+
 @keyframes ticker {
-    from { transform: translateX(0%); }
-    to   { transform: translateX(-15%); }
+    from { transform: translateX(0); }
+    to   { transform: translateX(var(--ticker-offset, -50%)); }
 }
 
 .ticker-active {
