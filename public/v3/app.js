@@ -502,7 +502,7 @@ function renderPanel(panel) {
     let html = `
         <div class="mbta-card ${routeClass}">
             <div class="mbta-card-header">
-                <span style="display: block; padding-right: 20px;">${panel.title} - <span style="font-weight: 200;">${panel.StationName}</span></span>
+                <span style="display: block; padding-right: 20px; white-space: nowrap; overflow: hidden; text-overflow: clip;">${panel.title} - <span style="font-weight: 200;">${panel.StationName}</span></span>
             </div>
             <div class="mbta-card-body">
         `;
