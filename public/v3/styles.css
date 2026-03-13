@@ -419,6 +419,103 @@ body {
     }
 
     .cr-times {
-    gap: 40px;
+        gap: 40px;
+    }
 }
+
+/* ===== RESPONSIVE: iPhone (max-width: 430px) ===== */
+@media (max-width: 430px) {
+    body {
+        padding: 0.75rem;
+        gap: 0.75rem;
+        height: auto;
+        overflow-y: auto;
+    }
+
+    .container-1,
+    .container-2,
+    .container-3 {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .container-ferry {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .container-4 {
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .mbta-card-header {
+        font-size: 22px;
+        padding: 10px 14px;
+        height: auto;
+    }
+
+    .mbta-card-header .ticker-station {
+        font-size: 16px;
+    }
+
+    .direction-header {
+        font-size: 16px;
+        padding: 8px 14px 4px;
+    }
+
+    .prediction-row {
+        padding: 8px 14px;
+    }
+
+    .destination-main,
+    .destination-via {
+        font-size: 16px;
+    }
+
+    .pred-time {
+        font-size: 16px;
+        min-width: 54px;
+    }
+
+    .pred-times {
+        gap: 12px;
+    }
+
+    .cr-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .cr-header,
+    .cr-line,
+    .cr-times {
+        font-size: 15px;
+        padding: 3px 12px;
+    }
+
+    .cr-header:last-child {
+        padding: 3px 8px;
+    }
+
+    .cr-times {
+        gap: 20px;
+    }
+
+    .alert-banner {
+        font-size: 15px;
+    }
+
+    .weather-temp,
+    #timestamp {
+        font-size: 40px;
+    }
+
+    .weather-emoji {
+        font-size: 28px;
+    }
+
+    .weather-date,
+    .weather-location {
+        font-size: 15px;
+    }
 }
