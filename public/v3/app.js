@@ -565,13 +565,10 @@ function renderPanel(panel) {
     if (!predContainer) return;
     const routeClass = getRouteClass(panel.routeId);
 
-    const headerCopy = `<span class="ticker-title">${panel.title}</span> - <span class="ticker-station">${panel.StationName}</span>`;
     let html = `
         <div class="mbta-card ${routeClass}">
             <div class="mbta-card-header">
-                <div class="ticker-container">
-                    <span class="ticker-text">${headerCopy}</span>
-                </div>
+                <span class="ticker-title">${panel.title}</span> - <span class="ticker-station">${panel.StationName}</span>
             </div>
             <div class="mbta-card-body">
         `;
@@ -657,17 +654,6 @@ function renderPanel(panel) {
         predContainer.innerHTML = '<div class="no-trains">No trains</div>';
     }
 
-    setTimeout(() => {
-        const tickerContainer =
-            predContainer.querySelector(".ticker-container");
-        const tickerSpan = predContainer.querySelector(".ticker-text");
-        if (!tickerContainer || !tickerSpan) return;
-
-        if (tickerSpan.scrollWidth > tickerContainer.offsetWidth) {
-            tickerSpan.innerHTML = `${headerCopy}<span style="display:inline-block;width:36px"></span>${headerCopy}<span style="display:inline-block;width:36px"></span>`;
-            tickerSpan.classList.add("ticker-active");
-        }
-    }, 300);
 }
 
 /**

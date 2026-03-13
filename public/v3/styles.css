@@ -194,34 +194,8 @@ body {
     flex-shrink: 0;
 }
 
-.ticker-container {
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.ticker-text {
-    display: inline-block;
-}
-
-.ticker-spacer {
-    display: inline-block;
-}
-
 .mbta-card-header .ticker-station {
     font-weight: 200;
-}
-
-@keyframes ticker {
-    from {
-        transform: translateX(0%);
-    }
-    to {
-        transform: translateX(-50%);
-    }
-}
-
-.ticker-active {
-    animation: ticker 70s linear infinite;
 }
 
 /* BODY */
