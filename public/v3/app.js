@@ -34,6 +34,7 @@ const PANELS = [
     {
         title: "Red Line",
         elementId: "south-station-red",
+        StationName: "South Station",
         routeId: "Red",
         services: [
             service("Red", 0, "place-sstat", "Ashmont", "Red-1-0"),
@@ -46,6 +47,7 @@ const PANELS = [
     {
         title: "Orange Line",
         elementId: "state-station-orange",
+        StationName: "South Station",
         routeId: "Orange",
         services: [
             service("Orange", 0, "place-state", "Forest Hills", "Orange-A-0"),
@@ -57,6 +59,7 @@ const PANELS = [
     {
         title: "Blue Line",
         elementId: "state-station-blue",
+        StationName: "South Station",
         routeId: "Blue",
         services: [
             service("Blue", 0, "place-state", "Bowdoin", "Blue-6-0"),
@@ -68,6 +71,7 @@ const PANELS = [
     {
         title: "Green Line",
         elementId: "park-street-green",
+        StationName: "Park Street",
         routeId: "Green",
         services: [
             service("Green-B", 0, "place-pktrm", "Boston College"),
@@ -83,12 +87,14 @@ const PANELS = [
     {
         title: "Greenbush Line",
         elementId: "south-station-cr-greenbush",
+        StationName: "South Station",
         routeId: "CR-Greenbush",
         services: [service("CR-Greenbush", 0, "place-sstat", "Greenbush")],
     },
     {
         title: "Fairmount Line",
         elementId: "south-station-cr-fairmount",
+        StationName: "South Station",
         routeId: "CR-Fairmount",
         services: [
             service("CR-Fairmount", 0, "place-sstat", "Readville"),
@@ -98,6 +104,7 @@ const PANELS = [
     {
         title: "Fall River/New Bedford Line",
         elementId: "south-station-cr-newbedford",
+        StationName: "South Station",
         routeId: "CR-NewBedford",
         services: [
             service("CR-NewBedford", 0, "place-sstat", "New Bedford"),
@@ -107,6 +114,7 @@ const PANELS = [
     {
         title: "Framingham/Worcester Line",
         elementId: "south-station-cr-worcester",
+        StationName: "South Station",
         routeId: "CR-Worcester",
         services: [
             service("CR-Worcester", 0, "place-sstat", "Worcester"),
@@ -116,6 +124,7 @@ const PANELS = [
     {
         title: "Franklin/Foxboro Line",
         elementId: "south-station-cr-franklin",
+        StationName: "South Station",
         routeId: "CR-Franklin",
         services: [
             service("CR-Franklin", 0, "place-sstat", "Foxboro"),
@@ -126,6 +135,7 @@ const PANELS = [
     {
         title: "Providence/Stoughton Line",
         elementId: "south-station-cr-providence",
+        StationName: "South Station",
         routeId: "CR-Providence",
         services: [
             service("CR-Providence", 0, "place-sstat", "Providence"),
@@ -136,12 +146,14 @@ const PANELS = [
     {
         title: "Kingston Line",
         elementId: "south-station-cr-kingston",
+        StationName: "South Station",
         routeId: "CR-Kingston",
         services: [service("CR-Kingston", 0, "place-sstat", "Kingston")],
     },
     {
         title: "Needham Line",
         elementId: "south-station-cr-needham",
+        StationName: "South Station",
         routeId: "CR-Needham",
         services: [service("CR-Needham", 0, "place-sstat", "Needham")],
     },
@@ -150,6 +162,7 @@ const PANELS = [
     {
         title: "Charlestown Ferry",
         elementId: "long-wharf-south-boat-f4",
+        StationName: "Long Wharf",
         routeId: "Boat-F4",
         services: [service("Boat-F4", 0, "Boat-Long-South", "Charlestown")],
     },
@@ -158,6 +171,7 @@ const PANELS = [
     {
         title: "Hingham/Hull Ferry",
         elementId: "boat-rowes-boat-f1",
+        StationName: "Rowes Wharf",
         routeId: "Boat-F1",
         services: [
             service("Boat-F1", 0, "Boat-Rowes", "Hingham"),
@@ -169,6 +183,7 @@ const PANELS = [
     {
         title: "East Boston Ferry",
         elementId: "boat-long-boat-eastboston",
+        StationName: "Long Wharf",
         routeId: "Boat-EastBoston",
         services: [service("Boat-EastBoston", 0, "Boat-Long", "Lewis Mall")],
     },
@@ -177,6 +192,7 @@ const PANELS = [
     {
         title: "Lynn Ferry",
         elementId: "boat-long-boat-lynn",
+        StationName: "Long Wharf",
         routeId: "Boat-Lynn",
         services: [service("Boat-Lynn", 0, "Boat-Long", "Blossom Street")],
     },
@@ -185,6 +201,7 @@ const PANELS = [
     {
         title: "Winthrop Ferry",
         elementId: "boat-aquarium-boat-f6",
+        StationName: "Aquarium",
         routeId: "Boat-F6",
         services: [service("Boat-F6", 0, "Boat-Aquarium", "Winthrop")],
     },
@@ -193,6 +210,7 @@ const PANELS = [
     {
         title: "Quincy Ferry",
         elementId: "boat-aquarium-boat-f7",
+        StationName: "Aquarium",
         routeId: "Boat-F7",
         services: [service("Boat-F7", 0, "Boat-Aquarium", "Quincy")],
     },
@@ -484,7 +502,7 @@ function renderPanel(panel) {
     let html = `
         <div class="mbta-card ${routeClass}">
             <div class="mbta-card-header">
-                ${panel.title} 
+                ${panel.title} - ${panel.StationName} 
             </div>
             <div class="mbta-card-body">
         `;
