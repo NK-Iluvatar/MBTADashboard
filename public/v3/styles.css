@@ -186,24 +186,12 @@ body {
   margin-bottom: 1.5rem;
 }
 
-.weather-card-header {
-  background: var(--mbta-cool-black-15);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .weather-card-body {
   height: auto;
   flex-direction: row;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   padding: 14px 20px;
-}
-
-.weather-emoji {
-  font-size: 40px;
-  line-height: 1;
 }
 
 .weather-temp {
@@ -211,12 +199,31 @@ body {
   font-weight: 700;
 }
 
-.weather-desc {
-  font-size: 22px;
-  font-weight: 700;
+.weather-emoji {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.weather-spacer {
+  flex: 1;
+}
+
+.weather-right-group {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.weather-date {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
 }
 
 #timestamp {
-  font-size: 20px;
+  font-size: 40px;
   font-weight: 700;
 }

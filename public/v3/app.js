@@ -506,22 +506,30 @@ function renderPanel(panel) {
  */
 function forecastToEmoji(forecast, isDaytime) {
     const f = forecast.toLowerCase();
-    if (f.includes('thunderstorm')) return '⛈️';
-    if (f.includes('lightning')) return '⚡️';
-    if (f.includes('blizzard')) return '❄️❄️❄️';
-    if (f.includes('snow')) return '❄️❄️';
-    if (f.includes('flurr')) return '❄️';
-    if (f.includes('sleet')) return '💧❄️';
-    if (f.includes('rain')) return '💧💧💧';
-    if (f.includes('shower')) return '💧💧';
-    if (f.includes('drizzle')) return '💧';
-    if (f.includes('fog') || f.includes('haze') || f.includes('mist')) return '🌫️';
+    if (f.includes('blizzard')) return '🌨️❄️💨';
+    if (f.includes('thunderstorm') || f.includes('lightning')) {
+        return f.includes('rain') || f.includes('shower') ? '⛈️⚡🌧️' : '⛈️⚡';
+    }
+    if (f.includes('freezing rain') || f.includes('sleet') || f.includes('ice pellet')) return '🌨️💧';
+    if (f.includes('heavy snow')) return '❄️🌨️❄️';
+    if (f.includes('snow') || f.includes('flurr')) return '❄️🌨️';
+    if (f.includes('heavy rain')) return '🌧️💧💧';
+    if (f.includes('rain') && (f.includes('wind') || f.includes('bree'))) return '🌧️💨';
+    if (f.includes('shower') && f.includes('sun')) return '🌦️☀️';
+    if (f.includes('rain') || f.includes('shower')) return '🌧️💧';
+    if (f.includes('drizzle')) return '🌦️💧';
+    if (f.includes('dense fog')) return '🌫️🌫️';
+    if (f.includes('fog') || f.includes('haze') || f.includes('mist') || f.includes('smoke')) return '🌫️';
+    if (f.includes('mostly sunny') && (f.includes('wind') || f.includes('bree'))) return '🌤️💨';
     if (f.includes('mostly sunny') || f.includes('partly sunny')) return '🌤️';
-    if (f.includes('partly cloudy')) return '⛅';
-    if (f.includes('mostly cloudy')) return '🌥️';
-    if (f.includes('cloudy') || f.includes('overcast')) return '☁️';
-    if (f.includes('sunny') || f.includes('clear')) return isDaytime ? '☀️' : '🌙';
-    if (f.includes('wind') || f.includes('bree')) return '💨';
+    if (f.includes('partly cloudy')) return isDaytime ? '⛅' : '🌙⛅';
+    if (f.includes('mostly cloudy')) return '🌥️☁️';
+    if (f.includes('cloudy') || f.includes('overcast')) return '☁️☁️';
+    if (f.includes('sunny') || f.includes('clear')) {
+        if (f.includes('wind') || f.includes('bree')) return isDaytime ? '☀️💨' : '🌙💨';
+        return isDaytime ? '☀️' : '🌙✨';
+    }
+    if (f.includes('wind') || f.includes('bree')) return '💨💨';
     return isDaytime ? '🌡️' : '🌙';
 }
 
@@ -547,20 +555,20 @@ function renderWeather() {
         container.innerHTML = `
         <div class="mbta-card weather-card">
             <div class="mbta-card-body weather-card-body">
-                <span class="weather-emoji">${emoji}</span>
                 <span class="weather-temp">${tempF}°</span>
-                <span class="weather-desc">${description}</span>
-                
-                <span class="weather-date">${date}</span>
-                <div id="timestamp"></div>
+                <span class="weather-emoji">${emoji}</span>
+                <div class="weather-spacer"></div>
+                <div class="weather-right-group">
+                    <span class="weather-date">${date}</span>
+                    <div id="timestamp"></div>
+                </div>
             </div>
         </div>
         `;
     } else {
         const card = container.querySelector(".weather-card");
-        card.querySelector(".weather-emoji").textContent = emoji;
         card.querySelector(".weather-temp").textContent = `${tempF}°`;
-        card.querySelector(".weather-desc").textContent = description;
+        card.querySelector(".weather-emoji").textContent = emoji;
         card.querySelector(".weather-date").textContent = date;
     }
 }
