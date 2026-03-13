@@ -714,9 +714,7 @@ function renderCRPanel(panels, stationName, stationClass) {
                             ${times}
                         </div>
 
-                        <div class="cr-alert">
-                            ${alert ? `<div class="cr-alert-ticker"><span class="cr-alert-text">⚠️ ${alert.attributes.header}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⚠️ ${alert.attributes.header}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>` : ""}
-                        </div>
+                        ${alert ? `<div class="cr-alert"><div class="cr-alert-ticker"><span class="cr-alert-text">⚠️ ${alert.attributes.header}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⚠️ ${alert.attributes.header}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div></div>` : `<div class="cr-alert"></div>`}
                     `;
         });
     });
@@ -882,7 +880,7 @@ function startContainerRotation() {
         containers[current].style.display = "none";
         current = (current + 1) % containers.length;
         containers[current].style.display = "grid";
-    }, 15000);
+    }, 25000);
 }
 
 // ===================== START =====================

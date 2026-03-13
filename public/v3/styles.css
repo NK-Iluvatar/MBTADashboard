@@ -176,7 +176,7 @@ body {
 
 .cr-alert-text {
     display: inline-block;
-    animation: cr-alert-ticker 20s linear infinite;
+    animation: cr-alert-ticker 25s linear infinite;
 }
 
 .predictions {
