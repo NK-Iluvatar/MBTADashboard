@@ -108,11 +108,27 @@ body {
     padding: 14px 20px;
     text-transform: uppercase;
     border-radius: 3px 3px 0 0;
-    white-space: nowrap;
     overflow: hidden;
-    text-overflow: clip;
     height: 66px;
     flex-shrink: 0;
+}
+
+.ticker-container {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ticker-text {
+    display: inline-block;
+}
+
+@keyframes ticker {
+    from { transform: translateX(100%); }
+    to   { transform: translateX(-100%); }
+}
+
+.ticker-active {
+    animation: ticker linear infinite;
 }
 
 /* BODY */

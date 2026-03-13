@@ -499,10 +499,13 @@ function renderPanel(panel) {
     if (!predContainer) return;
     const routeClass = getRouteClass(panel.routeId);
 
+    const headerText = `${panel.title} - ${panel.StationName}`;
     let html = `
         <div class="mbta-card ${routeClass}">
             <div class="mbta-card-header">
-                <span style="display: block; padding-right: 20px; white-space: nowrap; overflow: hidden; text-overflow: clip;">${panel.title} - <span style="font-weight: 200;">${panel.StationName}</span></span>
+                <div class="ticker-container">
+                    <span class="ticker-text"><strong>${panel.title}</strong> - <span style="font-weight: 200;">${panel.StationName}</span></span>
+                </div>
             </div>
             <div class="mbta-card-body">
         `;
@@ -587,6 +590,16 @@ function renderPanel(panel) {
     if (!predContainer.innerHTML.trim()) {
         predContainer.innerHTML = '<div class="no-trains">No trains</div>';
     }
+
+    setTimeout(() => {
+        const tickerContainer = predContainer.querySelector('.ticker-container');
+        const tickerSpan = predContainer.querySelector('.ticker-text');
+        if (tickerContainer && tickerSpan && tickerSpan.scrollWidth > tickerContainer.offsetWidth) {
+            const duration = Math.max(8, headerText.length * 0.2);
+            tickerSpan.style.animationDuration = `${duration}s`;
+            tickerSpan.classList.add('ticker-active');
+        }
+    }, 300);
 }
 
 /**
