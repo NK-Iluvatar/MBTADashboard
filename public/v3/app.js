@@ -566,7 +566,7 @@ function renderPanel(panel) {
     let html = `
         <div class="mbta-card ${routeClass}">
             <div class="mbta-card-header">
-                <span class="ticker-title">${panel.title}</span> <span class="ticker-station">via ${panel.StationName}</span>
+                <span class="ticker-title">${panel.title}</span> <span class="ticker-station"> ${panel.StationName}</span>
             </div>
             <div class="mbta-card-body">
         `;
@@ -668,7 +668,7 @@ function renderCRPanel(panels, stationName, stationClass) {
     let html = `
         <div class="mbta-card route-CR">
             <div class="mbta-card-header">
-                ${stationName} Commuter Rail
+                Commuter Rail - <span class="ticker-station">${stationName}</span>
             </div>
 
             <div class="cr-grid">
