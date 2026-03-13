@@ -715,7 +715,7 @@ function renderCRPanel(panels, stationName, stationClass) {
                         </div>
 
                         <div class="cr-alert">
-                            ${alert ? `⚠️ ${alert.attributes.header}` : ""}
+                            ${alert ? `<div class="cr-alert-ticker"><span class="cr-alert-text">⚠️ ${alert.attributes.header}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⚠️ ${alert.attributes.header}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>` : ""}
                         </div>
                     `;
         });

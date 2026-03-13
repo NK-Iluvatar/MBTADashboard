@@ -160,6 +160,23 @@ body {
 .cr-alert {
     text-align: left;
     align-self: center;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+@keyframes cr-alert-ticker {
+    from { transform: translateX(0%); }
+    to   { transform: translateX(-50%); }
+}
+
+.cr-alert-ticker {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.cr-alert-text {
+    display: inline-block;
+    animation: cr-alert-ticker 20s linear infinite;
 }
 
 .predictions {
