@@ -499,12 +499,12 @@ function renderPanel(panel) {
     if (!predContainer) return;
     const routeClass = getRouteClass(panel.routeId);
 
-    const oneCopy = `<span class="ticker-title">${panel.title}</span> - <span class="ticker-station">${panel.StationName}</span>`;
+    const headerCopy = `<span class="ticker-title">${panel.title}</span> - <span class="ticker-station">${panel.StationName}</span>`;
     let html = `
         <div class="mbta-card ${routeClass}">
             <div class="mbta-card-header">
                 <div class="ticker-container">
-                    <span class="ticker-text">${oneCopy}<span class="ticker-spacer"></span>${oneCopy}<span class="ticker-spacer"></span></span>
+                    <span class="ticker-text">${headerCopy}</span>
                 </div>
             </div>
             <div class="mbta-card-body">
@@ -596,12 +596,8 @@ function renderPanel(panel) {
         const tickerSpan = predContainer.querySelector('.ticker-text');
         if (!tickerContainer || !tickerSpan) return;
 
-        // scrollWidth with zero-width spacers ≈ 2× one copy; half of that vs container width
-        if (tickerSpan.scrollWidth / 2 > tickerContainer.offsetWidth) {
-            const spacerWidth = Math.round(tickerContainer.offsetWidth / 2);
-            predContainer.querySelectorAll('.ticker-spacer').forEach(s => {
-                s.style.width = `${spacerWidth}px`;
-            });
+        if (tickerSpan.scrollWidth > tickerContainer.offsetWidth) {
+            tickerSpan.innerHTML = `${headerCopy}<span style="display:inline-block;width:72px"></span>${headerCopy}<span style="display:inline-block;width:72px"></span>`;
             tickerSpan.classList.add('ticker-active');
         }
     }, 300);
