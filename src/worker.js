@@ -30,6 +30,24 @@ export default {
         });
       }
       
+      // Weather (NWS) API proxy
+      if (url.pathname.startsWith('/api/weather')) {
+        const weatherPath = url.pathname.replace('/api/weather', '');
+        const apiUrl = `https://api.weather.gov${weatherPath}${url.search}`;
+
+        const response = await fetch(apiUrl, {
+          headers: { 'User-Agent': 'MBTADashboard/1.0' }
+        });
+        const data = await response.json();
+
+        return new Response(JSON.stringify(data), {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
+      }
+
       // Blue Bikes API proxy
       if (url.pathname === '/api/bluebikes') {
         const response = await fetch('https://gbfs.bluebikes.com/gbfs/en/station_status.json');
