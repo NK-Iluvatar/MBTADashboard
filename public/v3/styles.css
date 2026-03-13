@@ -108,7 +108,7 @@ body {
     padding: 14px 20px;
     text-transform: uppercase;
     border-radius: 3px 3px 0 0;
-    overflow-x: hidden;
+    overflow-x: clip;
     flex-shrink: 0;
 }
 
@@ -147,7 +147,7 @@ body {
 
 /* DIRECTION LABEL */
 .direction-header {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     text-transform: uppercase;
     color: #616161;
@@ -176,14 +176,14 @@ body {
 }
 
 .destination-via {
-    font-size: 16px;
+    font-size: 22px;
     color: #555;
 }
 
 /* TIMES */
 .pred-times {
     display: flex;
-    gap: 16px;
+    gap: 22px;
     font-weight: 700;
 }
 
@@ -215,7 +215,7 @@ body {
 }
 
 .weather-temp {
-    font-size: 40px;
+    font-size: 60px;
     font-weight: 700;
 }
 
@@ -252,6 +252,6 @@ body {
 }
 
 #timestamp {
-    font-size: 40px;
+    font-size: 60px;
     font-weight: 700;
 }
