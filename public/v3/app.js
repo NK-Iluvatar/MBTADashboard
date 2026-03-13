@@ -540,14 +540,13 @@ function renderWeather() {
     if (!container.querySelector(".weather-card")) {
         container.innerHTML = `
         <div class="mbta-card weather-card">
-            <div class="mbta-card-header weather-card-header">
-                <span class="weather-date">${date}</span>
-                <div id="timestamp"></div>
-            </div>
             <div class="mbta-card-body weather-card-body">
                 <span class="weather-emoji">${emoji}</span>
                 <span class="weather-temp">${tempF}°</span>
                 <span class="weather-desc">${description}</span>
+                
+                <span class="weather-date">${date}</span>
+                <div id="timestamp"></div>
             </div>
         </div>
         `;
