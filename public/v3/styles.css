@@ -106,7 +106,7 @@ body {
 }
 
 .pred-time.scheduled {
-  color: black;
+  color: var(--mbta-cool-black-15);
 }
 
 .bi {
@@ -130,6 +130,7 @@ body {
   font-weight: 700;
   padding: 12px 16px;
   text-transform: uppercase;
+  border-radius: 50px;
 }
 
 /* BODY */
