@@ -49,7 +49,7 @@ body {
     flex: 1;
     min-height: 0;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: calc(33.333% - 0.834rem) calc(33.333% - 0.834rem) calc(33.333% - 0.834rem);
     grid-auto-rows: 1fr;
     grid-auto-flow: row;
     gap: 1.25rem;
@@ -59,7 +59,7 @@ body {
     flex: 1;
     min-height: 0;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: calc(25% - 0.938rem) calc(25% - 0.938rem) calc(25% - 0.938rem) calc(25% - 0.938rem);
     grid-auto-rows: 1fr;
     grid-auto-flow: row;
     gap: 1.25rem;
@@ -67,7 +67,7 @@ body {
 
 .container-ferry {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: calc(50% - 0.625rem) calc(50% - 0.625rem);
     grid-auto-rows: min-content;
     grid-auto-flow: row;
     gap: 1.25rem;
@@ -258,4 +258,19 @@ body {
     font-size: 60px;
     color: #616161;
     font-weight: 700;
+}
+
+/* ===== RESPONSIVE: 1080px breakpoint ===== */
+@media (max-width: 1080px) {
+    .container-top {
+        grid-template-columns: calc(50% - 0.625rem) calc(50% - 0.625rem);
+    }
+
+    .container-bottom {
+        grid-template-columns: calc(50% - 0.625rem) calc(50% - 0.625rem);
+    }
+
+    .container-ferry {
+        grid-template-columns: calc(50% - 0.625rem) calc(50% - 0.625rem);
+    }
 }
