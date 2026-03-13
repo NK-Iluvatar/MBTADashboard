@@ -110,7 +110,7 @@ body {
 
 .cr-grid {
     display: grid;
-    grid-template-columns: auto auto 3fr 3fr;
+    grid-template-columns: auto auto auto 1fr;
     background: #f2f3f5;
     border-radius: 6px;
 }
