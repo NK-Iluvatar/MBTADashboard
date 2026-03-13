@@ -8,7 +8,7 @@
  * @returns The service structure.
  */
 function service(routeId, directionId, stopId, destination) {
-    const isBlueOrGreen = routeId === "Green" || routeId === "Blue";
+    const isBlueOrGreen = routeId === "Green" || routeId === "Blue" || routeId.startsWith("Green-");
     const direction = isBlueOrGreen
         ? directionId === 0
             ? "Westbound"
@@ -18,6 +18,7 @@ function service(routeId, directionId, stopId, destination) {
           : "Northbound";
 
     return {
+        routeId,
         label: `${direction}`,
         directionId,
         stopId,
@@ -60,6 +61,21 @@ const PANELS = [
         services: [
             service("Blue", 0, "place-state", "Bowdoin", "Blue-6-0"),
             service("Blue", 1, "place-state", "Wonderland", "Blue-6-1"),
+        ],
+    },
+
+    // Park Street – Green Line (all branches)
+    {
+        title: "Green Line",
+        elementId: "park-street-green",
+        routeId: "Green",
+        services: [
+            service("Green-B", 0, "place-pktrm", "Boston College"),
+            service("Green-C", 0, "place-pktrm", "Cleveland Circle"),
+            service("Green-D", 0, "place-pktrm", "Riverside"),
+            service("Green-E", 0, "place-pktrm", "Heath Street"),
+            service("Green-E", 1, "place-pktrm", "Medford"),
+            service("Green-B", 1, "place-pktrm", "Lechmere"),
         ],
     },
 
@@ -222,7 +238,8 @@ function formatTime(minutes) {
  * @returns String
  */
 function buildKey(panel, service) {
-    return `${panel.routeId}-${service.stopId}-${service.directionId}-${service.headsignContains}`;
+    const routeId = service.routeId ?? panel.routeId;
+    return `${routeId}-${service.stopId}-${service.directionId}-${service.headsignContains}`;
 }
 
 /**
@@ -308,7 +325,8 @@ async function fetchRealtime() {
             const key = buildKey(panel, service);
 
             let url;
-            url = `/api/mbta/schedules?filter[stop]=${service.stopId}&filter[route]=${panel.routeId}&include=prediction,trip`;
+            const routeId = service.routeId ?? panel.routeId;
+            url = `/api/mbta/schedules?filter[stop]=${service.stopId}&filter[route]=${routeId}&include=prediction,trip`;
             if (service.directionId !== undefined) {
                 url += `&filter[direction_id]=${service.directionId}`;
             }
@@ -445,7 +463,7 @@ function getRouteClass(routeId) {
     if (routeId === "Red") return "route-Red";
     if (routeId === "Orange") return "route-Orange";
     if (routeId === "Blue") return "route-Blue";
-    if (routeId === "Green") return "route-Green";
+    if (routeId.startsWith("Green")) return "route-Green";
 
     return "";
 }
