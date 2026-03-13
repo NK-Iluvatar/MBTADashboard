@@ -93,14 +93,14 @@ const PANELS = [
 
     // South Station – Commuter Rail
     {
-        title: "Greenbush Line",
+        title: "Greenbush",
         elementId: "south-station-cr-greenbush",
         StationName: "South Station",
         routeId: "CR-Greenbush",
         services: [service("CR-Greenbush", 0, "place-sstat", "Greenbush")],
     },
     {
-        title: "Fairmount Line",
+        title: "Fairmount",
         elementId: "south-station-cr-fairmount",
         StationName: "South Station",
         routeId: "CR-Fairmount",
@@ -110,7 +110,7 @@ const PANELS = [
         ],
     },
     {
-        title: "Fall River/New Bedford Line",
+        title: "Fall River/New Bedford",
         elementId: "south-station-cr-newbedford",
         StationName: "South Station",
         routeId: "CR-NewBedford",
@@ -120,7 +120,7 @@ const PANELS = [
         ],
     },
     {
-        title: "Framingham/Worcester Line",
+        title: "Framingham/Worcester",
         elementId: "south-station-cr-worcester",
         StationName: "South Station",
         routeId: "CR-Worcester",
@@ -130,7 +130,7 @@ const PANELS = [
         ],
     },
     {
-        title: "Franklin/Foxboro Line",
+        title: "Franklin/Foxboro",
         elementId: "south-station-cr-franklin",
         StationName: "South Station",
         routeId: "CR-Franklin",
@@ -141,7 +141,7 @@ const PANELS = [
         ],
     },
     {
-        title: "Providence/Stoughton Line",
+        title: "Providence/Stoughton",
         elementId: "south-station-cr-providence",
         StationName: "South Station",
         routeId: "CR-Providence",
@@ -152,14 +152,14 @@ const PANELS = [
         ],
     },
     {
-        title: "Kingston Line",
+        title: "Kingston",
         elementId: "south-station-cr-kingston",
         StationName: "South Station",
         routeId: "CR-Kingston",
         services: [service("CR-Kingston", 0, "place-sstat", "Kingston")],
     },
     {
-        title: "Needham Line",
+        title: "Needham",
         elementId: "south-station-cr-needham",
         StationName: "South Station",
         routeId: "CR-Needham",
@@ -225,7 +225,7 @@ const PANELS = [
 
     // North Station
     {
-        title: "Fitchburg Line",
+        title: "Fitchburg",
         elementId: "north-station-cr-fitchburg",
         StationName: "North Station",
         routeId: "CR-Fitchburg",
@@ -236,7 +236,7 @@ const PANELS = [
     },
 
     {
-        title: "Lowell Line",
+        title: "Lowell",
         elementId: "north-station-cr-lowell",
         StationName: "North Station",
         routeId: "CR-Lowell",
@@ -244,7 +244,7 @@ const PANELS = [
     },
 
     {
-        title: "Haverhill Line",
+        title: "Haverhill",
         elementId: "north-station-cr-haverhill",
         StationName: "North Station",
         routeId: "CR-Haverhill",
@@ -255,7 +255,7 @@ const PANELS = [
     },
 
     {
-        title: "Newburyport/Rockport Line",
+        title: "Newburyport/Rockport",
         elementId: "north-station-cr-newburyport",
         StationName: "North Station",
         routeId: "CR-Newburyport",
@@ -310,9 +310,7 @@ const SCHEDULE_ICON = '<i class="bi bi-calendar-date"></i>';
 function formatTime(minutes) {
     if (minutes <= 1) return "Now";
 
-    const h = Math.floor(minutes / 60);
-    const m = Math.floor(minutes % 60);
-    return h ? `${h}h ${m}m` : `${m}m`;
+    return `${Math.floor(minutes)}m`;
 }
 
 /**
@@ -477,9 +475,9 @@ function getPredictions(data) {
 
         // predicted time train arrives
         const formattedTime = date.toLocaleTimeString([], {
-            hour: "2-digit",
+            hour: "numeric",
             minute: "2-digit",
-            hour12: false,
+            hour12: true,
         });
 
         results.push({
