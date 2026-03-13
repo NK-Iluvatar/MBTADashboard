@@ -192,6 +192,7 @@ body {
   align-items: center;
   gap: 20px;
   padding: 14px 20px;
+  background: none !important;
 }
 
 .weather-temp {
