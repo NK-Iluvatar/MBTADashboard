@@ -102,7 +102,8 @@
     :root {
         --cols-1:   calc(50% - 0.625rem) calc(50% - 0.625rem);
         --cols-2-3: calc(50% - 0.625rem) calc(50% - 0.625rem);
-        --gap-cr-times: 40px;
+        --pad-cr-cell: 3px 20px;
+        --gap-cr-times: 20px;
     }
 }
 
