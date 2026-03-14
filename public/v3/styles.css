@@ -63,7 +63,6 @@
     --gap-pred-times:    20px;
 
     /* CR grid cells */
-    --pad-cr-header:      0px 40px;
     --pad-cr-cell:        3px 40px;
     --pad-cr-header-last: 0px 20px;
     --gap-cr-times:       80px;
@@ -102,6 +101,7 @@
     :root {
         --cols-1:   calc(50% - 0.625rem) calc(50% - 0.625rem);
         --cols-2-3: calc(50% - 0.625rem) calc(50% - 0.625rem);
+        --cols-cr:  16% 16% 42% 26%;
         --pad-cr-cell: 3px 20px;
         --gap-cr-times: 20px;
     }
@@ -224,7 +224,7 @@ body {
     text-transform: uppercase;
     font-size: var(--fs-compact);
     color: var(--c-text-muted);
-    padding: var(--pad-cr-header);
+    padding: var(--pad-cr-cell);
 }
 
 .cr-header:last-child {
