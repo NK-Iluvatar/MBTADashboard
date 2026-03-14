@@ -481,8 +481,8 @@ function renderCRPanel(panels, stationName, stationClass) {
 
             const alert = getAlertForRoute(panel.routeId);
             html += `
-                <div class="cr-line">${panel.title}</div>
-                <div class="cr-line">${preds[0].headsign}</div>
+                <div class="cr-line">${panel.title.replace(/\//g, '/<wbr>')}</div>
+                <div class="cr-line">${preds[0].headsign.replace(/\//g, '/<wbr>')}</div>
                 <div class="cr-times">${times}</div>
                 ${alert
                     ? `<div class="cr-alert"><div class="cr-alert-ticker"><span class="cr-alert-text">⚠️ ${alert.attributes.header}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⚠️ ${alert.attributes.header}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div></div>`
