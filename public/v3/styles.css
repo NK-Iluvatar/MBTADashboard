@@ -1,15 +1,148 @@
 /* ----- MBTA SCREENS SYSTEM ----- */
 
+/* ===== DESIGN TOKENS: DESKTOP ===== */
 :root {
-    --mbta-green: #00843d;
-    --mbta-red: #da291c;
-    --mbta-blue: #003da5;
-    --mbta-orange: #ed8b00;
-    --mbta-commuter: #80276c;
-    --mbta-cool-black-15: #171f26;
-    --mbta-warm-white-90: #e6e4e1;
+    /* --- Colors --- */
+    --c-bg:           #e6e4e1;
+    --c-surface:      #f2f3f5;
+    --c-border:       #e6e7e8;
+    --c-border-row:   #d7d8da;
+    --c-text:         #171f26;
+    --c-text-muted:   #616161;
+    --c-text-dark:    #1c1e23;
+    --c-text-mid:     #555555;
+    --c-white:        #ffffff;
+    --c-alert-bg:     #fff7bf;
+    --c-alert-accent: #ffdd00;
+
+    /* Route colors */
+    --c-red:      #da291c;
+    --c-orange:   #ed8b00;
+    --c-blue:     #003da5;
+    --c-green:    #00843d;
+    --c-commuter: #80276c;
+    --c-boat:     #add8e6;
+
+    /* Realtime color shares green */
+    --c-realtime: var(--c-green);
+
+    /* --- Typography --- */
     --font: "Helvetica Neue", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --line-height:   1.3;
+    --letter-spacing: 0.04em;
+    --opacity-muted: 0.7;
+
+    --fw-light:   200;
+    --fw-semi:    600;
+    --fw-bold:    700;
+
+    /* Font sizes — redefined per breakpoint */
+    --fs-body:    20px;   /* destinations, direction headers, pred-times, station label */
+    --fs-compact: 20px;   /* cr cells, alert banner, weather meta — diverges more on mobile */
+    --fs-header:  30px;   /* card header title */
+    --fs-display: 60px;   /* weather temp, clock */
+    --fs-emoji:   36px;   /* weather emoji */
+
+    /* --- Layout — redefined per breakpoint --- */
+    --gap:        1.25rem;
+    --pad-outer:  1.25rem;
+
+    /* Grid column templates */
+    --cols-1:   calc(33.333% - 0.834rem) calc(33.333% - 0.834rem) calc(33.333% - 0.834rem);
+    --cols-2-3: calc(25% - 0.938rem) calc(25% - 0.938rem) calc(25% - 0.938rem) calc(25% - 0.938rem);
+    --cols-cr:  16.7% 16.7% 33.3% 33.3%;
+
+    /* Card */
+    --card-header-height: 66px;
+    --pad-card-header:    14px 20px;
+
+    /* Inner card rows */
+    --pad-direction:     12px 20px 4px;
+    --pad-row:           10px 20px;
+    --pred-time-min-width: 70px;
+    --gap-pred-times:    20px;
+
+    /* CR grid cells */
+    --pad-cr-header:      0px 40px;
+    --pad-cr-cell:        3px 40px;
+    --pad-cr-header-last: 0px 20px;
+    --gap-cr-times:       80px;
+
+    /* Container 4 */
+    --gap-c4:    1.5rem;
+    --margin-c4: 2rem;
+
+    /* Alert banner */
+    --pad-alert-banner: 0.75rem 1rem;
+    --gap-alert-banner: 0.75rem;
+
+    /* Weather */
+    --gap-weather-body:  20px;
+    --gap-weather-right: 16px;
+    --gap-weather-meta:  2px;
+
+    /* Icon */
+    --icon-gap: 0.4rem;
+
+    /* Ticker */
+    --ticker-duration: 25s;
+
+    /* --- Borders & Radii --- */
+    --radius:    3px;
+    --radius-md: 4px;
+    --radius-lg: 6px;
+
+    --border-card:  1px solid var(--c-border);
+    --border-row:   1px solid var(--c-border-row);
+    --border-alert: 4px solid var(--c-alert-accent);
 }
+
+/* ===== DESIGN TOKENS: 1080px ===== */
+@media (max-width: 1080px) {
+    :root {
+        --cols-1:   calc(50% - 0.625rem) calc(50% - 0.625rem);
+        --cols-2-3: calc(50% - 0.625rem) calc(50% - 0.625rem);
+        --gap-cr-times: 40px;
+    }
+}
+
+/* ===== DESIGN TOKENS: 430px (iPhone) ===== */
+@media (max-width: 430px) {
+    :root {
+        --gap:       0.75rem;
+        --pad-outer: 0.75rem;
+
+        --cols-1:   100%;
+        --cols-2-3: 100%;
+        --cols-cr:  50% 50%;
+
+        --gap-c4:    0.75rem;
+        --margin-c4: 1rem;
+
+        --fs-body:    16px;
+        --fs-compact: 15px;
+        --fs-header:  22px;
+        --fs-display: 40px;
+        --fs-emoji:   28px;
+
+        --card-header-height: auto;
+        --pad-card-header:    10px 14px;
+
+        --pad-direction:      8px 14px 4px;
+        --pad-row:            8px 14px;
+        --pred-time-min-width: 54px;
+        --gap-pred-times:     12px;
+        --gap-cr-times:       20px;
+
+        --pad-cr-header:      3px 12px;
+        --pad-cr-cell:        3px 12px;
+        --pad-cr-header-last: 3px 8px;
+    }
+}
+
+/* ===================================================
+   STYLES
+   =================================================== */
 
 * {
     margin: 0;
@@ -18,45 +151,37 @@
 }
 
 body {
-    background: var(--mbta-warm-white-90);
+    background:  var(--c-bg);
     font-family: var(--font);
-    color: var(--mbta-cool-black-15);
-    line-height: 1.3;
-    padding: 1.25rem;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
+    color:       var(--c-text);
+    line-height: var(--line-height);
+    padding:     var(--pad-outer);
+    width:       100%;
+    height:      100vh;
+    overflow:    hidden;
+    display:     flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap:         var(--gap);
 }
 
-/* 3 columns: gap = 1.25rem × 2 gaps / 3 cols ≈ 0.834rem per col */
+/* ===== CONTAINERS ===== */
 .container-1 {
     flex: 1;
     min-height: 0;
     display: grid;
-    grid-template-columns:
-        calc(33.333% - 0.834rem)
-        calc(33.333% - 0.834rem)
-        calc(33.333% - 0.834rem);
+    grid-template-columns: var(--cols-1);
     grid-auto-rows: 1fr;
-    gap: 1.25rem;
+    gap: var(--gap);
 }
 
-/* 4 columns: gap = 1.25rem × 3 gaps / 4 cols ≈ 0.938rem per col */
 .container-2,
 .container-3 {
     flex: 1;
     min-height: 0;
     display: grid;
-    grid-template-columns:
-        calc(25% - 0.938rem)
-        calc(25% - 0.938rem)
-        calc(25% - 0.938rem)
-        calc(25% - 0.938rem);
+    grid-template-columns: var(--cols-2-3);
     grid-auto-rows: 1fr;
-    gap: 1.25rem;
+    gap: var(--gap);
 }
 
 .container-4 {
@@ -64,8 +189,8 @@ body {
     min-height: 0;
     display: grid;
     grid-template-columns: 100%;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+    gap: var(--gap-c4);
+    margin-bottom: var(--margin-c4);
 }
 
 /* Propagate height through grid cell → predictions → card */
@@ -77,46 +202,47 @@ body {
     min-height: 0;
 }
 
+/* ===== CR GRID ===== */
 .cr-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1.5fr 3fr 3fr;
-    background: #f2f3f5;
-    border-radius: 6px;
+    grid-template-columns: var(--cols-cr);
+    background: var(--c-surface);
+    border-radius: var(--radius-lg);
 }
 
 .cr-grid > div:nth-child(8n+5),
 .cr-grid > div:nth-child(8n+6),
 .cr-grid > div:nth-child(8n+7),
 .cr-grid > div:nth-child(8n+8) {
-    background: var(--mbta-warm-white-90);
+    background: var(--c-bg);
 }
 
 .cr-header {
-    background: #f2f3f5;
-    font-weight: 700;
+    background: var(--c-surface);
+    font-weight: var(--fw-bold);
     text-transform: uppercase;
-    font-size: 20px;
-    color: #616161;
-    padding: 0px 40px;
+    font-size: var(--fs-compact);
+    color: var(--c-text-muted);
+    padding: var(--pad-cr-header);
 }
 
 .cr-header:last-child {
-    padding: 0px 20px;
+    padding: var(--pad-cr-header-last);
 }
 
 .cr-line {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-weight: 600;
-    font-size: 20px;
+    font-weight: var(--fw-semi);
+    font-size: var(--fs-compact);
 }
 
 .cr-times {
     display: flex;
-    gap: 80px;
-    font-weight: 700;
-    font-size: 20px;
+    gap: var(--gap-cr-times);
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-compact);
     align-items: center;
 }
 
@@ -127,8 +253,8 @@ body {
 
 .cr-line,
 .cr-times {
-    border-top: 1px solid #d7d8da;
-    padding: 3px 40px;
+    border-top: var(--border-row);
+    padding: var(--pad-cr-cell);
 }
 
 .cr-alert {
@@ -139,7 +265,7 @@ body {
 }
 
 .cr-alert:has(.cr-alert-ticker) {
-    border-top: 1px solid #d7d8da;
+    border-top: var(--border-row);
     padding: 3px 20px;
 }
 
@@ -166,10 +292,11 @@ body {
 
 .cr-alert-text {
     display: inline-block;
-    font-size: 20px;
-    animation: cr-alert-ticker 25s linear infinite;
+    font-size: var(--fs-compact);
+    animation: cr-alert-ticker var(--ticker-duration) linear infinite;
 }
 
+/* ===== PREDICTIONS WRAPPER ===== */
 .predictions {
     flex: 1;
     display: flex;
@@ -177,107 +304,112 @@ body {
     min-height: 0;
 }
 
+/* ===== MBTA CARD ===== */
 .mbta-card {
     flex: 1;
     display: flex;
     flex-direction: column;
     min-height: 0;
-    border: 1px solid #e6e7e8;
+    border: var(--border-card);
     font-family: var(--font);
 }
 
 .mbta-card-header {
-    color: white;
-    font-size: 30px;
-    font-weight: 700;
-    padding: 14px 20px;
+    color: var(--c-white);
+    font-size: var(--fs-header);
+    font-weight: var(--fw-bold);
+    padding: var(--pad-card-header);
     text-transform: uppercase;
-    border-radius: 3px 3px 0 0;
+    border-radius: var(--radius) var(--radius) 0 0;
     overflow: hidden;
-    height: 66px;
+    height: var(--card-header-height);
     flex-shrink: 0;
 }
 
 .mbta-card-header .ticker-station {
-    font-weight: 200;
-    font-size: 20px;
+    font-weight: var(--fw-light);
+    font-size: var(--fs-body);
 }
 
 .mbta-card-body {
-    background: #f2f3f5;
+    background: var(--c-surface);
     flex: 1;
     min-height: 0;
     display: flex;
     flex-direction: column;
-    border-radius: 0 0 3px 3px;
+    border-radius: 0 0 var(--radius) var(--radius);
     overflow-y: hidden;
 }
 
-.route-Red .mbta-card-header    { background: #da291c; }
-.route-Orange .mbta-card-header { background: #ed8b00; }
-.route-Blue .mbta-card-header   { background: #003da5; }
-.route-Green .mbta-card-header  { background: #00843d; }
-.route-CR .mbta-card-header     { background: #80276c; }
-.route-Boat .mbta-card-header   { background: #add8e6; }
+/* Route header colors */
+.route-Red .mbta-card-header    { background: var(--c-red); }
+.route-Orange .mbta-card-header { background: var(--c-orange); }
+.route-Blue .mbta-card-header   { background: var(--c-blue); }
+.route-Green .mbta-card-header  { background: var(--c-green); }
+.route-CR .mbta-card-header     { background: var(--c-commuter); }
+.route-Boat .mbta-card-header   { background: var(--c-boat); }
 
+/* ===== ALERT BANNER ===== */
 .alert-banner {
     display: flex;
     align-items: flex-start;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
+    gap: var(--gap-alert-banner);
+    padding: var(--pad-alert-banner);
     margin-top: auto;
-    border-radius: 4px;
-    background: #fff7bf;
-    border-left: 4px solid #ffdd00;
-    font-size: 20px;
+    border-radius: var(--radius-md);
+    background: var(--c-alert-bg);
+    border-left: var(--border-alert);
+    font-size: var(--fs-compact);
     flex-shrink: 0;
 }
 
+/* ===== DIRECTION HEADER ===== */
 .direction-header {
-    font-size: 20px;
-    font-weight: 700;
+    font-size: var(--fs-body);
+    font-weight: var(--fw-bold);
     text-transform: uppercase;
-    color: #616161;
-    padding: 12px 20px 4px;
+    color: var(--c-text-muted);
+    padding: var(--pad-direction);
     flex-shrink: 0;
 }
 
+/* ===== PREDICTION ROW ===== */
 .prediction-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    border-top: 1px solid #d7d8da;
+    padding: var(--pad-row);
+    border-top: var(--border-row);
 }
 
 .destination-main {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1c1e23;
+    font-size: var(--fs-body);
+    font-weight: var(--fw-bold);
+    color: var(--c-text-dark);
 }
 
 .destination-via {
-    font-size: 20px;
-    color: #555;
+    font-size: var(--fs-body);
+    color: var(--c-text-mid);
 }
 
 .pred-times {
     display: flex;
-    gap: 20px;
-    font-weight: 700;
+    gap: var(--gap-pred-times);
+    font-weight: var(--fw-bold);
 }
 
 .pred-time {
-    font-size: 20px;
-    min-width: 70px;
+    font-size: var(--fs-body);
+    min-width: var(--pred-time-min-width);
     text-align: right;
 }
 
-.pred-time.realtime  { color: #00843d; }
-.pred-time.scheduled { color: var(--mbta-cool-black-15); }
+.pred-time.realtime  { color: var(--c-realtime); }
+.pred-time.scheduled { color: var(--c-text); }
 
 .bi {
-    padding-right: 0.4rem;
+    padding-right: var(--icon-gap);
 }
 
 /* ===== WEATHER ===== */
@@ -289,19 +421,19 @@ body {
     height: auto;
     flex-direction: row;
     align-items: center;
-    gap: 20px;
+    gap: var(--gap-weather-body);
     padding: 0;
     background: none !important;
 }
 
 .weather-temp {
-    font-size: 60px;
-    color: #616161;
-    font-weight: 700;
+    font-size: var(--fs-display);
+    color: var(--c-text-muted);
+    font-weight: var(--fw-bold);
 }
 
 .weather-emoji {
-    font-size: 36px;
+    font-size: var(--fs-emoji);
     line-height: 1;
 }
 
@@ -313,140 +445,37 @@ body {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 16px;
+    gap: var(--gap-weather-right);
 }
 
 .weather-meta {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 2px;
+    gap: var(--gap-weather-meta);
 }
 
 .weather-date,
 .weather-location {
-    font-size: 20px;
-    font-weight: 600;
+    font-size: var(--fs-compact);
+    font-weight: var(--fw-semi);
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    opacity: 0.7;
+    letter-spacing: var(--letter-spacing);
+    opacity: var(--opacity-muted);
 }
 
 #timestamp {
-    font-size: 60px;
-    color: #616161;
-    font-weight: 700;
+    font-size: var(--fs-display);
+    color: var(--c-text-muted);
+    font-weight: var(--fw-bold);
 }
 
-/* ===== RESPONSIVE: 1080px ===== */
-@media (max-width: 1080px) {
-    /* 2 columns: gap = 1.25rem × 1 gap / 2 cols = 0.625rem per col */
-    .container-1 {
-        grid-template-columns:
-            calc(50% - 0.625rem)
-            calc(50% - 0.625rem);
-    }
-
-    .container-2,
-    .container-3 {
-        grid-template-columns:
-            calc(50% - 0.625rem)
-            calc(50% - 0.625rem);
-    }
-
-    .cr-times {
-        gap: 40px;
-    }
-}
-
-/* ===== RESPONSIVE: iPhone (max-width: 430px) ===== */
+/* ===== RESPONSIVE: iPhone body overrides ===== */
+/* All sizing tokens are handled in :root @media blocks above. */
+/* Only structural/behavioral overrides that can't be expressed as tokens go here. */
 @media (max-width: 430px) {
     body {
-        padding: 0.75rem;
-        gap: 0.75rem;
         height: auto;
         overflow-y: auto;
-    }
-
-    .container-1,
-    .container-2,
-    .container-3 {
-        grid-template-columns: 100%;
-        gap: 0.75rem;
-    }
-
-    .container-4 {
-        gap: 0.75rem;
-        margin-bottom: 1rem;
-    }
-
-    .mbta-card-header {
-        font-size: 22px;
-        padding: 10px 14px;
-        height: auto;
-    }
-
-    .mbta-card-header .ticker-station {
-        font-size: 16px;
-    }
-
-    .direction-header {
-        font-size: 16px;
-        padding: 8px 14px 4px;
-    }
-
-    .prediction-row {
-        padding: 8px 14px;
-    }
-
-    .destination-main,
-    .destination-via {
-        font-size: 16px;
-    }
-
-    .pred-time {
-        font-size: 16px;
-        min-width: 54px;
-    }
-
-    .pred-times {
-        gap: 12px;
-    }
-
-    .cr-grid {
-        grid-template-columns: 50% 50%;
-    }
-
-    .cr-header,
-    .cr-line,
-    .cr-times {
-        font-size: 15px;
-        padding: 3px 12px;
-    }
-
-    .cr-header:last-child {
-        padding: 3px 8px;
-    }
-
-    .cr-times {
-        gap: 20px;
-    }
-
-    .alert-banner {
-        font-size: 15px;
-    }
-
-    .weather-temp,
-    #timestamp {
-        font-size: 40px;
-    }
-
-    .weather-emoji {
-        font-size: 28px;
-    }
-
-    .weather-date,
-    .weather-location {
-        font-size: 15px;
     }
 }
