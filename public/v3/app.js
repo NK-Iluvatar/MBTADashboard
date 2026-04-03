@@ -333,6 +333,31 @@ const FERRY = [
     "Boat-F6",
     "Boat-F7",
 ];
+
+/** SUBWAY STATION GROUPS — top-level grouping for container-1 cards */
+const SUBWAY_STATION_GROUPS = [
+    {
+        stationName: "South Station",
+        elementId: "south-station-red",
+        walkMin: 7,
+        headerRouteIds: ["Red"],
+        panelRouteIds: ["Red"],
+    },
+    {
+        stationName: "State Street",
+        elementId: "state-station-orange",
+        walkMin: 9,
+        headerRouteIds: ["Orange", "Blue"],
+        panelRouteIds: ["Orange", "Blue"],
+    },
+    {
+        stationName: "Park Street",
+        elementId: "park-street-green",
+        walkMin: 16,
+        headerRouteIds: ["Green"],
+        panelRouteIds: ["Green"],
+    },
+];
 // ===================== STATE =====================
 /** MBTA Data */
 let realtimeData = {};
@@ -602,10 +627,14 @@ async function fetchLegalNews() {
  * @returns HTML string
  */
 function getLinePill(routeId) {
-    if (routeId === "Red")   return '<span class="line-pill pill-red">RL</span>';
-    if (routeId === "Orange") return '<span class="line-pill pill-orange">OL</span>';
-    if (routeId === "Blue")  return '<span class="line-pill pill-blue">BL</span>';
-    if (routeId === "Green" || routeId.startsWith("Green-")) return '<span class="line-pill pill-green">GL</span>';
+    if (routeId === "Red")     return '<span class="line-pill pill-red">RL</span>';
+    if (routeId === "Orange")  return '<span class="line-pill pill-orange">OL</span>';
+    if (routeId === "Blue")    return '<span class="line-pill pill-blue">BL</span>';
+    if (routeId === "Green")   return '<span class="line-pill pill-green">GL</span>';
+    if (routeId === "Green-B") return '<span class="line-pill pill-green">B</span>';
+    if (routeId === "Green-C") return '<span class="line-pill pill-green">C</span>';
+    if (routeId === "Green-D") return '<span class="line-pill pill-green">D</span>';
+    if (routeId === "Green-E") return '<span class="line-pill pill-green">E</span>';
     if (routeId.startsWith("CR-"))   return '<span class="line-pill pill-cr">CR</span>';
     if (routeId.startsWith("Boat-")) return '<span class="line-pill pill-boat">FR</span>';
     return "";
@@ -627,6 +656,70 @@ function getRouteClass(routeId) {
     if (routeId.startsWith("Green")) return "route-Green";
 
     return "";
+}
+
+/**
+ * Renders a station card that aggregates predictions from one or more route IDs,
+ * merges them into a single flat time-sorted list, with a line pill on each row.
+ * @param {*} group - entry from SUBWAY_STATION_GROUPS
+ */
+function renderStationGroup(group) {
+    const container = document.getElementById(group.elementId);
+    if (!container) return;
+    const predContainer = container.querySelector(".predictions");
+    if (!predContainer) return;
+
+    const groupPanels = PANELS.filter((p) =>
+        group.panelRouteIds.includes(p.routeId),
+    );
+
+    const allPreds = [];
+    groupPanels.forEach((panel) => {
+        panel.services.forEach((service) => {
+            const key = buildKey(panel, service);
+            let preds = getPredictions(realtimeData[key]);
+            preds = preds.filter((p) =>
+                p.headsign.includes(service.headsignContains),
+            );
+            const serviceRouteId = service.routeId ?? panel.routeId;
+            preds.forEach((p) => allPreds.push({ ...p, routeId: serviceRouteId }));
+        });
+    });
+
+    allPreds.sort((a, b) => a.minutes - b.minutes);
+
+    const headerPills = group.headerRouteIds.map((r) => getLinePill(r)).join("");
+
+    let html = `
+        <div class="card">
+            <div class="card-header">
+                ${headerPills}
+                <span class="header-station">${group.stationName}</span>
+                <span class="walk-min">${WALK_ICON} ${group.walkMin} min</span>
+            </div>
+            <div class="card-body">
+    `;
+
+    if (!allPreds.length) {
+        html += `<div class="no-trains">No service</div>`;
+    } else {
+        allPreds.slice(0, 10).forEach((p) => {
+            html += `
+                <div class="prediction-row">
+                    <div class="destination-main">${p.headsign}</div>
+                    <div class="pred-times">
+                        ${getLinePill(p.routeId)}
+                        <div class="pred-time ${p.isRealtime ? "realtime" : "scheduled"}">
+                            ${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON} ${formatTime(p.minutes)}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    html += `</div></div>`;
+    predContainer.innerHTML = html;
 }
 
 /**
@@ -1031,7 +1124,13 @@ async function updateAll() {
     await fetchAlerts();
     await fetchHourlyForecast();
 
-    PANELS.forEach(renderPanel);
+    const stationGroupRouteIds = new Set(
+        SUBWAY_STATION_GROUPS.flatMap((g) => g.panelRouteIds),
+    );
+    PANELS.forEach((panel) => {
+        if (!stationGroupRouteIds.has(panel.routeId)) renderPanel(panel);
+    });
+    SUBWAY_STATION_GROUPS.forEach(renderStationGroup);
 
     const southPanels = PANELS.filter((p) =>
         SOUTHSTATIONCR.includes(p.routeId),
