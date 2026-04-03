@@ -47,11 +47,13 @@ body {
 }
 
 .container-1 {
+    flex: 1;
+    min-height: 0;
     display: grid;
     grid-template-columns:
         calc(33.333% - 0.834rem) calc(33.333% - 0.834rem)
         calc(33.333% - 0.834rem);
-    grid-auto-rows: auto;
+    grid-template-rows: auto auto 1fr;
     align-items: start;
     gap: 2rem;
 }
@@ -96,7 +98,8 @@ body {
 
 /* ===== MAP ===== */
 #map-box {
-    flex: 1;
+    grid-column: 1 / -1;
+    align-self: stretch;
     min-height: 0;
 }
 
