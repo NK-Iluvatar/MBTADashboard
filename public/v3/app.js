@@ -1266,13 +1266,13 @@ function startContainerRotation() {
 
     let current = 0;
     containers.forEach((c, i) => {
-        c.style.display = i === 0 ? "grid" : "none";
+        c.style.display = i === 0 ? "" : "none";
     });
 
     setInterval(() => {
         containers[current].style.display = "none";
         current = (current + 1) % containers.length;
-        containers[current].style.display = "grid";
+        containers[current].style.display = "";
         updateAll();
     }, 25000);
 }

@@ -56,9 +56,7 @@ body {
 
 .container-1-cards {
     display: grid;
-    grid-template-columns:
-        calc(33.333% - 0.834rem) calc(33.333% - 0.834rem)
-        calc(33.333% - 0.834rem);
+    grid-template-columns: repeat(3, 1fr);
     align-items: start;
     gap: 2rem;
 }
