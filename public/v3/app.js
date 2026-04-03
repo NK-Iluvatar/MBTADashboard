@@ -659,8 +659,9 @@ function getRouteClass(routeId) {
 }
 
 /**
- * Renders a station card that aggregates predictions from one or more route IDs,
- * merges them into a single flat time-sorted list, with a line pill on each row.
+ * Renders a station card grouping departures by destination.
+ * Each row: pill | destination | next 2 reachable departure times.
+ * Filters out departures within 10 minutes (unreachable given walk time).
  * @param {*} group - entry from SUBWAY_STATION_GROUPS
  */
 function renderStationGroup(group) {
@@ -673,20 +674,31 @@ function renderStationGroup(group) {
         group.panelRouteIds.includes(p.routeId),
     );
 
-    const allPreds = [];
+    // Collect all reachable predictions keyed by headsign
+    const byDestination = new Map();
     groupPanels.forEach((panel) => {
         panel.services.forEach((service) => {
             const key = buildKey(panel, service);
             let preds = getPredictions(realtimeData[key]);
-            preds = preds.filter((p) =>
-                p.headsign.includes(service.headsignContains),
-            );
+            preds = preds
+                .filter((p) => p.headsign.includes(service.headsignContains))
+                .filter((p) => p.minutes >= 10);
+            if (!preds.length) return;
             const serviceRouteId = service.routeId ?? panel.routeId;
-            preds.forEach((p) => allPreds.push({ ...p, routeId: serviceRouteId }));
+            const headsign = preds[0].headsign;
+            if (!byDestination.has(headsign)) {
+                byDestination.set(headsign, { routeId: serviceRouteId, times: [] });
+            }
+            preds.forEach((p) => byDestination.get(headsign).times.push(p));
         });
     });
 
-    allPreds.sort((a, b) => a.minutes - b.minutes);
+    // Sort each destination's times, then sort destinations by their earliest time
+    const destinations = [...byDestination.entries()].map(([headsign, data]) => {
+        data.times.sort((a, b) => a.minutes - b.minutes);
+        return { headsign, ...data };
+    });
+    destinations.sort((a, b) => a.times[0].minutes - b.times[0].minutes);
 
     const headerPills = group.headerRouteIds.map((r) => getLinePill(r)).join("");
 
@@ -700,19 +712,24 @@ function renderStationGroup(group) {
             <div class="card-body">
     `;
 
-    if (!allPreds.length) {
+    if (!destinations.length) {
         html += `<div class="no-trains">No service</div>`;
     } else {
-        allPreds.slice(0, 10).forEach((p) => {
+        destinations.forEach(({ headsign, routeId, times }) => {
+            const next2 = times.slice(0, 2);
+            const timesHtml = next2
+                .map(
+                    (p) => `
+                    <div class="pred-time ${p.isRealtime ? "realtime" : "scheduled"}">
+                        ${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON} ${formatTime(p.minutes)}
+                    </div>`,
+                )
+                .join("");
             html += `
                 <div class="prediction-row">
-                    <div class="destination-main">${p.headsign}</div>
-                    <div class="pred-times">
-                        ${getLinePill(p.routeId)}
-                        <div class="pred-time ${p.isRealtime ? "realtime" : "scheduled"}">
-                            ${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON} ${formatTime(p.minutes)}
-                        </div>
-                    </div>
+                    ${getLinePill(routeId)}
+                    <div class="destination-main">${headsign}</div>
+                    <div class="pred-times">${timesHtml}</div>
                 </div>
             `;
         });
