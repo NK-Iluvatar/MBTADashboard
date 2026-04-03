@@ -597,6 +597,21 @@ async function fetchLegalNews() {
 
 // ===================== RENDER =====================
 /**
+ * Returns a colored pill element for a given route.
+ * @param {*} routeId
+ * @returns HTML string
+ */
+function getLinePill(routeId) {
+    if (routeId === "Red")   return '<span class="line-pill pill-red">RL</span>';
+    if (routeId === "Orange") return '<span class="line-pill pill-orange">OL</span>';
+    if (routeId === "Blue")  return '<span class="line-pill pill-blue">BL</span>';
+    if (routeId === "Green" || routeId.startsWith("Green-")) return '<span class="line-pill pill-green">GL</span>';
+    if (routeId.startsWith("CR-"))   return '<span class="line-pill pill-cr">CR</span>';
+    if (routeId.startsWith("Boat-")) return '<span class="line-pill pill-boat">FR</span>';
+    return "";
+}
+
+/**
  * Gets class based on route for styling
  * @param {*} routeId routeID of a line
  * @returns style class
@@ -630,14 +645,9 @@ function renderPanel(panel) {
     let html = `
         <div class="card ${routeClass}">
             <div class="card-header">
-                <span class="station-line">
-                <span class="icon">${panel.routeId.startsWith("Boat-") ? WATER_ICON : TRAIN_ICON}</span>
-                ${panel.title}</span> 
-                <span class="station-name"> ${panel.StationName}</span>
-                <span class="walk-min">
-                    ${WALK_ICON}
-                    ${panel.walkMin} min
-                </span>
+                ${getLinePill(panel.routeId)}
+                <span class="header-station">${panel.StationName}</span>
+                <span class="walk-min">${WALK_ICON} ${panel.walkMin} min</span>
             </div>
             <div class="card-body">
         `;
@@ -738,12 +748,9 @@ function renderCRPanel(panels, stationName, stationClass, walkMin) {
     let html = `
         <div class="card route-CR">
             <div class="card-header">
-                <span class="station-line"> ${TRAIN_ICON} Commuter Rail</span>
-                <span class="station-name">${stationName}</span>
-                <span class="walk-min">
-                    ${WALK_ICON}
-                    ${walkMin} min
-                </span>
+                <span class="line-pill pill-cr">CR</span>
+                <span class="header-station">${stationName}</span>
+                <span class="walk-min">${WALK_ICON} ${walkMin} min</span>
             </div>
 
             <div class="cr-grid">
@@ -816,7 +823,8 @@ function renderFerryPanel(panels, stationClass) {
     let html = `
         <div class="card route-Boat">
             <div class="card-header">
-                <span class="station-line"> ${WATER_ICON} Ferry </span>
+                <span class="line-pill pill-boat">FR</span>
+                <span class="header-station">Ferry</span>
             </div>
             <div class="card-body">
             <div class="ferry-grid">

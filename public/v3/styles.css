@@ -33,7 +33,7 @@
 /* ===== LAYOUT: full viewport, flex column ===== */
 
 body {
-    background: var(--mbta-warm-white-90);
+    background: #ffffff;
     font-family: var(--font-family-mono);
     color: var(--mbta-cool-black-15);
     line-height: 1.3;
@@ -275,33 +275,54 @@ body {
 
 /* HEADER */
 .card-header {
-    color: white;
-    font-size: 28px;
+    background: #ffffff;
+    color: #1c1e23;
+    font-size: 20px;
     font-weight: 700;
-    text-transform: uppercase;
+    padding: 8px 15px;
     border-radius: 3px 3px 0 0;
-    overflow: hidden;
-    height: 66px;
+    border-bottom: 1px solid #e0e0e0;
+    height: auto;
     flex-shrink: 0;
     display: flex;
-    text-align: center;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
 }
 
-.station-line {
-    padding: 15px 15px;
-}
-
-.station-name,
-.walk-min {
-    font-weight: 200;
+.header-station {
+    font-weight: 600;
     font-size: 20px;
-    padding: 23px 0px;
 }
 
 .walk-min {
-    padding-right: 10px;
+    font-size: 18px;
+    font-weight: 400;
+    color: #616161;
     margin-left: auto;
+    white-space: nowrap;
 }
+
+/* LINE PILLS */
+.line-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.pill-red    { background: #da291c; }
+.pill-orange { background: #ed8b00; }
+.pill-blue   { background: #003da5; }
+.pill-green  { background: #00843d; }
+.pill-cr     { background: #80276c; }
+.pill-boat   { background: #add8e6; color: #1c1e23; }
 
 .rotate-315 {
     transform: rotate(315deg);
@@ -322,24 +343,6 @@ body {
     overflow-y: hidden;
 }
 
-.route-Red .card-header {
-    background: #da291c;
-}
-.route-Orange .card-header {
-    background: #ed8b00;
-}
-.route-Blue .card-header {
-    background: #003da5;
-}
-.route-Green .card-header {
-    background: #00843d;
-}
-.route-CR .card-header {
-    background: #80276c;
-}
-.route-Boat .card-header {
-    background: #add8e6;
-}
 
 /* ----- ALERT BANNERS ----- */
 .alert-banner {
