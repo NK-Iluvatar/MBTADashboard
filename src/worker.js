@@ -48,11 +48,12 @@ export default {
         });
       }
 
-      // Blue Bikes API proxy
-      if (url.pathname === '/api/bluebikes') {
-        const response = await fetch('https://gbfs.bluebikes.com/gbfs/en/station_status.json');
+      // Blue Bikes API proxy — passes path through to the GBFS feed
+      if (url.pathname.startsWith('/api/bluebikes')) {
+        const bikePath = url.pathname.replace('/api/bluebikes', '') || '/station_status.json';
+        const response = await fetch(`https://gbfs.bluebikes.com/gbfs/en${bikePath}`);
         const data = await response.json();
-        
+
         return new Response(JSON.stringify(data), {
           headers: {
             'Content-Type': 'application/json',

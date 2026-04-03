@@ -305,7 +305,34 @@ body {
 .pill-blue   { background: #003da5; }
 .pill-green  { background: #00843d; }
 .pill-cr     { background: #80276c; }
-.pill-boat   { background: #add8e6; color: #1c1e23; }
+.pill-boat     { background: #add8e6; color: #1c1e23; }
+.pill-bluebike { background: #2277b3; }
+
+/* ===== BLUEBIKES ===== */
+.bb-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-top: 1px solid #d7d8da;
+}
+
+.bb-station-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1c1e23;
+    flex: 1;
+}
+
+.bb-counts {
+    display: flex;
+    gap: 24px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.bb-ebike  { color: #00843d; }
+.bb-bike   { color: #1c1e23; }
 
 .rotate-315 {
     transform: rotate(315deg);
