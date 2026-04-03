@@ -1277,8 +1277,26 @@ function startContainerRotation() {
     }, 25000);
 }
 
+/**
+ * Renders a static OSM map card into #map-box. Called once at startup.
+ */
+function renderMap() {
+    const container = document.getElementById("map-box");
+    if (!container) return;
+    container.innerHTML = `
+        <div class="card map-card">
+            <div class="card-header">
+                <span class="header-station">Area Map</span>
+            </div>
+            <div class="card-body">
+                <img src="/api/map" class="map-img" alt="Area map">
+            </div>
+        </div>`;
+}
+
 // ===================== START =====================
 console.log("Starting scalable MBTA tracker");
 startClock();
 startContainerRotation();
+renderMap();
 updateAll();

@@ -94,6 +94,17 @@ body {
     margin-bottom: 2rem;
 }
 
+/* ===== MAP ===== */
+#map-box {
+    grid-column: span 2;
+}
+
+.map-img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
 .container-ferry {
     display: grid;
     grid-template-columns: calc(50% - 0.625rem) calc(50% - 0.625rem);

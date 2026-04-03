@@ -48,6 +48,40 @@ export default {
         });
       }
 
+      // Static map proxy — fetches a pre-built OSM static map image
+      if (url.pathname === '/api/map') {
+        const markers = [
+          // Office
+          '42.3535,-71.0534,red-pushpin',
+          // Transit stops
+          '42.3519,-71.0551,orange-pushpin',
+          '42.3592,-71.0585,orange-pushpin',
+          '42.3563,-71.0621,orange-pushpin',
+          // Bluebikes stations
+          '42.3549,-71.0527,blue-pushpin',
+          '42.3566,-71.0541,blue-pushpin',
+          '42.3552,-71.0522,blue-pushpin',
+        ].map(m => `&markers=${m}`).join('');
+
+        const mapUrl =
+          'https://staticmap.openstreetmap.de/staticmap.php' +
+          '?center=42.3558,-71.0580&zoom=15&size=700x280' +
+          markers;
+
+        const response = await fetch(mapUrl, {
+          headers: { 'User-Agent': 'MBTADashboard/1.0' }
+        });
+        const body = await response.arrayBuffer();
+
+        return new Response(body, {
+          headers: {
+            'Content-Type': response.headers.get('Content-Type') || 'image/png',
+            'Access-Control-Allow-Origin': '*',
+            'Cache-Control': 'public, max-age=3600',
+          }
+        });
+      }
+
       // Blue Bikes API proxy — passes path through to the GBFS feed
       if (url.pathname.startsWith('/api/bluebikes')) {
         const bikePath = url.pathname.replace('/api/bluebikes', '') || '/station_status.json';
