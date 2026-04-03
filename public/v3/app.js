@@ -1288,7 +1288,7 @@ function renderMap() {
     container.innerHTML = `<div id="leaflet-map"></div>`;
 
     requestAnimationFrame(() => {
-        const map = L.map("leaflet-map", { zoomControl: true }).setView([42.3555, -71.0545], 15);
+        const map = L.map("leaflet-map", { zoomControl: true }).setView([42.3558, -71.0572], 15);
 
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
             attribution: "© OpenStreetMap contributors",
@@ -1303,21 +1303,21 @@ function renderMap() {
                 weight: 2,
                 opacity: 1,
                 fillOpacity: 0.9,
-            }).addTo(map).bindTooltip(label, { permanent: false, direction: "top" });
+            }).addTo(map).bindTooltip(label, { permanent: true, direction: "top", offset: [0, -8] });
         }
 
         // Office — amber
-        circleMarker(42.35267, -71.05461, "#ED8B00", "One International Place (Office)");
+        circleMarker(42.3526, -71.0546, "#ED8B00", "One International Place");
 
-        // Transit stops — line colors
-        circleMarker(42.35222, -71.05509, "#DA291C", "South Station (Red Line)");
-        circleMarker(42.35875, -71.05762, "#003DA5", "State Street (Orange / Blue Line)");
-        circleMarker(42.35643, -71.06219, "#00843D", "Park Street (Green Line)");
+        // MBTA stops — 9W5R+GX, 9W4Q+G3, 9W2V+QW (Boston)
+        circleMarker(42.3523, -71.0572, "#DA291C", "MBTA - South Station");
+        circleMarker(42.3593, -71.0596, "#003DA5", "MBTA - State Street");
+        circleMarker(42.3563, -71.0624, "#00843D", "MBTA - Park Street");
 
-        // Bluebike stations — bluebike blue
-        circleMarker(42.35621, -71.05413, "#2277B3", "Purchase St at Pearl St (Bluebikes)");
-        circleMarker(42.35687, -71.05479, "#2277B3", "Post Office Square (Bluebikes)");
-        circleMarker(42.35333, -71.04996, "#2277B3", "Rowes Wharf at Atlantic Ave (Bluebikes)");
+        // Bluebike stations — 9W3W+VP, 9W4W+85, 9W4X+VP (Boston)
+        circleMarker(42.3547, -71.0536, "#2277B3", "Blue Bikes");
+        circleMarker(42.3556, -71.0542, "#2277B3", "Blue Bikes");
+        circleMarker(42.3572, -71.0511, "#2277B3", "Blue Bikes");
     });
 }
 
