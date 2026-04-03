@@ -689,8 +689,8 @@ function renderBluebikes(stations) {
             <div class="bb-row">
                 <div class="bb-station-name">${name}</div>
                 <div class="bb-counts">
-                    <span class="bb-ebike">⚡ ${eBikes}</span>
-                    <span class="bb-bike">🚲 ${regularBikes}</span>
+                    <span class="bb-ebike"><i class="bi bi-lightning-charge-fill"></i> ${eBikes}</span>
+                    <span class="bb-bike"><i class="bi bi-bicycle"></i> ${regularBikes}</span>
                 </div>
             </div>`,
         )
