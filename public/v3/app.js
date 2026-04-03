@@ -941,15 +941,11 @@ function renderFerryPanel(panels, stationClass) {
     let html = `
         <div class="card route-Boat">
             <div class="card-header">
-                <span class="line-pill pill-boat">FR</span>
                 <span class="header-station">Ferry</span>
             </div>
             <div class="card-body">
             <div class="ferry-grid">
-                <div class="grid-header ferry-header">From</div>
-                <div class="grid-header ferry-header">To</div>
-                <div class="grid-header ferry-header">Arrives(min)</div>   
-                        
+
         `;
 
     panels.forEach((panel) => {
@@ -1104,8 +1100,10 @@ function renderNews(articles) {
 
     const html = `
         <div class="card route-News">
+            <div class="card-header">
+                <span class="header-station">News</span>
+            </div>
             <div class="card-body news-body">
-                <div class="news-label">News</div>
                 <div class="news-list">
                     ${articles
                         .map((a) => `<div class="news-item">${a.title}</div>`)

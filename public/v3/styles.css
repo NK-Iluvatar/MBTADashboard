@@ -196,11 +196,6 @@ body {
     padding: 3px 20px;
 }
 
-.ferry-grid > .ferry-stop:last-of-type,
-.ferry-grid > .ferry-line:last-of-type,
-.ferry-grid > .ferry-times:last-of-type {
-    border-bottom: none;
-}
 
 .cr-alert {
     min-width: 0;
@@ -323,12 +318,8 @@ body {
 /* BODY */
 .card-body {
     background: #ffffff;
-    flex: 1;
-    min-height: 0;
     display: flex;
     flex-direction: column;
-    border-radius: 0 0 3px 3px;
-    overflow-y: hidden;
 }
 
 
@@ -482,15 +473,6 @@ body {
 
 /* ===== RSS ===== */
 
-.news-label {
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #616161;
-    padding-bottom: 4px;
-    border-bottom: 1px solid #e0e0e0;
-}
 
 .news-body {
     display: flex;
