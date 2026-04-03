@@ -1287,36 +1287,38 @@ function renderMap() {
 
     container.innerHTML = `<div id="leaflet-map"></div>`;
 
-    const map = L.map("leaflet-map", { zoomControl: true }).setView([42.3555, -71.0545], 15);
+    requestAnimationFrame(() => {
+        const map = L.map("leaflet-map", { zoomControl: true }).setView([42.3555, -71.0545], 15);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap contributors",
-        maxZoom: 19,
-    }).addTo(map);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "© OpenStreetMap contributors",
+            maxZoom: 19,
+        }).addTo(map);
 
-    function circleMarker(lat, lng, color, label) {
-        return L.circleMarker([lat, lng], {
-            radius: 10,
-            fillColor: color,
-            color: "#ffffff",
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.9,
-        }).addTo(map).bindTooltip(label, { permanent: false, direction: "top" });
-    }
+        function circleMarker(lat, lng, color, label) {
+            return L.circleMarker([lat, lng], {
+                radius: 10,
+                fillColor: color,
+                color: "#ffffff",
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.9,
+            }).addTo(map).bindTooltip(label, { permanent: false, direction: "top" });
+        }
 
-    // Office — amber
-    circleMarker(42.35267, -71.05461, "#ED8B00", "One International Place (Office)");
+        // Office — amber
+        circleMarker(42.35267, -71.05461, "#ED8B00", "One International Place (Office)");
 
-    // Transit stops — line colors
-    circleMarker(42.35222, -71.05509, "#DA291C", "South Station (Red Line)");
-    circleMarker(42.35875, -71.05762, "#003DA5", "State Street (Orange / Blue Line)");
-    circleMarker(42.35643, -71.06219, "#00843D", "Park Street (Green Line)");
+        // Transit stops — line colors
+        circleMarker(42.35222, -71.05509, "#DA291C", "South Station (Red Line)");
+        circleMarker(42.35875, -71.05762, "#003DA5", "State Street (Orange / Blue Line)");
+        circleMarker(42.35643, -71.06219, "#00843D", "Park Street (Green Line)");
 
-    // Bluebike stations — bluebike blue
-    circleMarker(42.35621, -71.05413, "#2277B3", "Purchase St at Pearl St (Bluebikes)");
-    circleMarker(42.35687, -71.05479, "#2277B3", "Post Office Square (Bluebikes)");
-    circleMarker(42.35333, -71.04996, "#2277B3", "Rowes Wharf at Atlantic Ave (Bluebikes)");
+        // Bluebike stations — bluebike blue
+        circleMarker(42.35621, -71.05413, "#2277B3", "Purchase St at Pearl St (Bluebikes)");
+        circleMarker(42.35687, -71.05479, "#2277B3", "Post Office Square (Bluebikes)");
+        circleMarker(42.35333, -71.04996, "#2277B3", "Rowes Wharf at Atlantic Ave (Bluebikes)");
+    });
 }
 
 // ===================== START =====================
