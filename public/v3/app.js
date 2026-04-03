@@ -1285,15 +1285,7 @@ function renderMap() {
     const container = document.getElementById("map-box");
     if (!container) return;
 
-    container.innerHTML = `
-        <div class="card map-card">
-            <div class="card-header">
-                <span class="header-station">Area Map</span>
-            </div>
-            <div class="card-body">
-                <div id="leaflet-map"></div>
-            </div>
-        </div>`;
+    container.innerHTML = `<div id="leaflet-map"></div>`;
 
     const map = L.map("leaflet-map", { zoomControl: true }).setView([42.3555, -71.0545], 15);
 
