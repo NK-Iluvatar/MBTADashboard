@@ -699,8 +699,7 @@ function renderBluebikes(stations) {
     container.innerHTML = `
         <div class="card">
             <div class="card-header">
-                <span class="line-pill pill-bluebike">BB</span>
-                <span class="header-station">Bluebikes</span>
+                <span class="header-station">Blue Bikes</span>
             </div>
             <div class="card-body">${rows}</div>
         </div>`;
