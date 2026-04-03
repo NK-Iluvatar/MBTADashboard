@@ -1,149 +1,28 @@
 /* ----- MBTA SCREENS SYSTEM ----- */
+/* Maximum readability for distant, short-viewing-time displays */
 
-/* ===== DESIGN TOKENS: DESKTOP ===== */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+
 :root {
-    /* --- Colors --- */
-    --c-bg:           #e6e4e1;
-    --c-surface:      #f2f3f5;
-    --c-border:       #e6e7e8;
-    --c-border-row:   #d7d8da;
-    --c-text:         #171f26;
-    --c-text-muted:   #616161;
-    --c-text-dark:    #1c1e23;
-    --c-text-mid:     #555555;
-    --c-white:        #ffffff;
-    --c-alert-bg:     #fff7bf;
-    --c-alert-accent: #ffdd00;
+    /* MBTA system colors */
+    --mbta-green: #00843d;
+    --mbta-red: #da291c;
+    --mbta-blue: #003da5;
+    --mbta-orange: #ed8b00;
+    --mbta-commuter: #80276c;
+    --mbta-bus: #ffc72c;
+    --mbta-bluebike: #2277b3;
+    --mbta-cool-black-15: #171f26;
+    --mbta-warm-white-90: #e6e4e1;
+    --mbta-warm-white-85: #d9d6d0;
+    --mbta-warm-white-80: #cccbc8;
+    --mbta-true-white: #ffffff;
 
-    /* Route colors */
-    --c-red:      #da291c;
-    --c-orange:   #ed8b00;
-    --c-blue:     #003da5;
-    --c-green:    #00843d;
-    --c-commuter: #80276c;
-    --c-boat:     #add8e6;
-
-    /* Realtime color shares green */
-    --c-realtime: var(--c-green);
-
-    /* --- Typography --- */
-    --font: "Helvetica Neue", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    --line-height:   1.3;
-    --letter-spacing: 0.04em;
-    --opacity-muted: 0.7;
-
-    --fw-light:   200;
-    --fw-semi:    600;
-    --fw-bold:    700;
-
-    /* Font sizes — redefined per breakpoint */
-    --fs-body:    20px;   /* destinations, direction headers, pred-times, station label */
-    --fs-compact: 20px;   /* cr cells, alert banner, weather meta — diverges more on mobile */
-    --fs-header:  30px;   /* card header title */
-    --fs-display: 60px;   /* weather temp, clock */
-    --fs-emoji:   36px;   /* weather emoji */
-
-    /* --- Layout — redefined per breakpoint --- */
-    --gap:        1.25rem;
-    --pad-outer:  1.25rem;
-
-    /* Grid column templates */
-    --cols-1:   calc(33.333% - 0.834rem) calc(33.333% - 0.834rem) calc(33.333% - 0.834rem);
-    --cols-2-3: calc(25% - 0.938rem) calc(25% - 0.938rem) calc(25% - 0.938rem) calc(25% - 0.938rem);
-    --cols-cr:  16.7% 16.7% 33.3% 33.3%;
-
-    /* Card */
-    --card-header-height: 66px;
-    --pad-card-header:    14px 20px;
-
-    /* Inner card rows */
-    --pad-direction:     12px 20px 4px;
-    --pad-row:           10px 20px;
-    --pred-time-min-width: 70px;
-    --gap-pred-times:    20px;
-
-    /* CR grid cells */
-    --pad-cr-cell:        3px 40px;
-    --pad-cr-header-last: 0px 20px;
-    --gap-cr-times:       80px;
-
-    /* Container 4 */
-    --gap-c4:    1.5rem;
-    --margin-c4: 2rem;
-
-    /* Alert banner */
-    --pad-alert-banner: 0.75rem 1rem;
-    --gap-alert-banner: 0.75rem;
-
-    /* Weather */
-    --gap-weather-body:  20px;
-    --gap-weather-right: 16px;
-    --gap-weather-meta:  2px;
-
-    /* Icon */
-    --icon-gap: 0.4rem;
-
-    /* Ticker */
-    --ticker-duration: 25s;
-
-    /* --- Borders & Radii --- */
-    --radius:    3px;
-    --radius-md: 4px;
-    --radius-lg: 6px;
-
-    --border-card:  1px solid var(--c-border);
-    --border-row:   1px solid var(--c-border-row);
-    --border-alert: 4px solid var(--c-alert-accent);
+    --font-family-mono:
+        "Helvetica Neue", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Arial, sans-serif;
 }
-
-/* ===== DESIGN TOKENS: 1080px ===== */
-@media (max-width: 1080px) {
-    :root {
-        --cols-1:   calc(50% - 0.625rem) calc(50% - 0.625rem);
-        --cols-2-3: calc(50% - 0.625rem) calc(50% - 0.625rem);
-        --cols-cr:  16% 16% 42% 26%;
-        --pad-cr-cell: 3px 20px;
-        --gap-cr-times: 20px;
-    }
-}
-
-/* ===== DESIGN TOKENS: 430px (iPhone) ===== */
-@media (max-width: 430px) {
-    :root {
-        --gap:       0.75rem;
-        --pad-outer: 0.75rem;
-
-        --cols-1:   100%;
-        --cols-2-3: 100%;
-        --cols-cr:  50% 50%;
-
-        --gap-c4:    0.75rem;
-        --margin-c4: 1rem;
-
-        --fs-body:    16px;
-        --fs-compact: 15px;
-        --fs-header:  22px;
-        --fs-display: 40px;
-        --fs-emoji:   28px;
-
-        --card-header-height: auto;
-        --pad-card-header:    10px 14px;
-
-        --pad-direction:      8px 14px 4px;
-        --pad-row:            8px 14px;
-        --pred-time-min-width: 54px;
-        --gap-pred-times:     12px;
-        --gap-cr-times:       20px;
-
-        --pad-cr-header:      3px 12px;
-        --pad-cr-cell:        3px 12px;
-        --pad-cr-header-last: 3px 8px;
-    }
-}
-
-/* ===================================================
-   STYLES
-   =================================================== */
 
 * {
     margin: 0;
@@ -151,47 +30,82 @@
     box-sizing: border-box;
 }
 
+/* ===== LAYOUT: full viewport, flex column ===== */
+
 body {
-    background:  var(--c-bg);
-    font-family: var(--font);
-    color:       var(--c-text);
-    line-height: var(--line-height);
-    padding:     var(--pad-outer);
-    width:       100%;
-    height:      100vh;
-    overflow:    hidden;
-    display:     flex;
+    background: var(--mbta-warm-white-90);
+    font-family: var(--font-family-mono);
+    color: var(--mbta-cool-black-15);
+    line-height: 1.3;
+    padding: 1.25rem;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
     flex-direction: column;
-    gap:         var(--gap);
+    gap: 1.25rem;
 }
 
-/* ===== CONTAINERS ===== */
 .container-1 {
     flex: 1;
     min-height: 0;
     display: grid;
-    grid-template-columns: var(--cols-1);
+    grid-template-columns:
+        calc(33.333% - 0.834rem) calc(33.333% - 0.834rem)
+        calc(33.333% - 0.834rem);
     grid-auto-rows: 1fr;
-    gap: var(--gap);
+    grid-auto-flow: row;
+    gap: 1.25rem;
 }
 
-.container-2,
+.container-2 {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns:
+        calc(25% - 0.938rem) calc(25% - 0.938rem) calc(25% - 0.938rem)
+        calc(25% - 0.938rem);
+    grid-auto-rows: 1fr;
+    grid-auto-flow: row;
+    gap: 1.25rem;
+}
+
 .container-3 {
     flex: 1;
     min-height: 0;
     display: grid;
-    grid-template-columns: var(--cols-2-3);
+    grid-template-columns:
+        calc(25% - 0.938rem) calc(25% - 0.938rem) calc(25% - 0.938rem)
+        calc(25% - 0.938rem);
     grid-auto-rows: 1fr;
-    gap: var(--gap);
+    grid-auto-flow: row;
+    gap: 1.25rem;
 }
 
 .container-4 {
     flex: 1;
     min-height: 0;
     display: grid;
-    grid-template-columns: 100%;
-    gap: var(--gap-c4);
-    margin-bottom: var(--margin-c4);
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.container-5 {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.container-ferry {
+    display: grid;
+    grid-template-columns: calc(50% - 0.625rem) calc(50% - 0.625rem);
+    grid-auto-rows: min-content;
+    grid-auto-flow: row;
+    gap: 1.25rem;
 }
 
 /* Propagate height through grid cell → predictions → card */
@@ -203,59 +117,97 @@ body {
     min-height: 0;
 }
 
-/* ===== CR GRID ===== */
-.cr-grid {
-    display: grid;
-    grid-template-columns: var(--cols-cr);
-    background: var(--c-surface);
-    border-radius: var(--radius-lg);
+.ferry-grid {
+    grid-template-columns: 2fr 3fr 3fr;
 }
 
-.cr-grid > div:nth-child(8n+5),
-.cr-grid > div:nth-child(8n+6),
-.cr-grid > div:nth-child(8n+7),
-.cr-grid > div:nth-child(8n+8) {
-    background: var(--c-bg);
+.cr-grid {
+    grid-template-columns: 1fr 2fr 4fr 4fr;
+}
+
+.ferry-grid,
+.cr-grid {
+    display: grid;
+    background: #f2f3f5;
+    border-radius: 6px;
+}
+
+.cr-grid > div:nth-child(8n + 5),
+.cr-grid > div:nth-child(8n + 6),
+.cr-grid > div:nth-child(8n + 7),
+.cr-grid > div:nth-child(8n + 8) {
+    background: var(--mbta-warm-white-90);
+}
+.grid-header {
+    background: #f2f3f5;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 20px;
+    color: #616161;
 }
 
 .cr-header {
-    background: var(--c-surface);
-    font-weight: var(--fw-bold);
-    text-transform: uppercase;
-    font-size: var(--fs-compact);
-    color: var(--c-text-muted);
-    padding: var(--pad-cr-cell);
+    padding: 3px 40px;
 }
 
-.cr-header:last-child {
-    padding: var(--pad-cr-header-last);
+.ferry-header {
+    padding: 3px 20px;
 }
 
 .cr-line {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-weight: var(--fw-semi);
-    font-size: var(--fs-compact);
+    font-weight: 600;
+    font-size: 20px;
 }
 
-.cr-times {
+.ferry-stop {
+    border-top: 1px solid #d7d8da;
+    padding-left: 20px;
+    padding-top: 3px;
+    font-weight: 600;
+    font-size: 20px;
+}
+.ferry-line {
+    font-weight: 600;
+    font-size: 20px;
+}
+.cr-times,
+.ferry-times {
     display: flex;
-    gap: var(--gap-cr-times);
-    font-weight: var(--fw-bold);
-    font-size: var(--fs-compact);
+    font-weight: 700;
+    font-size: 20px;
     align-items: center;
 }
 
+.ferry-times {
+    gap: 30px;
+}
+
+.cr-times {
+    gap: 60px;
+}
 .cr-times .pred-time {
     text-align: left;
-    min-width: auto;
+    min-width: 120px;
+}
+
+.ferry-times .pred-time {
+    text-align: left;
+    min-width: 90px;
 }
 
 .cr-line,
-.cr-times {
-    border-top: var(--border-row);
-    padding: var(--pad-cr-cell);
+.cr-times,
+.ferry-times {
+    border-top: 1px solid #d7d8da;
+    padding: 3px 40px;
+}
+
+.ferry-line {
+    border-top: 1px solid #d7d8da;
+    padding: 3px 20px;
 }
 
 .cr-alert {
@@ -263,10 +215,11 @@ body {
     overflow: hidden;
     position: relative;
     align-self: stretch;
+    border-top: 1px solid #d7d8da;
 }
 
 .cr-alert:has(.cr-alert-ticker) {
-    border-top: var(--border-row);
+    border-top: 1px solid #d7d8da;
     padding: 3px 20px;
 }
 
@@ -277,8 +230,12 @@ body {
 }
 
 @keyframes cr-alert-ticker {
-    from { transform: translateX(0%); }
-    to   { transform: translateX(-50%); }
+    from {
+        transform: translateX(0%);
+    }
+    to {
+        transform: translateX(-50%);
+    }
 }
 
 .cr-alert-ticker {
@@ -293,11 +250,10 @@ body {
 
 .cr-alert-text {
     display: inline-block;
-    font-size: var(--fs-compact);
-    animation: cr-alert-ticker var(--ticker-duration) linear infinite;
+    font-size: 20px;
+    animation: cr-alert-ticker 25s linear infinite;
 }
 
-/* ===== PREDICTIONS WRAPPER ===== */
 .predictions {
     flex: 1;
     display: flex;
@@ -305,112 +261,164 @@ body {
     min-height: 0;
 }
 
-/* ===== MBTA CARD ===== */
-.mbta-card {
+/* ===== NO DECORATION RULES ===== */
+/* No box-shadow, no hover effects, no transforms, no transitions, no gradients */
+
+.card {
     flex: 1;
     display: flex;
     flex-direction: column;
     min-height: 0;
-    border: var(--border-card);
-    font-family: var(--font);
+    border: 1px solid #e6e7e8;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.mbta-card-header {
-    color: var(--c-white);
-    font-size: var(--fs-header);
-    font-weight: var(--fw-bold);
-    padding: var(--pad-card-header);
+/* HEADER */
+.card-header {
+    color: white;
+    font-size: 28px;
+    font-weight: 700;
     text-transform: uppercase;
-    border-radius: var(--radius) var(--radius) 0 0;
+    border-radius: 3px 3px 0 0;
     overflow: hidden;
-    height: var(--card-header-height);
+    height: 66px;
     flex-shrink: 0;
+    display: flex;
+    text-align: center;
 }
 
-.mbta-card-header .ticker-station {
-    font-weight: var(--fw-light);
-    font-size: var(--fs-body);
+.station-line {
+    padding: 15px 15px;
 }
 
-.mbta-card-body {
-    background: var(--c-surface);
+.station-name,
+.walk-min {
+    font-weight: 200;
+    font-size: 20px;
+    padding: 23px 0px;
+}
+
+.walk-min {
+    padding-right: 10px;
+    margin-left: auto;
+}
+
+.rotate-315 {
+    transform: rotate(315deg);
+}
+
+.bi {
+    display: inline-block;
+}
+
+/* BODY */
+.card-body {
+    background: #f2f3f5;
     flex: 1;
     min-height: 0;
     display: flex;
     flex-direction: column;
-    border-radius: 0 0 var(--radius) var(--radius);
+    border-radius: 0 0 3px 3px;
     overflow-y: hidden;
 }
 
-/* Route header colors */
-.route-Red .mbta-card-header    { background: var(--c-red); }
-.route-Orange .mbta-card-header { background: var(--c-orange); }
-.route-Blue .mbta-card-header   { background: var(--c-blue); }
-.route-Green .mbta-card-header  { background: var(--c-green); }
-.route-CR .mbta-card-header     { background: var(--c-commuter); }
-.route-Boat .mbta-card-header   { background: var(--c-boat); }
+.route-Red .card-header {
+    background: #da291c;
+}
+.route-Orange .card-header {
+    background: #ed8b00;
+}
+.route-Blue .card-header {
+    background: #003da5;
+}
+.route-Green .card-header {
+    background: #00843d;
+}
+.route-CR .card-header {
+    background: #80276c;
+}
+.route-Boat .card-header {
+    background: #add8e6;
+}
 
-/* ===== ALERT BANNER ===== */
+/* ----- ALERT BANNERS ----- */
 .alert-banner {
     display: flex;
     align-items: flex-start;
-    gap: var(--gap-alert-banner);
-    padding: var(--pad-alert-banner);
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
     margin-top: auto;
-    border-radius: var(--radius-md);
-    background: var(--c-alert-bg);
-    border-left: var(--border-alert);
-    font-size: var(--fs-compact);
+    border-radius: 4px;
+    background: #fff7bf;
+    border-left: 4px solid #ffdd00;
+    font-family: var(--font-family-mono);
+    font-size: 20px;
     flex-shrink: 0;
 }
 
-/* ===== DIRECTION HEADER ===== */
+/* DIRECTION LABEL */
 .direction-header {
-    font-size: var(--fs-body);
-    font-weight: var(--fw-bold);
+    font-size: 20px;
+    font-weight: 700;
     text-transform: uppercase;
-    color: var(--c-text-muted);
-    padding: var(--pad-direction);
+    color: #616161;
+    padding: 12px 20px 4px;
     flex-shrink: 0;
 }
 
-/* ===== PREDICTION ROW ===== */
+/* ROW */
 .prediction-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--pad-row);
-    border-top: var(--border-row);
+    padding: 10px 20px;
+    border-top: 1px solid #d7d8da;
 }
 
+.prediction-row:last-child {
+    border-bottom: none;
+}
+
+/* DESTINATION */
 .destination-main {
-    font-size: var(--fs-body);
-    font-weight: var(--fw-bold);
-    color: var(--c-text-dark);
+    font-size: 20px;
+    font-weight: 700;
+    color: #1c1e23;
 }
 
 .destination-via {
-    font-size: var(--fs-body);
-    color: var(--c-text-mid);
+    font-size: 20px;
+    color: #555;
 }
 
+.ferry-destination-via {
+    font-size: 15px;
+    color: #555;
+    padding-left: 20px;
+}
+
+/* TIMES */
 .pred-times {
     display: flex;
-    gap: var(--gap-pred-times);
-    font-weight: var(--fw-bold);
+    gap: 20px;
+    font-weight: 700;
 }
 
 .pred-time {
-    font-size: var(--fs-body);
-    min-width: var(--pred-time-min-width);
-    text-align: right;
+    font-size: 20px;
+    min-width: 80px;
+    text-align: left;
 }
 
-.pred-time.realtime  { color: var(--c-realtime); }
-.pred-time.scheduled { color: var(--c-text); }
+.pred-time.realtime {
+    color: #00843d;
+}
+.pred-time.scheduled {
+    color: var(--mbta-cool-black-15);
+}
 
 .bi {
-    padding-right: var(--icon-gap);
+    padding-right: 0.4rem;
 }
 
 /* ===== WEATHER ===== */
@@ -422,19 +430,20 @@ body {
     height: auto;
     flex-direction: row;
     align-items: center;
-    gap: var(--gap-weather-body);
+    gap: 20px;
     padding: 0;
     background: none !important;
 }
 
 .weather-temp {
-    font-size: var(--fs-display);
-    color: var(--c-text-muted);
-    font-weight: var(--fw-bold);
+    font-size: 60px;
+
+    color: #616161;
+    font-weight: 700;
 }
 
 .weather-emoji {
-    font-size: var(--fs-emoji);
+    font-size: 36px;
     line-height: 1;
 }
 
@@ -446,37 +455,124 @@ body {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: var(--gap-weather-right);
+    gap: 16px;
 }
 
 .weather-meta {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: var(--gap-weather-meta);
+    gap: 2px;
 }
 
 .weather-date,
 .weather-location {
-    font-size: var(--fs-compact);
-    font-weight: var(--fw-semi);
+    font-size: 20px;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: var(--letter-spacing);
-    opacity: var(--opacity-muted);
+    letter-spacing: 0.04em;
+    opacity: 0.7;
 }
 
 #timestamp {
-    font-size: var(--fs-display);
-    color: var(--c-text-muted);
-    font-weight: var(--fw-bold);
+    font-size: 60px;
+    color: #616161;
+    font-weight: 700;
 }
 
-/* ===== RESPONSIVE: iPhone body overrides ===== */
-/* All sizing tokens are handled in :root @media blocks above. */
-/* Only structural/behavioral overrides that can't be expressed as tokens go here. */
-@media (max-width: 430px) {
-    body {
-        height: auto;
-        overflow-y: auto;
+/* ===== RSS ===== */
+.route-News .card-header {
+    background: #1c1e23;
+    align-items: center;
+    padding: 0 15px;
+}
+
+.news-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 16px;
+    overflow-y: auto;
+}
+
+.news-feature {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.news-feature img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 3px;
+}
+
+.news-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1c1e23;
+    line-height: 1.2;
+}
+
+.news-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.news-item {
+    font-size: 16px;
+    color: #444;
+    line-height: 1.3;
+    padding: 8px 0;
+    border-top: 1px solid #d7d8da;
+}
+
+/* ===== RESPONSIVE: 1080px breakpoint ===== */
+@media (max-width: 1080px) {
+    .container-1 {
+        grid-template-columns: calc(50% - 0.625rem) calc(50% - 0.625rem);
+    }
+
+    .container-2 {
+        grid-template-columns: calc(50% - 0.625rem) calc(50% - 0.625rem);
+    }
+
+    .container-ferry {
+        grid-template-columns: calc(50% - 0.625rem) calc(50% - 0.625rem);
+    }
+
+    .cr-grid {
+        grid-template-columns: 1fr 1fr 3fr 3fr;
+    }
+
+    .cr-times {
+        gap: 12px;
+        font-weight: 700;
+    }
+    .cr-times .pred-time {
+        font-size: 17px;
+        text-align: left;
+        padding: 22px 0px 22px;
+        min-width: 90px;
+    }
+    .cr-header,
+    .cr-line,
+    .cr-times {
+        padding: 3px 20px;
+    }
+    .cr-icon {
+        display: none;
+    }
+
+    .card-header {
+        font-size: 25px;
+    }
+    .station-name {
+        padding: 20px 0px;
+    }
+    .icon {
+        display: none;
     }
 }
