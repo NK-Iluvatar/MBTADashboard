@@ -698,7 +698,18 @@ function renderStationGroup(group) {
         data.times.sort((a, b) => a.minutes - b.minutes);
         return { headsign, ...data };
     });
-    destinations.sort((a, b) => a.times[0].minutes - b.times[0].minutes);
+    const GREEN_BRANCH_ORDER = { B: 0, C: 1, D: 2, E: 3 };
+    destinations.sort((a, b) => {
+        if (a.routeId.startsWith("Green-") && b.routeId.startsWith("Green-")) {
+            const aBranch = a.routeId.split("-")[1];
+            const bBranch = b.routeId.split("-")[1];
+            const branchDiff =
+                (GREEN_BRANCH_ORDER[aBranch] ?? 99) -
+                (GREEN_BRANCH_ORDER[bBranch] ?? 99);
+            if (branchDiff !== 0) return branchDiff;
+        }
+        return a.times[0].minutes - b.times[0].minutes;
+    });
 
     const headerPills = group.headerRouteIds.map((r) => getLinePill(r)).join("");
 

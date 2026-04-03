@@ -387,6 +387,8 @@ body {
     font-size: 20px;
     font-weight: 700;
     color: #1c1e23;
+    flex: 1;
+    text-align: left;
 }
 
 .destination-via {
