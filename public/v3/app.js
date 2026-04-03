@@ -1278,20 +1278,53 @@ function startContainerRotation() {
 }
 
 /**
- * Renders a static OSM map card into #map-box. Called once at startup.
+ * Renders an interactive Leaflet map into #map-box with office, transit, and bike markers.
+ * Called once at startup.
  */
 function renderMap() {
     const container = document.getElementById("map-box");
     if (!container) return;
+
     container.innerHTML = `
         <div class="card map-card">
             <div class="card-header">
                 <span class="header-station">Area Map</span>
             </div>
             <div class="card-body">
-                <img src="/api/map" class="map-img" alt="Area map">
+                <div id="leaflet-map"></div>
             </div>
         </div>`;
+
+    const map = L.map("leaflet-map", { zoomControl: true }).setView([42.3555, -71.0545], 15);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors",
+        maxZoom: 19,
+    }).addTo(map);
+
+    function circleMarker(lat, lng, color, label) {
+        return L.circleMarker([lat, lng], {
+            radius: 10,
+            fillColor: color,
+            color: "#ffffff",
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.9,
+        }).addTo(map).bindTooltip(label, { permanent: false, direction: "top" });
+    }
+
+    // Office — amber
+    circleMarker(42.35267, -71.05461, "#ED8B00", "One International Place (Office)");
+
+    // Transit stops — line colors
+    circleMarker(42.35222, -71.05509, "#DA291C", "South Station (Red Line)");
+    circleMarker(42.35875, -71.05762, "#003DA5", "State Street (Orange / Blue Line)");
+    circleMarker(42.35643, -71.06219, "#00843D", "Park Street (Green Line)");
+
+    // Bluebike stations — bluebike blue
+    circleMarker(42.35621, -71.05413, "#2277B3", "Purchase St at Pearl St (Bluebikes)");
+    circleMarker(42.35687, -71.05479, "#2277B3", "Post Office Square (Bluebikes)");
+    circleMarker(42.35333, -71.04996, "#2277B3", "Rowes Wharf at Atlantic Ave (Bluebikes)");
 }
 
 // ===================== START =====================

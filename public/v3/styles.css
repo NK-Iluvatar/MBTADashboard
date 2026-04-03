@@ -94,9 +94,26 @@ body {
     margin-bottom: 2rem;
 }
 
+/* ===== EXTRAS ROW (Bluebikes + News) ===== */
+.container-extras {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+}
+
 /* ===== MAP ===== */
 #map-box {
-    grid-column: span 2;
+    width: 100%;
+}
+
+#leaflet-map {
+    width: 100%;
+    height: 260px;
+    border-radius: 0 0 3px 3px;
+}
+
+.map-card .card-body {
+    padding: 0;
 }
 
 .map-img {
