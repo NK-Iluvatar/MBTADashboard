@@ -43,7 +43,7 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 2rem;
 }
 
 .container-1 {
@@ -53,7 +53,7 @@ body {
         calc(33.333% - 0.834rem);
     grid-auto-rows: auto;
     align-items: start;
-    gap: 1.25rem;
+    gap: 2rem;
 }
 
 .container-2 {
@@ -63,7 +63,7 @@ body {
         calc(25% - 0.938rem);
     grid-auto-rows: auto;
     align-items: start;
-    gap: 1.25rem;
+    gap: 2rem;
 }
 
 .container-3 {
@@ -73,7 +73,7 @@ body {
         calc(25% - 0.938rem);
     grid-auto-rows: auto;
     align-items: start;
-    gap: 1.25rem;
+    gap: 2rem;
 }
 
 .container-4 {
@@ -194,6 +194,12 @@ body {
 .ferry-line {
     border-top: 1px solid #d7d8da;
     padding: 3px 20px;
+}
+
+.ferry-grid > .ferry-stop:last-of-type,
+.ferry-grid > .ferry-line:last-of-type,
+.ferry-grid > .ferry-times:last-of-type {
+    border-bottom: none;
 }
 
 .cr-alert {
@@ -435,6 +441,12 @@ body {
     line-height: 1;
 }
 
+.weather-desc {
+    font-size: 20px;
+    font-weight: 500;
+    color: #616161;
+}
+
 .weather-spacer {
     flex: 1;
 }
@@ -469,6 +481,16 @@ body {
 }
 
 /* ===== RSS ===== */
+
+.news-label {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #616161;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #e0e0e0;
+}
 
 .news-body {
     display: flex;

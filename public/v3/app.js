@@ -1073,6 +1073,7 @@ function renderWeather() {
             <div class="card-body weather-card-body">
                 <span class="weather-temp">${tempF}°</span>
                 <span class="weather-emoji">${emoji}</span>
+                <span class="weather-desc">${description}</span>
                 <div class="weather-spacer"></div>
                 <div class="weather-right-group">
                     <div class="weather-meta">
@@ -1101,18 +1102,12 @@ function renderNews(articles) {
         return;
     }
 
-    const main = articles[0];
-
     const html = `
         <div class="card route-News">
             <div class="card-body news-body">
-                <div class="news-feature">
-                    ${main.thumbnail ? `<img src="${main.thumbnail}" alt="">` : ""}
-                    <div class="news-title">${main.title}</div>
-                </div>
+                <div class="news-label">News</div>
                 <div class="news-list">
                     ${articles
-                        .slice(1)
                         .map((a) => `<div class="news-item">${a.title}</div>`)
                         .join("")}
                 </div>
