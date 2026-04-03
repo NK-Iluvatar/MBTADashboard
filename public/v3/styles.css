@@ -114,7 +114,7 @@ body {
 .ferry-grid,
 .cr-grid {
     display: grid;
-    background: #f2f3f5;
+    background: #ffffff;
     border-radius: 6px;
 }
 
@@ -273,8 +273,8 @@ body {
 }
 
 .header-station {
-    font-weight: 600;
-    font-size: 20px;
+    font-weight: 700;
+    font-size: 24px;
 }
 
 .walk-min {
@@ -356,7 +356,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 14px 20px;
     border-top: 1px solid #d7d8da;
 }
 
@@ -469,11 +469,6 @@ body {
 }
 
 /* ===== RSS ===== */
-.route-News .card-header {
-    background: #1c1e23;
-    align-items: center;
-    padding: 0 15px;
-}
 
 .news-body {
     display: flex;

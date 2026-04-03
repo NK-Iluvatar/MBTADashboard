@@ -711,12 +711,9 @@ function renderStationGroup(group) {
         return a.times[0].minutes - b.times[0].minutes;
     });
 
-    const headerPills = group.headerRouteIds.map((r) => getLinePill(r)).join("");
-
     let html = `
         <div class="card">
             <div class="card-header">
-                ${headerPills}
                 <span class="header-station">${group.stationName}</span>
                 <span class="walk-min">${WALK_ICON} ${group.walkMin} min</span>
             </div>
@@ -1108,7 +1105,6 @@ function renderNews(articles) {
 
     const html = `
         <div class="card route-News">
-            <div class="card-header">News Updates</div>
             <div class="card-body news-body">
                 <div class="news-feature">
                     ${main.thumbnail ? `<img src="${main.thumbnail}" alt="">` : ""}
