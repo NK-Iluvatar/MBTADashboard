@@ -41,29 +41,23 @@ body {
     gap: 1.5rem;
 }
 
-/* ===== MAIN GRID: 2 columns, 4 rows ===== */
+/* ===== MAIN LAYOUT: 2 independent flex columns ===== */
 .dashboard {
     flex: 1;
     min-height: 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto auto;
-    grid-template-areas:
-        "south  state"
-        "south  northcr"
-        "green  ferry"
-        "bikes  news";
-    align-items: start;
+    display: flex;
+    flex-direction: row;
     gap: 1.5rem;
 }
 
-#south-station        { grid-area: south; }
-#state-station-orange { grid-area: state; }
-.north-station-cr     { grid-area: northcr; }
-#park-street-green    { grid-area: green; }
-.ferry                { grid-area: ferry; }
-#bluebikes-box        { grid-area: bikes; }
-#news-box             { grid-area: news; }
+.col-left,
+.col-right {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
 
 /* ===== PREDICTIONS WRAPPER ===== */
 .predictions {

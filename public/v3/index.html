@@ -23,34 +23,33 @@
         <div id="weather-box" class="weather-box"></div>
 
         <div class="dashboard">
-            <!-- col 1 rows 1-2: South Station (Red + CR combined) -->
-            <div id="south-station"></div>
-
-            <!-- col 2 row 1: State Street -->
-            <div id="state-station-orange">
-                <div class="predictions"></div>
+            <!-- Left column: Red Line, State Street, Park Street, Blue Bikes -->
+            <div class="col-left">
+                <div id="south-station-red">
+                    <div class="predictions"></div>
+                </div>
+                <div id="state-station-orange">
+                    <div class="predictions"></div>
+                </div>
+                <div id="park-street-green">
+                    <div class="predictions"></div>
+                </div>
+                <div id="bluebikes-box"></div>
             </div>
 
-            <!-- col 2 row 2: North Station CR -->
-            <div class="north-station-cr">
-                <div class="predictions"></div>
+            <!-- Right column: South Station CR, North Station CR, Ferry, News -->
+            <div class="col-right">
+                <div class="south-station-cr">
+                    <div class="predictions"></div>
+                </div>
+                <div class="north-station-cr">
+                    <div class="predictions"></div>
+                </div>
+                <div class="ferry">
+                    <div class="predictions"></div>
+                </div>
+                <div id="news-box"></div>
             </div>
-
-            <!-- col 1 row 3: Park Street -->
-            <div id="park-street-green">
-                <div class="predictions"></div>
-            </div>
-
-            <!-- col 2 row 3: Ferry -->
-            <div class="ferry">
-                <div class="predictions"></div>
-            </div>
-
-            <!-- col 1 row 4: Blue Bikes -->
-            <div id="bluebikes-box"></div>
-
-            <!-- col 2 row 4: News -->
-            <div id="news-box"></div>
         </div>
 
         <script src="app.js"></script>
