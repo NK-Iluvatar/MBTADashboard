@@ -195,14 +195,12 @@ function renderWeather() {
 }
 
 function renderNews(articles) {
-    const container = document.getElementById("news-box");
-    if (!container) return;
-    container.innerHTML = articles.length
-        ? `<div class="card">
-            <div class="card-header"><span class="header-station">News</span></div>
-            <div class="card-body">${articles.map((a) => `<div class="news-item">${a.title}</div>`).join("")}</div>
-           </div>`
-        : `<div class="no-trains">No updates.</div>`;
+    const track = document.getElementById("ticker-track");
+    if (!track || !articles.length) return;
+    const separator = '<span class="ticker-sep">&#9679;</span>';
+    const items = articles.map((a) => `<span class="ticker-item">${a.title}</span>`).join(separator);
+    // Double the content for a seamless loop
+    track.innerHTML = items + separator + items + separator;
 }
 
 function renderBluebikes(stations) {
