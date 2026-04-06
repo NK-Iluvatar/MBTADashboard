@@ -1,5 +1,3 @@
-// ===================== CLOCK =====================
-
 function startClock() {
     function tick() {
         const ts = document.getElementById("timestamp");
@@ -11,21 +9,15 @@ function startClock() {
     setInterval(tick, 1000);
 }
 
-// ===================== UPDATE LOOP =====================
-
 async function updateAll() {
-    await fetchRealtime();
-    await fetchAlerts();
-    await fetchHourlyForecast();
+    // fetch realtime and weather in parallel; news/bikes are independently cached
+    await Promise.all([fetchRealtime(), fetchHourlyForecast()]);
 
     SUBWAY_STATION_GROUPS.forEach(renderStationGroup);
 
-    const southCRPanels = PANELS.filter((p) => SOUTHSTATIONCR.includes(p.routeId));
-    const northPanels   = PANELS.filter((p) => NORTHSTATIONCR.includes(p.routeId));
-    const ferryPanels   = PANELS.filter((p) => FERRY.includes(p.routeId));
-    renderCRPanel(southCRPanels, "South Station", "south-station-cr", 7);
-    renderCRPanel(northPanels, "North Station", "north-station-cr", 21);
-    renderFerryPanel(ferryPanels, "ferry");
+    renderCRPanel(PANELS.filter((p) => SOUTHSTATIONCR.includes(p.routeId)), "South Station", "south-station-cr", 7);
+    renderCRPanel(PANELS.filter((p) => NORTHSTATIONCR.includes(p.routeId)), "North Station", "north-station-cr", 21);
+    renderFerryPanel(PANELS.filter((p) => FERRY.includes(p.routeId)), "ferry");
 
     const [news, bikes] = await Promise.all([fetchLegalNews(), fetchBluebikes()]);
     renderNews(news);
@@ -34,9 +26,6 @@ async function updateAll() {
     renderWeather();
 }
 
-// ===================== START =====================
-
-console.log("Starting MBTA dashboard");
 startClock();
 updateAll();
 setInterval(updateAll, 30000);

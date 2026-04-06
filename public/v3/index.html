@@ -2,52 +2,24 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, minimum-scale=1"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
         <title>PLT-Boston Transit Dashboard</title>
         <link rel="stylesheet" href="styles.css" />
-        <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-            rel="stylesheet"
-        />
     </head>
     <body>
-        <!-- ================= WEATHER ================= -->
-        <div id="weather-box" class="weather-box"></div>
+        <div id="weather-box"></div>
 
         <div class="dashboard">
-            <!-- Left column: Red Line, State Street, Park Street, Blue Bikes -->
             <div class="col-left">
-                <div id="south-station-red">
-                    <div class="predictions"></div>
-                </div>
-                <div id="state-station-orange">
-                    <div class="predictions"></div>
-                </div>
-                <div id="park-street-green">
-                    <div class="predictions"></div>
-                </div>
+                <div id="south-station-red"></div>
+                <div id="state-station-orange"></div>
+                <div id="park-street-green"></div>
                 <div id="bluebikes-box"></div>
             </div>
-
-            <!-- Right column: South Station CR, North Station CR, Ferry, News -->
             <div class="col-right">
-                <div class="south-station-cr">
-                    <div class="predictions"></div>
-                </div>
-                <div class="north-station-cr">
-                    <div class="predictions"></div>
-                </div>
-                <div class="ferry">
-                    <div class="predictions"></div>
-                </div>
+                <div class="south-station-cr"></div>
+                <div class="north-station-cr"></div>
+                <div class="ferry"></div>
                 <div id="news-box"></div>
             </div>
         </div>

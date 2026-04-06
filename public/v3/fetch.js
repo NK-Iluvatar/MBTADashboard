@@ -1,14 +1,10 @@
 // ===================== STATE =====================
 
 let realtimeData = {};
-let alertData = {};
-
 let cachedWeather = null;
 let lastHourlyFetch = 0;
-
 let cachedNews = [];
 let lastNewsFetch = 0;
-
 let cachedBluebikes = null;
 let lastBikesFetch = 0;
 
@@ -33,44 +29,30 @@ async function fetchRealtime() {
             const routeId = svc.routeId ?? panel.routeId;
             let url = `/api/mbta/schedules?filter[stop]=${svc.stopId}&filter[route]=${routeId}&include=prediction,trip`;
             if (svc.directionId !== undefined) url += `&filter[direction_id]=${svc.directionId}`;
-            promises.push(fetchAPI(url).then((data) => { realtimeData[key] = { ...data }; }));
+            promises.push(fetchAPI(url).then((data) => { realtimeData[key] = data ?? {}; }));
         });
     });
     await Promise.all(promises);
 }
 
-async function fetchAlerts() {
-    alertData = {};
-    const promises = PANELS.map((line) =>
-        fetchAPI(`/api/mbta/alerts?&filter[route]=${line.routeId}`).then((data) => {
-            if (data?.data?.length) alertData[line.routeId] = data.data;
-        })
-    );
-    await Promise.all(promises);
-}
-
 async function fetchHourlyForecast() {
     const now = Date.now();
-    if (cachedWeather && now - lastHourlyFetch < 20 * 60000) return cachedWeather;
+    if (cachedWeather && now - lastHourlyFetch < 20 * 60000) return;
     const data = await fetchAPI("/api/weather/gridpoints/BOX/72,90/forecast/hourly");
     cachedWeather = data?.properties?.periods ?? [];
     lastHourlyFetch = now;
-    return cachedWeather;
 }
 
 async function fetchLegalNews() {
     const now = Date.now();
     if (cachedNews.length && now - lastNewsFetch < 60 * 60000) return cachedNews;
     const url = "https://api.rss2json.com/v1/api.json?rss_url=https://news.google.com/rss/search?q=site%3Areuters.com&hl=en-US&gl=US&ceid=US%3Aen";
-    try {
-        const res = await fetch(url);
-        const data = await res.json();
+    const data = await fetchAPI(url);
+    if (data?.items) {
         cachedNews = data.items.slice(0, 5);
         lastNewsFetch = now;
-        return cachedNews;
-    } catch {
-        return cachedNews;
     }
+    return cachedNews;
 }
 
 async function fetchBluebikes() {
@@ -118,12 +100,8 @@ function getPredictions(data) {
         if (item.type === "prediction") {
             const tripId = item.relationships?.trip?.data?.id;
             if (tripId) predictionsByTrip[tripId] = item.attributes;
-        }
-        if (item.type === "trip") {
-            tripsById[item.id] = {
-                headsign: item.attributes.headsign,
-                directionId: item.attributes.direction_id,
-            };
+        } else if (item.type === "trip") {
+            tripsById[item.id] = item.attributes.headsign;
         }
     });
 
@@ -136,51 +114,14 @@ function getPredictions(data) {
             schedule.attributes.departure_time || schedule.attributes.arrival_time;
         if (!timeStr) return;
 
-        const date = new Date(timeStr);
-        const minutes = (date - now) / 60000;
+        const minutes = (new Date(timeStr) - now) / 60000;
         if (minutes < -1 || minutes > 480) return;
 
-        const trip = tripsById[tripId];
-        if (!trip?.headsign) return;
+        const headsign = tripsById[tripId];
+        if (!headsign) return;
 
-        const formattedTime = date.toLocaleTimeString([], {
-            hour: "numeric", minute: "2-digit", hour12: true,
-        });
-
-        results.push({
-            formattedTime, minutes,
-            headsign: trip.headsign,
-            directionId: trip.directionId,
-            status: prediction?.status || null,
-            isRealtime: !!prediction,
-        });
+        results.push({ minutes, headsign, isRealtime: !!prediction });
     });
 
     return results.sort((a, b) => a.minutes - b.minutes);
-}
-
-function getAlertForRoute(routeId) {
-    const alerts = alertData[routeId];
-    if (!alerts?.length) return null;
-
-    const allowedEffects = [
-        { effect: "DELAY", severity: 10 },
-        { effect: "CANCELLATION", severity: 10 },
-        { effect: "NO_SERVICE", severity: 10 },
-        { effect: "SIGNIFICANT_DELAYS", severity: 10 },
-        { effect: "SHUTTLE", severity: 6 },
-        { effect: "REDUCED_SERVICE", severity: 5 },
-        { effect: "MODIFIED_SERVICE", severity: 5 },
-    ];
-
-    const filtered = alerts
-        .map((alert) => {
-            const rule = allowedEffects.find((r) => r.effect === alert.attributes.effect);
-            return rule ? { alert, severity: rule.severity } : null;
-        })
-        .filter(Boolean);
-
-    if (!filtered.length) return null;
-    filtered.sort((a, b) => a.severity - b.severity);
-    return filtered[0].alert;
 }
