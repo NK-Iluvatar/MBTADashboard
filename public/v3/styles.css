@@ -47,9 +47,23 @@ body {
     min-height: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas:
+        "south  state"
+        "south  northcr"
+        "green  ferry"
+        "bikes  news";
     align-items: start;
     gap: 1.5rem;
 }
+
+#south-station        { grid-area: south; }
+#state-station-orange { grid-area: state; }
+.north-station-cr     { grid-area: northcr; }
+#park-street-green    { grid-area: green; }
+.ferry                { grid-area: ferry; }
+#bluebikes-box        { grid-area: bikes; }
+#news-box             { grid-area: news; }
 
 /* ===== PREDICTIONS WRAPPER ===== */
 .predictions {

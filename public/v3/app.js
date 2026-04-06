@@ -1198,6 +1198,100 @@ function startClock() {
 }
 
 /**
+ * Renders the combined South Station card: Red Line predictions on top,
+ * then a "Commuter Rail" section label, then one CR row per line.
+ * Renders directly into #south-station (no .predictions wrapper needed).
+ */
+function renderSouthStationCard() {
+    const container = document.getElementById("south-station");
+    if (!container) return;
+
+    const WALK_MIN = 7;
+
+    // --- Red Line: group predictions by destination (same logic as renderStationGroup) ---
+    const redPanels = PANELS.filter((p) => p.routeId === "Red");
+    const byDestination = new Map();
+    redPanels.forEach((panel) => {
+        panel.services.forEach((service) => {
+            const key = buildKey(panel, service);
+            const preds = getPredictions(realtimeData[key])
+                .filter((p) => p.headsign.includes(service.headsignContains))
+                .filter((p) => p.minutes >= WALK_MIN);
+            if (!preds.length) return;
+            const headsign = preds[0].headsign;
+            if (!byDestination.has(headsign)) {
+                byDestination.set(headsign, { routeId: service.routeId ?? panel.routeId, times: [] });
+            }
+            preds.forEach((p) => byDestination.get(headsign).times.push(p));
+        });
+    });
+
+    const destinations = [...byDestination.entries()].map(([headsign, data]) => {
+        data.times.sort((a, b) => a.minutes - b.minutes);
+        return { headsign, ...data };
+    });
+    destinations.sort((a, b) => a.times[0].minutes - b.times[0].minutes);
+
+    let html = `
+        <div class="card">
+            <div class="card-header">
+                <span class="header-station">South Station</span>
+                <span class="walk-min">${WALK_ICON} ${WALK_MIN} min</span>
+            </div>
+            <div class="card-body">
+    `;
+
+    if (!destinations.length) {
+        html += `<div class="no-trains">No service</div>`;
+    } else {
+        destinations.forEach(({ headsign, routeId, times }) => {
+            const timesHtml = times.slice(0, 2).map((p) => `
+                <div class="pred-time ${p.isRealtime ? "realtime" : "scheduled"}">
+                    ${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON} ${formatTime(p.minutes)}
+                </div>`).join("");
+            html += `
+                <div class="prediction-row">
+                    ${getLinePill(routeId)}
+                    <div class="destination-main">${headsign}</div>
+                    <div class="pred-times">${timesHtml}</div>
+                </div>`;
+        });
+    }
+
+    // --- Commuter Rail section ---
+    html += `<div class="direction-header">Commuter Rail</div>`;
+
+    const southCRPanels = PANELS.filter((p) => SOUTHSTATIONCR.includes(p.routeId));
+    southCRPanels.forEach((panel) => {
+        const allPreds = [];
+        panel.services.forEach((service) => {
+            const key = buildKey(panel, service);
+            getPredictions(realtimeData[key])
+                .filter((p) => p.headsign.includes(service.headsignContains))
+                .forEach((p) => allPreds.push(p));
+        });
+        allPreds.sort((a, b) => a.minutes - b.minutes);
+        const next2 = allPreds.slice(0, 2);
+        if (!next2.length) return;
+
+        const timesHtml = next2.map((p) => `
+            <div class="pred-time ${p.isRealtime ? "realtime" : "scheduled"}">
+                ${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON} ${formatTime(p.minutes)}
+            </div>`).join("");
+
+        html += `
+            <div class="prediction-row">
+                ${getLinePill(panel.routeId)}
+                <div class="destination-main">${panel.title}</div>
+                <div class="pred-times">${timesHtml}</div>
+            </div>`;
+    });
+
+    html += `</div></div>`;
+    container.innerHTML = html;
+}
+
+/**
  * Update calls and render.
  */
 async function updateAll() {
@@ -1205,12 +1299,15 @@ async function updateAll() {
     await fetchAlerts();
     await fetchHourlyForecast();
 
-    SUBWAY_STATION_GROUPS.forEach(renderStationGroup);
+    renderSouthStationCard();
 
-    const southPanels = PANELS.filter((p) => SOUTHSTATIONCR.includes(p.routeId));
+    // State Street (Orange + Blue) and Park Street (Green)
+    SUBWAY_STATION_GROUPS
+        .filter((g) => g.stationName !== "South Station")
+        .forEach(renderStationGroup);
+
     const northPanels = PANELS.filter((p) => NORTHSTATIONCR.includes(p.routeId));
     const ferryPanels = PANELS.filter((p) => FERRY.includes(p.routeId));
-    renderCRPanel(southPanels, "South Station", "south-station-cr", 7);
     renderCRPanel(northPanels, "North Station", "north-station-cr", 21);
     renderFerryPanel(ferryPanels, "ferry");
 
