@@ -1318,6 +1318,11 @@ function renderMap() {
         circleMarker(42.3547, -71.0536, "#2277B3", "Blue Bikes");
         circleMarker(42.3556, -71.0542, "#2277B3", "Blue Bikes");
         circleMarker(42.3572, -71.0511, "#2277B3", "Blue Bikes");
+
+        setTimeout(() => {
+            map.invalidateSize();
+            map.setView([42.3558, -71.0572], 15);
+        }, 300);
     });
 }
 
