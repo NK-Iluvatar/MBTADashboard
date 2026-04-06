@@ -937,9 +937,8 @@ function renderPanel(panel) {
 }
 
 /**
- * Render commuter rails in PANELS in grid format
- * @param {*} panel - a train line
- * @returns
+ * Renders a commuter rail card matching the transit card style.
+ * One row per line: CR pill | line title | next 2 departure ETAs.
  */
 function renderCRPanel(panels, stationName, stationClass, walkMin) {
     const container = document.querySelector(`.${stationClass}`);
@@ -949,66 +948,46 @@ function renderCRPanel(panels, stationName, stationClass, walkMin) {
     if (!predContainer) return;
 
     let html = `
-        <div class="card route-CR">
+        <div class="card">
             <div class="card-header">
-                <span class="line-pill pill-cr">CR</span>
                 <span class="header-station">${stationName}</span>
                 <span class="walk-min">${WALK_ICON} ${walkMin} min</span>
             </div>
-
-            <div class="cr-grid">
-                <div class="grid-header cr-header">Line</div>
-                <div class="grid-header cr-header">Destination</div>
-                <div class="grid-header cr-header">Departure Time</div>
-                <div class="grid-header cr-header">Alert</div>
-            
-        `;
+            <div class="card-body">
+    `;
 
     panels.forEach((panel) => {
+        // Collect all predictions across services, dedupe by minutes, take earliest 2
+        const allPreds = [];
         panel.services.forEach((service) => {
             const key = buildKey(panel, service);
-            let preds = getPredictions(realtimeData[key]);
-
-            preds = preds.filter((p) =>
-                p.headsign.includes(service.headsignContains),
-            );
-            if (!preds.length) return;
-
-            // renders predicted time horizontally
-            const times = preds
-                .slice(0, 3)
-                .map((p) => {
-                    return `
-                        <div class="pred-time ${p.isRealtime ? "realtime" : "scheduled"}">
-                            <span class="cr-icon">${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON}</span>
-                            <span> ${p.formattedTime}</span>
-                        </div>
-                    `;
-                })
-                .join("");
-
-            const p = preds[0];
-            // puts alerts bottom of panel
-            const alert = getAlertForRoute(panel.routeId);
-            html += `
-
-                    <div class="cr-line">${panel.title}</div>
-                        <div class="cr-line">${p.headsign}</div>
-
-                        <div class="cr-times">
-                            ${times}
-                        </div>
-
-                        ${alert ? `<div class="cr-alert"><div class="cr-alert-ticker"><span class="cr-alert-text">⚠️ ${alert.attributes.header}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⚠️ ${alert.attributes.header}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div></div>` : `<div class="cr-alert"></div>`}
-                    `;
+            getPredictions(realtimeData[key])
+                .filter((p) => p.headsign.includes(service.headsignContains))
+                .forEach((p) => allPreds.push(p));
         });
+        allPreds.sort((a, b) => a.minutes - b.minutes);
+        const next2 = allPreds.slice(0, 2);
+        if (!next2.length) return;
+
+        const timesHtml = next2
+            .map(
+                (p) => `
+                <div class="pred-time ${p.isRealtime ? "realtime" : "scheduled"}">
+                    ${p.isRealtime ? LIVE_ICON : SCHEDULE_ICON} ${formatTime(p.minutes)}
+                </div>`,
+            )
+            .join("");
+
+        html += `
+            <div class="prediction-row">
+                ${getLinePill(panel.routeId)}
+                <div class="destination-main">${panel.title}</div>
+                <div class="pred-times">${timesHtml}</div>
+            </div>`;
     });
+
     html += `</div></div>`;
     predContainer.innerHTML = html;
-
-    if (!predContainer.innerHTML.trim()) {
-        predContainer.innerHTML = '<div class="no-trains">No trains</div>';
-    }
 }
 
 /**
@@ -1226,20 +1205,10 @@ async function updateAll() {
     await fetchAlerts();
     await fetchHourlyForecast();
 
-    const stationGroupRouteIds = new Set(
-        SUBWAY_STATION_GROUPS.flatMap((g) => g.panelRouteIds),
-    );
-    PANELS.forEach((panel) => {
-        if (!stationGroupRouteIds.has(panel.routeId)) renderPanel(panel);
-    });
     SUBWAY_STATION_GROUPS.forEach(renderStationGroup);
 
-    const southPanels = PANELS.filter((p) =>
-        SOUTHSTATIONCR.includes(p.routeId),
-    );
-    const northPanels = PANELS.filter((p) =>
-        NORTHSTATIONCR.includes(p.routeId),
-    );
+    const southPanels = PANELS.filter((p) => SOUTHSTATIONCR.includes(p.routeId));
+    const northPanels = PANELS.filter((p) => NORTHSTATIONCR.includes(p.routeId));
     const ferryPanels = PANELS.filter((p) => FERRY.includes(p.routeId));
     renderCRPanel(southPanels, "South Station", "south-station-cr", 7);
     renderCRPanel(northPanels, "North Station", "north-station-cr", 21);
@@ -1252,83 +1221,8 @@ async function updateAll() {
     renderWeather();
 }
 
-/**
- * Cycles visibility between container-1, container-2, and container-3 every 15 seconds.
- */
-function startContainerRotation() {
-    const containers = [
-        document.querySelector(".container-1"),
-        document.querySelector(".container-2"),
-        document.querySelector(".container-3"),
-        document.querySelector(".container-4"),
-    ].filter(Boolean);
-    if (containers.length === 0) return;
-
-    let current = 0;
-    containers.forEach((c, i) => {
-        c.style.display = i === 0 ? "" : "none";
-    });
-
-    setInterval(() => {
-        containers[current].style.display = "none";
-        current = (current + 1) % containers.length;
-        containers[current].style.display = "";
-        updateAll();
-    }, 25000);
-}
-
-/**
- * Renders an interactive Leaflet map into #map-box with office, transit, and bike markers.
- * Called once at startup.
- */
-function renderMap() {
-    const container = document.getElementById("map-box");
-    if (!container) return;
-
-    container.innerHTML = `<div id="leaflet-map"></div>`;
-
-    requestAnimationFrame(() => {
-        const map = L.map("leaflet-map", { zoomControl: true }).setView([42.3558, -71.0572], 15);
-
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: "© OpenStreetMap contributors",
-            maxZoom: 19,
-        }).addTo(map);
-
-        function circleMarker(lat, lng, color, label) {
-            return L.circleMarker([lat, lng], {
-                radius: 10,
-                fillColor: color,
-                color: "#ffffff",
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.9,
-            }).addTo(map).bindTooltip(label, { permanent: true, direction: "top", offset: [0, -8] });
-        }
-
-        // Office — amber
-        circleMarker(42.3526, -71.0546, "#ED8B00", "One International Place");
-
-        // MBTA stops — 9W5R+GX, 9W4Q+G3, 9W2V+QW (Boston)
-        circleMarker(42.3523, -71.0572, "#DA291C", "MBTA - South Station");
-        circleMarker(42.3593, -71.0596, "#003DA5", "MBTA - State Street");
-        circleMarker(42.3563, -71.0624, "#00843D", "MBTA - Park Street");
-
-        // Bluebike stations — 9W3W+VP, 9W4W+85, 9W4X+VP (Boston)
-        circleMarker(42.3547, -71.0536, "#2277B3", "Blue Bikes");
-        circleMarker(42.3556, -71.0542, "#2277B3", "Blue Bikes");
-        circleMarker(42.3572, -71.0511, "#2277B3", "Blue Bikes");
-
-        setTimeout(() => {
-            map.invalidateSize();
-            map.setView([42.3558, -71.0572], 15);
-        }, 300);
-    });
-}
-
 // ===================== START =====================
-console.log("Starting scalable MBTA tracker");
+console.log("Starting MBTA dashboard");
 startClock();
-startContainerRotation();
-renderMap();
 updateAll();
+setInterval(updateAll, 30000);

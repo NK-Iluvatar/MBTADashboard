@@ -1,11 +1,10 @@
 /* ----- MBTA SCREENS SYSTEM ----- */
-/* Maximum readability for distant, short-viewing-time displays */
+/* Portrait 1080x1920 fixed target */
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
 
 :root {
-    /* MBTA system colors */
     --mbta-green: #00843d;
     --mbta-red: #da291c;
     --mbta-blue: #003da5;
@@ -15,8 +14,6 @@
     --mbta-bluebike: #2277b3;
     --mbta-cool-black-15: #171f26;
     --mbta-warm-white-90: #e6e4e1;
-    --mbta-warm-white-85: #d9d6d0;
-    --mbta-warm-white-80: #cccbc8;
     --mbta-true-white: #ffffff;
 
     --font-family-mono:
@@ -30,8 +27,6 @@
     box-sizing: border-box;
 }
 
-/* ===== LAYOUT: full viewport, flex column ===== */
-
 body {
     background: #ffffff;
     font-family: var(--font-family-mono);
@@ -43,242 +38,26 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
 }
 
-.container-1 {
+/* ===== MAIN GRID: 2 columns, 4 rows ===== */
+.dashboard {
     flex: 1;
     min-height: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto 1fr;
-    grid-template-areas:
-        "ss    state"
-        "park  ferry"
-        "bikes news"
-        "map   map";
     align-items: start;
-    gap: 2rem;
-}
-
-#south-station-red   { grid-area: ss; }
-#state-station-orange { grid-area: state; }
-#park-street-green   { grid-area: park; }
-.ferry               { grid-area: ferry; }
-#bluebikes-box       { grid-area: bikes; }
-#news-box            { grid-area: news; }
-
-.container-2 {
-    display: grid;
-    grid-template-columns:
-        calc(25% - 0.938rem) calc(25% - 0.938rem) calc(25% - 0.938rem)
-        calc(25% - 0.938rem);
-    grid-auto-rows: auto;
-    align-items: start;
-    gap: 2rem;
-}
-
-.container-3 {
-    display: grid;
-    grid-template-columns:
-        calc(25% - 0.938rem) calc(25% - 0.938rem) calc(25% - 0.938rem)
-        calc(25% - 0.938rem);
-    grid-auto-rows: auto;
-    align-items: start;
-    gap: 2rem;
-}
-
-.container-4 {
-    flex: 1;
-    min-height: 0;
-    display: grid;
-    grid-template-columns: 1fr;
     gap: 1.5rem;
-    margin-bottom: 2rem;
 }
 
-.container-5 {
-    flex: 1;
-    min-height: 0;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-/* ===== MAP ===== */
-#map-box {
-    grid-area: map;
-    align-self: stretch;
-    min-height: 0;
-}
-
-#leaflet-map {
-    width: 100%;
-    height: 100%;
-}
-
-.map-img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-.container-ferry {
-    display: grid;
-    grid-template-columns: calc(50% - 0.625rem) calc(50% - 0.625rem);
-    grid-auto-rows: min-content;
-    grid-auto-flow: row;
-    gap: 1.25rem;
-}
-
-
-.ferry-grid {
-    grid-template-columns: 2fr 3fr 3fr;
-}
-
-.cr-grid {
-    grid-template-columns: 1fr 2fr 4fr 4fr;
-}
-
-.ferry-grid,
-.cr-grid {
-    display: grid;
-    background: #ffffff;
-    border-radius: 6px;
-}
-
-.cr-grid > div:nth-child(8n + 5),
-.cr-grid > div:nth-child(8n + 6),
-.cr-grid > div:nth-child(8n + 7),
-.cr-grid > div:nth-child(8n + 8) {
-    background: var(--mbta-warm-white-90);
-}
-.grid-header {
-    background: #f2f3f5;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 20px;
-    color: #616161;
-}
-
-.cr-header {
-    padding: 3px 40px;
-}
-
-.ferry-header {
-    padding: 3px 20px;
-}
-
-.cr-line {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 600;
-    font-size: 20px;
-}
-
-.ferry-stop {
-    border-top: 1px solid #d7d8da;
-    padding-left: 20px;
-    padding-top: 3px;
-    font-weight: 600;
-    font-size: 20px;
-}
-.ferry-line {
-    font-weight: 600;
-    font-size: 20px;
-}
-.cr-times,
-.ferry-times {
-    display: flex;
-    font-weight: 700;
-    font-size: 20px;
-    align-items: center;
-}
-
-.ferry-times {
-    gap: 30px;
-}
-
-.cr-times {
-    gap: 60px;
-}
-.cr-times .pred-time {
-    text-align: left;
-    min-width: 120px;
-}
-
-.ferry-times .pred-time {
-    text-align: left;
-    min-width: 90px;
-}
-
-.cr-line,
-.cr-times,
-.ferry-times {
-    border-top: 1px solid #d7d8da;
-    padding: 3px 40px;
-}
-
-.ferry-line {
-    border-top: 1px solid #d7d8da;
-    padding: 3px 20px;
-}
-
-
-.cr-alert {
-    min-width: 0;
-    overflow: hidden;
-    position: relative;
-    align-self: stretch;
-    border-top: 1px solid #d7d8da;
-}
-
-.cr-alert:has(.cr-alert-ticker) {
-    border-top: 1px solid #d7d8da;
-    padding: 3px 20px;
-}
-
-.cr-grid:not(:has(.cr-alert-ticker)) .cr-header:last-child {
-    background: transparent;
-    border: none;
-    padding: 0;
-}
-
-@keyframes cr-alert-ticker {
-    from {
-        transform: translateX(0%);
-    }
-    to {
-        transform: translateX(-50%);
-    }
-}
-
-.cr-alert-ticker {
-    position: absolute;
-    top: 50%;
-    left: 20px;
-    right: 0;
-    transform: translateY(-50%);
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.cr-alert-text {
-    display: inline-block;
-    font-size: 20px;
-    animation: cr-alert-ticker 25s linear infinite;
-}
-
+/* ===== PREDICTIONS WRAPPER ===== */
 .predictions {
     display: flex;
     flex-direction: column;
 }
 
-/* ===== NO DECORATION RULES ===== */
-/* No box-shadow, no hover effects, no transforms, no transitions, no gradients */
-
+/* ===== CARD ===== */
 .card {
     display: flex;
     flex-direction: column;
@@ -286,7 +65,6 @@ body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-/* HEADER */
 .card-header {
     background: #ffffff;
     color: #1c1e23;
@@ -295,7 +73,6 @@ body {
     padding: 8px 15px;
     border-radius: 3px 3px 0 0;
     border-bottom: 1px solid #e0e0e0;
-    height: auto;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -316,7 +93,13 @@ body {
     white-space: nowrap;
 }
 
-/* LINE PILLS */
+.card-body {
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== LINE PILLS ===== */
 .line-pill {
     display: inline-flex;
     align-items: center;
@@ -330,13 +113,128 @@ body {
     flex-shrink: 0;
 }
 
-.pill-red    { background: #da291c; }
-.pill-orange { background: #ed8b00; }
-.pill-blue   { background: #003da5; }
-.pill-green  { background: #00843d; }
-.pill-cr     { background: #80276c; }
+.pill-red      { background: #da291c; }
+.pill-orange   { background: #ed8b00; }
+.pill-blue     { background: #003da5; }
+.pill-green    { background: #00843d; }
+.pill-cr       { background: #80276c; }
 .pill-boat     { background: #add8e6; color: #1c1e23; }
 .pill-bluebike { background: #2277b3; }
+
+/* ===== PREDICTION ROWS ===== */
+.direction-header {
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #616161;
+    padding: 12px 20px 4px;
+    flex-shrink: 0;
+}
+
+.prediction-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    border-top: 1px solid #d7d8da;
+}
+
+.prediction-row:last-child {
+    border-bottom: none;
+}
+
+.destination-main {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1c1e23;
+    flex: 1;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.destination-via {
+    font-size: 20px;
+    color: #555;
+}
+
+.pred-times {
+    display: flex;
+    gap: 20px;
+    font-weight: 700;
+}
+
+.pred-time {
+    font-size: 20px;
+    min-width: 80px;
+    text-align: left;
+}
+
+.pred-time.realtime  { color: #00843d; }
+.pred-time.scheduled { color: var(--mbta-cool-black-15); }
+
+.no-trains {
+    padding: 14px 20px;
+    font-size: 20px;
+    color: #616161;
+}
+
+/* ===== ALERT BANNER ===== */
+.alert-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    margin-top: auto;
+    border-radius: 4px;
+    background: #fff7bf;
+    border-left: 4px solid #ffdd00;
+    font-family: var(--font-family-mono);
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+/* ===== FERRY ===== */
+.ferry-grid {
+    display: grid;
+    grid-template-columns: 2fr 3fr 3fr;
+    background: #ffffff;
+    border-radius: 6px;
+}
+
+.ferry-stop {
+    border-top: 1px solid #d7d8da;
+    padding: 3px 20px;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.ferry-line {
+    border-top: 1px solid #d7d8da;
+    padding: 3px 20px;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.ferry-destination-via {
+    font-size: 15px;
+    color: #555;
+    padding-left: 20px;
+}
+
+.ferry-times {
+    display: flex;
+    gap: 30px;
+    font-weight: 700;
+    font-size: 20px;
+    align-items: center;
+    border-top: 1px solid #d7d8da;
+    padding: 3px 20px;
+}
+
+.ferry-times .pred-time {
+    text-align: left;
+    min-width: 90px;
+}
 
 /* ===== BLUEBIKES ===== */
 .bb-row {
@@ -361,106 +259,35 @@ body {
     font-weight: 700;
 }
 
-.bb-ebike  { color: #1c1e23; }
-.bb-bike   { color: #1c1e23; }
+.bb-ebike { color: #1c1e23; }
+.bb-bike  { color: #1c1e23; }
 
-.rotate-315 {
-    transform: rotate(315deg);
-}
-
-.bi {
-    display: inline-block;
-}
-
-/* BODY */
-.card-body {
-    background: #ffffff;
+/* ===== NEWS ===== */
+.news-body {
     display: flex;
     flex-direction: column;
+    gap: 0;
+    padding: 0;
+    overflow-y: auto;
 }
 
-
-/* ----- ALERT BANNERS ----- */
-.alert-banner {
+.news-list {
     display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    margin-top: auto;
-    border-radius: 4px;
-    background: #fff7bf;
-    border-left: 4px solid #ffdd00;
-    font-family: var(--font-family-mono);
-    font-size: 20px;
-    flex-shrink: 0;
+    flex-direction: column;
+    gap: 0;
 }
 
-/* DIRECTION LABEL */
-.direction-header {
+.news-item {
     font-size: 20px;
     font-weight: 700;
-    text-transform: uppercase;
-    color: #616161;
-    padding: 12px 20px 4px;
-    flex-shrink: 0;
-}
-
-/* ROW */
-.prediction-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    color: #1c1e23;
+    line-height: 1.3;
     padding: 14px 20px;
     border-top: 1px solid #d7d8da;
 }
 
-.prediction-row:last-child {
-    border-bottom: none;
-}
-
-/* DESTINATION */
-.destination-main {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1c1e23;
-    flex: 1;
-    text-align: left;
-    padding-left: 20px;
-}
-
-.destination-via {
-    font-size: 20px;
-    color: #555;
-}
-
-.ferry-destination-via {
-    font-size: 15px;
-    color: #555;
-    padding-left: 20px;
-}
-
-/* TIMES */
-.pred-times {
-    display: flex;
-    gap: 20px;
-    font-weight: 700;
-}
-
-.pred-time {
-    font-size: 20px;
-    min-width: 80px;
-    text-align: left;
-}
-
-.pred-time.realtime {
-    color: #00843d;
-}
-.pred-time.scheduled {
-    color: var(--mbta-cool-black-15);
-}
-
-.bi {
-    padding-right: 0.4rem;
+.news-item:first-child {
+    border-top: none;
 }
 
 /* ===== WEATHER ===== */
@@ -479,7 +306,6 @@ body {
 
 .weather-temp {
     font-size: 60px;
-
     color: #616161;
     font-weight: 700;
 }
@@ -495,9 +321,7 @@ body {
     color: #616161;
 }
 
-.weather-spacer {
-    flex: 1;
-}
+.weather-spacer { flex: 1; }
 
 .weather-right-group {
     display: flex;
@@ -528,100 +352,6 @@ body {
     font-weight: 700;
 }
 
-/* ===== RSS ===== */
-
-
-.news-body {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    padding: 0;
-    overflow-y: auto;
-}
-
-.news-feature {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.news-feature img {
-    width: 100%;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 3px;
-}
-
-.news-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1c1e23;
-    line-height: 1.2;
-}
-
-.news-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-
-.news-item {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1c1e23;
-    line-height: 1.3;
-    padding: 14px 20px;
-    border-top: 1px solid #d7d8da;
-}
-
-.news-item:first-child {
-    border-top: none;
-}
-
-/* ===== RESPONSIVE: 1080px breakpoint ===== */
-@media (max-width: 1080px) {
-    .container-1 {
-        grid-template-columns: calc(50% - 0.625rem) calc(50% - 0.625rem);
-    }
-
-    .container-2 {
-        grid-template-columns: calc(50% - 0.625rem) calc(50% - 0.625rem);
-    }
-
-    .container-ferry {
-        grid-template-columns: calc(50% - 0.625rem) calc(50% - 0.625rem);
-    }
-
-    .cr-grid {
-        grid-template-columns: 1fr 1fr 3fr 3fr;
-    }
-
-    .cr-times {
-        gap: 12px;
-        font-weight: 700;
-    }
-    .cr-times .pred-time {
-        font-size: 17px;
-        text-align: left;
-        padding: 22px 0px 22px;
-        min-width: 90px;
-    }
-    .cr-header,
-    .cr-line,
-    .cr-times {
-        padding: 3px 20px;
-    }
-    .cr-icon {
-        display: none;
-    }
-
-    .card-header {
-        font-size: 25px;
-    }
-    .station-name {
-        padding: 20px 0px;
-    }
-    .icon {
-        display: none;
-    }
-}
+/* ===== MISC ===== */
+.rotate-315 { transform: rotate(315deg); }
+.bi         { display: inline-block; padding-right: 0.4rem; }

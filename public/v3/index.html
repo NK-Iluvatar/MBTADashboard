@@ -17,112 +17,41 @@
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
             rel="stylesheet"
         />
-        <link
-            rel="stylesheet"
-            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        />
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     </head>
     <body>
         <!-- ================= WEATHER ================= -->
         <div id="weather-box" class="weather-box"></div>
 
-        <div class="container-1">
-            <!-- ================= ROW 1 ================= -->
+        <div class="dashboard">
+            <!-- ================= ROW 1: Red | Orange+Blue ================= -->
             <div id="south-station-red">
                 <div class="predictions"></div>
             </div>
             <div id="state-station-orange">
                 <div class="predictions"></div>
             </div>
-            <!-- ================= ROW 2 ================= -->
+
+            <!-- ================= ROW 2: South CR | North CR ================= -->
+            <div class="south-station-cr">
+                <div class="predictions"></div>
+            </div>
+            <div class="north-station-cr">
+                <div class="predictions"></div>
+            </div>
+
+            <!-- ================= ROW 3: Green | Ferry ================= -->
             <div id="park-street-green">
                 <div class="predictions"></div>
             </div>
             <div class="ferry">
                 <div class="predictions"></div>
             </div>
-            <!-- ================= ROW 3 ================= -->
+
+            <!-- ================= ROW 4: Blue Bikes | News ================= -->
             <div id="bluebikes-box"></div>
             <div id="news-box"></div>
-            <!-- ================= MAP ================= -->
-            <div id="map-box"></div>
         </div>
 
-        <!-- SEASONAL FERRY (NOT OPERATING RN)
-            <div id="boat-long-boat-eastboston">...</div>
-            <div id="boat-long-boat-lynn">...</div>
-            <div id="boat-aquarium-boat-f6">...</div>
-            <div id="boat-aquarium-boat-f7">...</div>
-        -->
-        <!---
-        <div class="container-2">
-            <div id="south-station-cr-greenbush">
-                <div class="predictions"></div>
-            </div>
-
-            <div id="south-station-cr-fairmount">
-                <div class="predictions"></div>
-            </div>
-
-            <div id="south-station-cr-newbedford">
-                <div class="predictions"></div>
-            </div>
-
-            <div id="south-station-cr-worcester">
-                <div class="predictions"></div>
-            </div>
-
-            <div id="south-station-cr-franklin">
-                <div class="predictions"></div>
-            </div>
-
-            <div id="south-station-cr-providence">
-                <div class="predictions"></div>
-            </div>
-
-            <div id="south-station-cr-kingston">
-                <div class="predictions"></div>
-            </div>
-
-            <div id="south-station-cr-needham">
-                <div class="predictions"></div>
-            </div>
-        </div>
-
-        <div class="container-3">
-            <div id="north-station-cr-fitchburg">
-                <div class="predictions"></div>
-            </div>
-
-            <div id="north-station-cr-lowell">
-                <div class="predictions"></div>
-            </div>
-
-            <div id="north-station-cr-haverhill">
-                <div class="predictions"></div>
-            </div>
-
-            <div id="north-station-cr-newburyport">
-                <div class="predictions"></div>
-            </div>
-        </div> -->
-
-        <!-- ================= COMMUTER RAIL GRID ================= -->
-        <div class="container-4">
-            <div class="south-station-cr">
-                <div class="predictions"></div>
-            </div>
-
-            <div class="north-station-cr">
-                <div class="predictions"></div>
-            </div>
-        </div>
-        <!-- <div class="container-5">
-            <div class="ferry">
-                <div class="predictions"></div>
-            </div>
-        </div> -->
         <script src="app.js"></script>
     </body>
 </html>
