@@ -135,21 +135,29 @@ function renderFerryPanel(panels, stationClass) {
     const container = document.querySelector(`.${stationClass}`);
     if (!container) return;
 
-    const rows = panels.flatMap((panel) =>
-        panel.services.map((svc) => {
-            const preds = getPredictions(realtimeData[buildKey(panel, svc)])
-                .filter((p) => p.headsign === svc.headsignContains);
-            if (!preds.length) return "";
-            const [destination, via] = preds[0].headsign.split(" via ");
+    const rows = panels.flatMap((panel) => {
+        // Group services by base destination (strip " via ..." suffix)
+        const groups = new Map();
+        for (const svc of panel.services) {
+            const baseDest = svc.headsignContains.split(" via ")[0];
+            if (!groups.has(baseDest)) groups.set(baseDest, []);
+            groups.get(baseDest).push(svc);
+        }
+
+        return [...groups.entries()].map(([destination, svcs]) => {
+            const allPreds = svcs
+                .flatMap((svc) =>
+                    getPredictions(realtimeData[buildKey(panel, svc)])
+                        .filter((p) => p.headsign === svc.headsignContains)
+                )
+                .sort((a, b) => a.minutes - b.minutes);
+            if (!allPreds.length) return "";
             return `
                 <div class="ferry-stop">${panel.title}</div>
-                <div>
-                    <div class="ferry-line">${destination}</div>
-                    ${via ? `<div class="ferry-destination-via">via ${via}</div>` : ""}
-                </div>
-                <div class="ferry-times">${preds.slice(0, 2).map(predTimeHtml).join("")}</div>`;
-        })
-    ).join("");
+                <div><div class="ferry-line">${destination}</div></div>
+                <div class="ferry-times">${allPreds.slice(0, 2).map(predTimeHtml).join("")}</div>`;
+        });
+    }).join("");
 
     container.innerHTML = `
         <div class="card">
