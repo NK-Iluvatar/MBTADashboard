@@ -82,6 +82,47 @@ export default {
         });
       }
 
+      // RSS feed proxy — fetches any RSS/Atom feed with browser-like headers
+      if (url.pathname === '/api/rss') {
+        const feedUrl = url.searchParams.get('url');
+        if (!feedUrl) return new Response('Missing url param', { status: 400 });
+
+        let response;
+        try {
+          response = await fetch(feedUrl, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+              'Accept': 'application/rss+xml, application/xml, text/xml, application/atom+xml, */*',
+              'Accept-Language': 'en-US,en;q=0.9',
+              'Cache-Control': 'no-cache',
+            }
+          });
+        } catch (e) {
+          return new Response(JSON.stringify({ error: 'fetch_failed', message: e.message }), {
+            status: 502,
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+          });
+        }
+
+        const text = await response.text();
+        console.log(`[rss] ${feedUrl} → status=${response.status} contentType=${response.headers.get('Content-Type')} bodyStart=${text.slice(0, 200)}`);
+
+        if (!response.ok) {
+          return new Response(JSON.stringify({ error: 'upstream_error', status: response.status, body: text.slice(0, 500) }), {
+            status: 502,
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+          });
+        }
+
+        return new Response(text, {
+          headers: {
+            'Content-Type': response.headers.get('Content-Type') || 'application/xml',
+            'Access-Control-Allow-Origin': '*',
+            'Cache-Control': 'public, max-age=1800',
+          }
+        });
+      }
+
       // Blue Bikes API proxy — passes path through to the GBFS feed
       if (url.pathname.startsWith('/api/bluebikes')) {
         const bikePath = url.pathname.replace('/api/bluebikes', '') || '/station_status.json';
