@@ -39,13 +39,20 @@ body {
     gap: 1.5rem;
 }
 
-.col-left,
+.col-left {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+}
+
 .col-right {
     flex: 1;
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    gap: 1.5rem;
 }
 
 /* ===== CARD ===== */
