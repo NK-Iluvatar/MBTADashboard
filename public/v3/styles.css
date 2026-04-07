@@ -52,7 +52,7 @@ body {
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
 }
 
 /* ===== CARD ===== */
@@ -193,7 +193,7 @@ body {
 #map-container {
     flex-shrink: 0;
     width: 100%;
-    height: 553px;
+    height: 545px;
     background: #e8e8e8;
     border-radius: 4px;
     overflow: hidden;
