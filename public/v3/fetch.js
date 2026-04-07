@@ -44,10 +44,15 @@ async function fetchHourlyForecast() {
 async function fetchLegalNews() {
     const now = Date.now();
     if (cachedNews.length && now - lastNewsFetch < 60 * 60000) return cachedNews;
-    const url = "https://api.rss2json.com/v1/api.json?rss_url=https://news.google.com/rss/search?q=site%3Areuters.com&hl=en-US&gl=US&ceid=US%3Aen";
-    const data = await fetchAPI(url);
-    if (data?.items) {
-        cachedNews = data.items.slice(0, 5);
+    const results = await Promise.all(
+        NEWS_FEEDS.map((feed) =>
+            fetchAPI(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed)}`)
+                .then((data) => data?.items ?? [])
+        )
+    );
+    const merged = results.flat();
+    if (merged.length) {
+        cachedNews = merged;
         lastNewsFetch = now;
     }
     return cachedNews;

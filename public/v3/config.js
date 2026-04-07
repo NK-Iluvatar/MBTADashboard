@@ -103,6 +103,11 @@ const LIVE_ICON     = '<i class="bi bi-broadcast-pin" style="font-size:0.9em; ma
 const SCHEDULE_ICON = '<i class="bi bi-calendar-date"></i>';
 const WALK_ICON     = '<i class="bi bi-person-walking"></i>';
 
+const NEWS_FEEDS = [
+    "https://masslawyersweekly.com/feed/",
+    "https://www.statehousenews.com/search/?format=rss",
+];
+
 function buildKey(panel, svc) {
     const routeId = svc.routeId ?? panel.routeId;
     return `${routeId}-${svc.stopId}-${svc.directionId}-${svc.headsignContains}`;
