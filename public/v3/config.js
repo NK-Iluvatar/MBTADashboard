@@ -105,7 +105,7 @@ const WALK_ICON     = '<i class="bi bi-person-walking"></i>';
 
 const NEWS_FEEDS = [
     "https://masslawyersweekly.com/feed/",
-    "https://www.statehousenews.com/search/?format=rss",
+    "http://rss.justia.com/BostonLawyerBlogCom",
 ];
 
 function buildKey(panel, svc) {

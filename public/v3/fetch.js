@@ -41,38 +41,15 @@ async function fetchHourlyForecast() {
     lastHourlyFetch = now;
 }
 
-async function fetchRSSFeed(feedUrl) {
-    try {
-        const res = await fetch(`/api/rss?url=${encodeURIComponent(feedUrl)}`);
-        if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            console.error(`[rss] ${feedUrl} proxy error:`, res.status, err);
-            return [];
-        }
-        const text = await res.text();
-        const doc = new DOMParser().parseFromString(text, 'application/xml');
-        const parseError = doc.querySelector('parsererror');
-        if (parseError) {
-            console.error(`[rss] ${feedUrl} XML parse error:`, parseError.textContent.slice(0, 300));
-            return [];
-        }
-        const items = [...doc.querySelectorAll('item')];
-        return items.slice(0, 3).map((item) => ({
-            title:       item.querySelector('title')?.textContent ?? '',
-            link:        item.querySelector('link')?.textContent ?? '',
-            pubDate:     item.querySelector('pubDate')?.textContent ?? '',
-            description: item.querySelector('description')?.textContent ?? '',
-        }));
-    } catch (e) {
-        console.error(`[rss] ${feedUrl} exception:`, e);
-        return [];
-    }
-}
-
 async function fetchLegalNews() {
     const now = Date.now();
     if (cachedNews.length && now - lastNewsFetch < 60 * 60000) return cachedNews;
-    const results = await Promise.all(NEWS_FEEDS.map(fetchRSSFeed));
+    const results = await Promise.all(
+        NEWS_FEEDS.map((feed) =>
+            fetchAPI(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed)}`)
+                .then((data) => (data?.items ?? []).slice(0, 3))
+        )
+    );
     const merged = results.flat();
     if (merged.length) {
         cachedNews = merged;
