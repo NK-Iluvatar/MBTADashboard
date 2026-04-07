@@ -178,10 +178,6 @@ function renderWeather() {
                     <span class="weather-desc">${current.shortForecast}</span>
                     <div class="weather-spacer"></div>
                     <div class="weather-right-group">
-                        <div class="weather-meta">
-                            <span class="weather-date">${date}</span>
-                            <span class="weather-location">Boston, MA</span>
-                        </div>
                         <div id="timestamp"></div>
                     </div>
                 </div>
