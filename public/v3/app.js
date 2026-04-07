@@ -6,7 +6,7 @@ function startClock() {
         });
     }
     tick();
-    setInterval(tick, 500);
+    setInterval(tick, 1000);
 }
 
 async function updateAll() {
