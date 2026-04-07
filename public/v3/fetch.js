@@ -47,7 +47,7 @@ async function fetchLegalNews() {
     const results = await Promise.all(
         NEWS_FEEDS.map((feed) =>
             fetchAPI(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed)}`)
-                .then((data) => data?.items ?? [])
+                .then((data) => (data?.items ?? []).slice(0, 3))
         )
     );
     const merged = results.flat();

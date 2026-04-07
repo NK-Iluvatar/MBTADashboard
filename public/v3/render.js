@@ -202,7 +202,7 @@ function renderNews(articles) {
     const track = document.getElementById("ticker-track");
     if (!track || !articles.length) return;
     const separator = '<span class="ticker-sep">&#9679;</span>';
-    const items = articles.map((a) => `<span class="ticker-item">${a.title}</span>`).join(separator);
+    const items = articles.map((a) => `<span class="ticker-item">${a.title} - ${a.description}</span>`).join(separator);
     // Double the content for a seamless loop
     track.innerHTML = items + separator + items + separator;
 }
