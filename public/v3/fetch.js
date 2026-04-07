@@ -5,8 +5,6 @@ let cachedWeather = null;
 let lastHourlyFetch = 0;
 let cachedNews = [];
 let lastNewsFetch = 0;
-let cachedBluebikes = null;
-let lastBikesFetch = 0;
 
 // ===================== FETCH =====================
 
@@ -55,37 +53,6 @@ async function fetchLegalNews() {
     return cachedNews;
 }
 
-async function fetchBluebikes() {
-    const now = Date.now();
-    if (cachedBluebikes && now - lastBikesFetch < 60000) return cachedBluebikes;
-    try {
-        const [statusRes, infoRes] = await Promise.all([
-            fetchAPI("/api/bluebikes/station_status.json"),
-            fetchAPI("/api/bluebikes/station_information.json"),
-        ]);
-        if (!statusRes?.data?.stations || !infoRes?.data?.stations) return cachedBluebikes ?? [];
-
-        const nameById = {};
-        infoRes.data.stations.forEach((s) => { nameById[s.station_id] = s.name; });
-
-        const statusByName = {};
-        statusRes.data.stations.forEach((s) => {
-            const name = nameById[s.station_id];
-            if (name) statusByName[name] = s;
-        });
-
-        cachedBluebikes = BLUEBIKE_STATIONS.map((name) => {
-            const s = statusByName[name];
-            const eBikes = s?.num_ebikes_available ?? 0;
-            const total = s?.num_bikes_available ?? 0;
-            return { name, eBikes, regularBikes: total - eBikes };
-        });
-        lastBikesFetch = now;
-    } catch (err) {
-        console.error("Bluebikes fetch error:", err);
-    }
-    return cachedBluebikes ?? [];
-}
 
 // ===================== PREDICTION TRANSFORM =====================
 

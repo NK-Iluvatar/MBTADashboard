@@ -99,12 +99,6 @@ const SUBWAY_STATION_GROUPS = [
     { stationName: "Park Street",   elementId: "park-street-green",     walkMin: 16, panelRouteIds: ["Green"] },
 ];
 
-const BLUEBIKE_STATIONS = [
-    "Purchase St at Pearl St",
-    "Post Office Square",
-    "Rowes Wharf at Atlantic Ave",
-];
-
 const LIVE_ICON     = '<i class="bi bi-broadcast-pin" style="font-size:0.9em; margin-right:4px;"></i>';
 const SCHEDULE_ICON = '<i class="bi bi-calendar-date"></i>';
 const WALK_ICON     = '<i class="bi bi-person-walking"></i>';

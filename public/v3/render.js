@@ -198,22 +198,3 @@ function renderNews(articles) {
     // Double the content for a seamless loop
     track.innerHTML = items + separator + items + separator;
 }
-
-function renderBluebikes(stations) {
-    const container = document.getElementById("bluebikes-box");
-    if (!container) return;
-    container.innerHTML = stations.length
-        ? `<div class="card">
-            <div class="card-header"><span class="header-station">Blue Bikes</span></div>
-            <div class="card-body">${stations.map(({ name, eBikes, regularBikes }) => `
-                <div class="bb-row">
-                    <div class="bb-station-name">${name}</div>
-                    <div class="bb-counts">
-                        <span class="bb-ebike"><i class="bi bi-lightning-charge-fill"></i> ${eBikes}</span>
-                        <span class="bb-bike"><i class="bi bi-bicycle"></i> ${regularBikes}</span>
-                    </div>
-                </div>`).join("")}
-            </div>
-           </div>`
-        : "";
-}
